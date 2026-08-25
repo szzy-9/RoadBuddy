@@ -3,7 +3,6 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { getRadarCluster, getRadarClusters } from '../api/client'
 import ClusterPanel from '../components/ClusterPanel'
-import ErrorMessage from '../components/ErrorMessage'
 import type { CrashClusterDetail, CrashClusterSummary } from '../types/api'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || ''
@@ -19,6 +18,13 @@ export default function RadarPage() {
   const [mapError, setMapError] = useState<string | null>(null)
   const [clusterError, setClusterError] = useState<string | null>(null)
   const [dataUnavailable, setDataUnavailable] = useState(false)
+
+  const closeCluster = useCallback(() => {
+    setSelected(null)
+    setSelectedId(null)
+    setClusterError(null)
+    setIsClusterLoading(false)
+  }, [])
 
   const selectCluster = useCallback(async (clusterId: number) => {
     setSelectedId(clusterId)
@@ -88,6 +94,8 @@ export default function RadarPage() {
 
     markersRef.current.forEach((marker) => marker.remove())
     markersRef.current = clusters.map((cluster) => {
+      const markerRoot = document.createElement('div')
+      markerRoot.className = 'radar-marker-root'
       const button = document.createElement('button')
       button.type = 'button'
       button.className = `radar-marker${selectedId === cluster.id ? ' selected' : ''}`
@@ -97,11 +105,22 @@ export default function RadarPage() {
       button.style.width = `${size}px`
       button.style.height = `${size}px`
       button.addEventListener('click', () => void selectCluster(cluster.id))
-      return new mapboxgl.Marker({ element: button })
+      markerRoot.appendChild(button)
+      return new mapboxgl.Marker({ element: markerRoot })
         .setLngLat([cluster.longitude, cluster.latitude])
         .addTo(map)
     })
   }, [clusters, selectedId, selectCluster])
+
+  useEffect(() => {
+    if (selectedId === null) return
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeCluster()
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [closeCluster, selectedId])
 
   return (
     <div className="radar-page">
@@ -124,19 +143,25 @@ export default function RadarPage() {
           <div className="map-card">
             <div ref={mapContainer} className="map-container" aria-label="Map of historical crash clusters" />
             <div className="map-legend"><span /> Marker size reflects crash count</div>
+            {(mapError || dataUnavailable) && (
+              <div className="radar-status-message" role="status">
+                {mapError || 'Crash data is currently unavailable. No crash information is being inferred.'}
+              </div>
+            )}
+            {selectedId !== null && (
+              <div className="radar-sheet-backdrop" onMouseDown={closeCluster}>
+                <div className="radar-sheet" onMouseDown={(event) => event.stopPropagation()}>
+                  <ClusterPanel
+                    cluster={selected}
+                    isLoading={isClusterLoading}
+                    error={clusterError}
+                    onClose={closeCluster}
+                  />
+                </div>
+              </div>
+            )}
           </div>
-          <ClusterPanel
-            cluster={selected}
-            isLoading={isClusterLoading}
-            error={clusterError}
-            onClose={() => { setSelected(null); setSelectedId(null); setClusterError(null) }}
-          />
         </div>
-      )}
-
-      {mapError && <ErrorMessage message={mapError} />}
-      {dataUnavailable && (
-        <ErrorMessage message="Crash data is currently unavailable. No crash information is being inferred." />
       )}
     </div>
   )
