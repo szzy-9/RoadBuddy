@@ -50,7 +50,8 @@ def test_autocomplete_short_query_returns_empty_without_request() -> None:
 
 def test_autocomplete_accepts_victoria_and_filters_other_states() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        assert request.url.path == "/geocode/autocomplete"
+        assert request.url.host == "api.heigit.org"
+        assert request.url.path == "/pelias/v1/autocomplete"
         assert request.headers["Authorization"] == "test-only"
         assert request.url.params["boundary.country"] == "AU"
         assert request.url.params["size"] == "5"
@@ -108,7 +109,8 @@ def test_autocomplete_ors_failure_is_safe() -> None:
 
 def test_forward_geocoding_uses_ors_and_returns_victoria_result() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        assert request.url.path == "/geocode/search"
+        assert request.url.host == "api.heigit.org"
+        assert request.url.path == "/pelias/v1/search"
         assert request.headers["Authorization"] == "test-only"
         assert request.url.params["boundary.rect.min_lon"] == "140.95"
         return httpx.Response(

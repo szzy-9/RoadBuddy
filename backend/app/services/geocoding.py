@@ -6,7 +6,7 @@ import httpx
 
 from app.config import Settings
 
-ORS_GEOCODE_BASE_URL = "https://api.openrouteservice.org/geocode"
+ORS_GEOCODE_BASE_URL = "https://api.heigit.org/pelias/v1"
 MAX_GEOCODING_RESULTS = 5
 
 VICTORIA_BOUNDS = {
