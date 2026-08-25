@@ -93,7 +93,6 @@ def test_weather_failure_keeps_route_and_marks_weather_unavailable(monkeypatch) 
     request = TripCheckRequest.model_validate(VALID_REQUEST)
     settings = Settings(
         use_mock_data=False,
-        pelias_base_url="https://pelias.example",
         ors_api_key="test-only",
     )
     result = asyncio.run(_analyse_production_trip(request, settings, Mock()))
@@ -101,4 +100,3 @@ def test_weather_failure_keeps_route_and_marks_weather_unavailable(monkeypatch) 
     assert result.route.distance_km == 12.5
     assert result.data_status.weather == DataAvailability.UNAVAILABLE
     assert result.factors == []
-
