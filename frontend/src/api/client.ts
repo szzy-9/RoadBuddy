@@ -1,5 +1,6 @@
 import type {
   CrashClusterDetail,
+  LocationSuggestionsResponse,
   RadarClustersResponse,
   RadarStatusResponse,
   TripCheckRequest,
@@ -48,6 +49,10 @@ export function checkTrip(request: TripCheckRequest): Promise<TripCheckResponse>
   })
 }
 
+export function searchLocations(query: string): Promise<LocationSuggestionsResponse> {
+  return apiFetch(`/trip/locations?q=${encodeURIComponent(query)}`)
+}
+
 export function getRadarClusters(bbox: string): Promise<RadarClustersResponse> {
   return apiFetch(`/radar/clusters?bbox=${encodeURIComponent(bbox)}`)
 }
@@ -59,4 +64,3 @@ export function getRadarCluster(clusterId: number): Promise<CrashClusterDetail> 
 export function getRadarStatus(): Promise<RadarStatusResponse> {
   return apiFetch('/radar/status')
 }
-

@@ -31,6 +31,16 @@ class TripCheckRequest(BaseModel):
         return value
 
 
+class LocationSuggestion(BaseModel):
+    label: str
+    longitude: float = Field(ge=-180, le=180)
+    latitude: float = Field(ge=-90, le=90)
+
+
+class LocationSuggestionsResponse(BaseModel):
+    suggestions: list[LocationSuggestion]
+
+
 class RouteSummary(BaseModel):
     origin: str
     destination: str
@@ -74,4 +84,3 @@ class TripCheckResponse(BaseModel):
     alternative_departure: AlternativeDeparture | None
     data_status: TripDataStatus
     rule_version: str
-

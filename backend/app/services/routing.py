@@ -29,7 +29,7 @@ async def calculate_route(
 
     try:
         response = await client.post(
-            "https://api.openrouteservice.org/v2/directions/driving-car/geojson",
+            "https://api.heigit.org/openrouteservice/v2/directions/driving-car/geojson",
             headers={
                 "Authorization": settings.ors_api_key,
                 "Accept": "application/geo+json",
@@ -56,4 +56,3 @@ async def calculate_route(
         )
     except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:
         raise RoutingUnavailable from exc
-

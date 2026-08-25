@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { checkTrip } from '../api/client'
+import AddressAutocomplete from '../components/AddressAutocomplete'
 import ConcernBadge from '../components/ConcernBadge'
 import ErrorMessage from '../components/ErrorMessage'
 import LoadingState from '../components/LoadingState'
@@ -86,29 +87,19 @@ export default function TripPage() {
 
       <form className="trip-form" onSubmit={handleSubmit} noValidate>
         <div className="journey-fields">
-          <label>
-            <span>From address</span>
-            <input
-              type="text"
-              autoComplete="street-address"
-              value={origin}
-              onChange={(event) => setOrigin(event.target.value)}
-              placeholder="e.g. Tarneit VIC 3029"
-              maxLength={200}
-            />
-          </label>
+          <AddressAutocomplete
+            label="From address"
+            value={origin}
+            onChange={setOrigin}
+            placeholder="e.g. Tarneit VIC 3029"
+          />
           <span className="journey-arrow" aria-hidden="true">→</span>
-          <label>
-            <span>To address</span>
-            <input
-              type="text"
-              autoComplete="street-address"
-              value={destination}
-              onChange={(event) => setDestination(event.target.value)}
-              placeholder="e.g. Docklands VIC 3008"
-              maxLength={200}
-            />
-          </label>
+          <AddressAutocomplete
+            label="To address"
+            value={destination}
+            onChange={setDestination}
+            placeholder="e.g. Docklands VIC 3008"
+          />
         </div>
         <label className="departure-field">
           <span>Departure date and time</span>
@@ -211,4 +202,3 @@ export default function TripPage() {
     </div>
   )
 }
-
