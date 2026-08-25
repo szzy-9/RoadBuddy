@@ -1,9 +1,11 @@
 import { NavLink } from 'react-router-dom'
 
 const items = [
-  { to: '/', label: 'Home', icon: '⌂' },
-  { to: '/radar', label: 'Radar', icon: '◎' },
-  { to: '/trip', label: 'Trip', icon: '↗' },
+  { to: '/', label: 'Home', icon: '🏠' },
+  { to: '/radar', label: 'Radar', icon: '🗺️' },
+  { to: '/trip', label: 'Trip', icon: '🚗' },
+  { to: '/learn', label: 'Learn', icon: '💡' },
+  { to: '/me', label: 'Me', icon: '📋' },
 ]
 
 export default function BottomNav() {
@@ -14,6 +16,7 @@ export default function BottomNav() {
           key={item.to}
           to={item.to}
           end={item.to === '/'}
+          aria-label={item.label}
           className={({ isActive }) => (isActive ? 'active' : undefined)}
         >
           <span className="bottom-nav-icon" aria-hidden="true">{item.icon}</span>
