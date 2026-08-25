@@ -169,6 +169,46 @@ h1 { margin-bottom: 18px; font-size: clamp(2.45rem, 11vw, 5rem); line-height: 0.
   outline: none;
 }
 .trip-form input:focus { border-color: var(--green-dark); box-shadow: 0 0 0 4px rgba(47, 184, 121, .14); }
+.address-autocomplete { position: relative; z-index: 1; display: grid; min-width: 0; gap: 8px; }
+.address-autocomplete:focus-within { z-index: 30; }
+.address-suggestions {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 7px);
+  right: 0;
+  left: 0;
+  max-height: 270px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 14px 32px rgba(16, 42, 67, .14);
+}
+.address-suggestion {
+  display: grid;
+  width: 100%;
+  min-height: 46px;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  color: var(--navy);
+  background: transparent;
+  border: 0;
+  border-radius: 11px;
+  font-size: .82rem;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+}
+.address-suggestion > span:first-child { color: var(--green-dark); font-size: 1rem; }
+.address-suggestion:hover,
+.address-suggestion.active { background: #e8f4ed; }
+.address-suggestion:focus-visible { outline: 3px solid rgba(47, 184, 121, .28); outline-offset: -2px; }
+.address-suggestion-status { padding: 13px 11px; color: var(--muted); font-size: .8rem; font-weight: 500; line-height: 1.4; }
 .journey-arrow { display: none; }
 .submit-button { width: 100%; }
 .submit-button:disabled { opacity: .68; cursor: progress; }

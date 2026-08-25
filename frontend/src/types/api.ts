@@ -50,6 +50,16 @@ export interface TripCheckRequest {
   departure_time: string
 }
 
+export interface LocationSuggestion {
+  label: string
+  longitude: number
+  latitude: number
+}
+
+export interface LocationSuggestionsResponse {
+  suggestions: LocationSuggestion[]
+}
+
 export interface CrashClusterSummary {
   id: number
   name: string | null
