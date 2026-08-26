@@ -797,6 +797,26 @@ h3 { margin-top: 0; }
   line-height: 1.35;
 }
 
+.radar-no-history {
+  position: absolute;
+  z-index: 4;
+  right: 10px;
+  bottom: 52px;
+  left: 10px;
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  color: var(--navy);
+  background: rgba(255, 255, 255, .96);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: .68rem;
+  line-height: 1.35;
+}
+
+.radar-no-history strong { font-size: .76rem; }
+.radar-no-history span { color: var(--muted); }
+
 .radar-sheet-backdrop {
   position: absolute;
   z-index: 10;

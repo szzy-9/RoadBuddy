@@ -16,6 +16,9 @@ export default function RadarPage() {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const markersRef = useRef<mapboxgl.Marker[]>([])
+  const pendingSearchRef = useRef<number | null>(null)
+  const searchSequenceRef = useRef(0)
+  const viewportRequestSequenceRef = useRef(0)
   const [clusters, setClusters] = useState<CrashClusterSummary[]>([])
   const [selected, setSelected] = useState<CrashClusterDetail | null>(null)
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -24,6 +27,7 @@ export default function RadarPage() {
   const [clusterError, setClusterError] = useState<string | null>(null)
   const [dataUnavailable, setDataUnavailable] = useState(false)
   const [roadQuery, setRoadQuery] = useState('')
+  const [showNoCrashHistory, setShowNoCrashHistory] = useState(false)
 
   const closeCluster = useCallback(() => {
     setSelected(null)
@@ -34,7 +38,14 @@ export default function RadarPage() {
 
   const selectRoadLocation = useCallback((suggestion: LocationSuggestion) => {
     closeCluster()
-    mapRef.current?.flyTo({
+    setShowNoCrashHistory(false)
+
+    const map = mapRef.current
+    if (!map) return
+
+    map.stop()
+    pendingSearchRef.current = ++searchSequenceRef.current
+    map.flyTo({
       center: [suggestion.longitude, suggestion.latitude],
       zoom: 15,
       essential: false,
@@ -72,7 +83,10 @@ export default function RadarPage() {
     mapRef.current = map
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
 
-    const loadViewport = async () => {
+    const loadViewport = async (searchedAreaId: number | null) => {
+      const requestId = ++viewportRequestSequenceRef.current
+      if (searchedAreaId === null) setShowNoCrashHistory(false)
+
       const bounds = map.getBounds()
       if (!bounds) return
       const bbox = [
@@ -83,16 +97,31 @@ export default function RadarPage() {
       ].map((value) => value.toFixed(6)).join(',')
       try {
         const response = await getRadarClusters(bbox)
+        if (requestId !== viewportRequestSequenceRef.current) return
+
         setClusters(response.clusters)
         setDataUnavailable(response.data_status === 'unavailable')
         setMapError(null)
+        setShowNoCrashHistory(
+          searchedAreaId !== null
+          && searchedAreaId === searchSequenceRef.current
+          && response.data_status === 'available'
+          && response.clusters.length === 0,
+        )
       } catch (error) {
+        if (requestId !== viewportRequestSequenceRef.current) return
+
+        setShowNoCrashHistory(false)
         setMapError(error instanceof Error ? error.message : 'Could not load crash clusters.')
       }
     }
 
-    map.on('load', loadViewport)
-    map.on('moveend', loadViewport)
+    map.on('load', () => void loadViewport(null))
+    map.on('moveend', () => {
+      const searchedAreaId = pendingSearchRef.current
+      pendingSearchRef.current = null
+      void loadViewport(searchedAreaId)
+    })
     map.on('error', () => setMapError('The map could not be loaded. Check the Mapbox token and try again.'))
 
     return () => {
@@ -171,6 +200,12 @@ export default function RadarPage() {
             {(mapError || dataUnavailable) && (
               <div className="radar-status-message" role="status">
                 {mapError || 'Crash data is currently unavailable. No crash information is being inferred.'}
+              </div>
+            )}
+            {showNoCrashHistory && (
+              <div className="radar-no-history" role="status">
+                <strong>No recorded crash history</strong>
+                <span>No recorded crashes were found for this road in the available dataset. This does not mean the road is risk-free.</span>
               </div>
             )}
             {selectedId !== null && (
