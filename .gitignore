@@ -10,9 +10,6 @@ frontend/dist/
 frontend/.env
 frontend/.env.local
 
-backend/data/raw/**
-!backend/data/raw/.gitkeep
-
 .DS_Store
 Thumbs.db
 
