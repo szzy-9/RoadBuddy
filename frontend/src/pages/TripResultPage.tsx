@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import ConcernBadge from '../components/ConcernBadge'
 import RiskFactorCard from '../components/RiskFactorCard'
-import type { TripCheckResponse } from '../types/api'
+import type { DepartureComparison, TripCheckResponse } from '../types/api'
 
-type DetailMode = 'conditions' | 'hotspots' | null
+type DetailMode = 'comparison' | 'conditions' | 'hotspots' | null
 
 interface TripResultLocationState {
   tripResult?: TripCheckResponse
@@ -16,6 +16,49 @@ function formatDeparture(value: string): string {
     hour: 'numeric',
     minute: '2-digit',
   }).format(new Date(value))
+}
+
+function formatComparisonTime(value: string): string {
+  return new Intl.DateTimeFormat('en-AU', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(new Date(value))
+}
+
+function DepartureComparisonContent({ comparison }: { comparison: DepartureComparison }) {
+  const options = [
+    { label: 'Now', value: comparison.selected },
+    { label: '30 min later', value: comparison.thirty_minutes_later },
+  ]
+
+  return (
+    <>
+      <p className="eyebrow">Departure comparison</p>
+      <h2 id="trip-detail-title">Compare your options</h2>
+      <div className="departure-comparison-grid">
+        {options.map((option) => (
+          <article className="departure-comparison-option" key={option.label}>
+            <p>{option.label}</p>
+            <dl>
+              <div>
+                <dt>Departure</dt>
+                <dd>{formatComparisonTime(option.value.departure_time)}</dd>
+              </div>
+              <div>
+                <dt>Arrival</dt>
+                <dd>{formatComparisonTime(option.value.arrival_time)}</dd>
+              </div>
+            </dl>
+            <ConcernBadge level={option.value.concern_level} />
+          </article>
+        ))}
+      </div>
+      {comparison.difference_summary && (
+        <p className="departure-difference">{comparison.difference_summary}</p>
+      )}
+    </>
+  )
 }
 
 export default function TripResultPage() {
@@ -68,6 +111,20 @@ export default function TripResultPage() {
       </section>
 
       <div className="result-detail-actions">
+        <button type="button" onClick={() => setDetailMode('comparison')}>
+          <span className="result-detail-icon" aria-hidden="true">◷</span>
+          <span>
+            <strong>Departure comparison</strong>
+            <small>
+              {formatComparisonTime(result.departure_comparison.selected.departure_time)} now
+              {' → '}
+              {formatComparisonTime(
+                result.departure_comparison.thirty_minutes_later.departure_time,
+              )} later
+            </small>
+          </span>
+          <span aria-hidden="true">→</span>
+        </button>
         <button type="button" onClick={() => setDetailMode('conditions')}>
           <span className="result-detail-icon" aria-hidden="true">☂</span>
           <span><strong>Conditions</strong><small>{result.factors.length} contributing</small></span>
@@ -116,7 +173,9 @@ export default function TripResultPage() {
             >
               ×
             </button>
-            {detailMode === 'conditions' ? (
+            {detailMode === 'comparison' ? (
+              <DepartureComparisonContent comparison={result.departure_comparison} />
+            ) : detailMode === 'conditions' ? (
               <>
                 <p className="eyebrow">Contributing conditions</p>
                 <h2 id="trip-detail-title">What shaped this result</h2>
