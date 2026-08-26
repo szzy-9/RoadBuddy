@@ -2,8 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { getRadarCluster, getRadarClusters } from '../api/client'
+import AddressAutocomplete from '../components/AddressAutocomplete'
 import ClusterPanel from '../components/ClusterPanel'
-import type { CrashClusterDetail, CrashClusterSummary } from '../types/api'
+import type {
+  CrashClusterDetail,
+  CrashClusterSummary,
+  LocationSuggestion,
+} from '../types/api'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || ''
 
@@ -18,6 +23,7 @@ export default function RadarPage() {
   const [mapError, setMapError] = useState<string | null>(null)
   const [clusterError, setClusterError] = useState<string | null>(null)
   const [dataUnavailable, setDataUnavailable] = useState(false)
+  const [roadQuery, setRoadQuery] = useState('')
 
   const closeCluster = useCallback(() => {
     setSelected(null)
@@ -25,6 +31,15 @@ export default function RadarPage() {
     setClusterError(null)
     setIsClusterLoading(false)
   }, [])
+
+  const selectRoadLocation = useCallback((suggestion: LocationSuggestion) => {
+    closeCluster()
+    mapRef.current?.flyTo({
+      center: [suggestion.longitude, suggestion.latitude],
+      zoom: 15,
+      essential: false,
+    })
+  }, [closeCluster])
 
   const selectCluster = useCallback(async (clusterId: number) => {
     setSelectedId(clusterId)
@@ -131,6 +146,16 @@ export default function RadarPage() {
         </div>
         <div className="layer-chip"><span aria-hidden="true" /> Crashes</div>
       </section>
+
+      <div className="radar-search">
+        <AddressAutocomplete
+          label="Search a road"
+          value={roadQuery}
+          onChange={setRoadQuery}
+          onSelect={selectRoadLocation}
+          placeholder="Search a road"
+        />
+      </div>
 
       {!MAPBOX_TOKEN ? (
         <div className="map-token-message">

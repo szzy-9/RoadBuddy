@@ -666,7 +666,7 @@ h3 { margin-top: 0; }
   position: relative;
   display: grid;
   min-height: 0;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: 10px;
   padding: 14px 14px 12px;
 }
@@ -681,6 +681,36 @@ h3 { margin-top: 0; }
 }
 
 .radar-heading h1 { font-size: 1.5rem; }
+
+.radar-search {
+  position: relative;
+  z-index: 20;
+  padding: 0 2px;
+}
+
+.radar-search .address-autocomplete { gap: 5px; }
+
+.radar-search label {
+  color: var(--navy);
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.radar-search input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 13px;
+  color: var(--navy);
+  background: var(--white);
+  border: 1px solid #cfdcda;
+  border-radius: 13px;
+  outline: none;
+}
+
+.radar-search input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(21, 148, 95, .13);
+}
 
 .layer-chip {
   display: flex;

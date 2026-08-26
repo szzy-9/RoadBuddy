@@ -6,6 +6,7 @@ import type { LocationSuggestion } from '../types/api'
 interface AddressAutocompleteProps {
   value: string
   onChange: (value: string) => void
+  onSelect?: (suggestion: LocationSuggestion) => void
   label: string
   placeholder: string
 }
@@ -13,6 +14,7 @@ interface AddressAutocompleteProps {
 export default function AddressAutocomplete({
   value,
   onChange,
+  onSelect,
   label,
   placeholder,
 }: AddressAutocompleteProps) {
@@ -106,6 +108,7 @@ export default function AddressAutocomplete({
     setSearchError(false)
     setActiveIndex(-1)
     onChange(suggestion.label)
+    onSelect?.(suggestion)
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
