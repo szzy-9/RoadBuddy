@@ -26,6 +26,47 @@ function formatComparisonTime(value: string): string {
   }).format(new Date(value))
 }
 
+function partialDataMessage(dataStatus: TripCheckResponse['data_status']): string | null {
+  const weatherUnavailable = dataStatus.weather === 'unavailable'
+  const crashUnavailable = dataStatus.crash_data === 'unavailable'
+  const speedZonesUnavailable = dataStatus.speed_zones === 'unavailable'
+  const unavailableCount = [
+    weatherUnavailable,
+    crashUnavailable,
+    speedZonesUnavailable,
+  ].filter(Boolean).length
+
+  if (unavailableCount === 0) return null
+  if (unavailableCount === 1) {
+    if (weatherUnavailable) {
+      return 'Weather data is unavailable. This check uses the other available information.'
+    }
+    if (crashUnavailable) {
+      return 'Crash history is unavailable. No crash information has been inferred.'
+    }
+    return 'Speed-zone data is unavailable. This check does not include speed-zone context.'
+  }
+
+  const unavailableSources = [
+    weatherUnavailable ? 'weather data' : null,
+    crashUnavailable ? 'crash history' : null,
+    speedZonesUnavailable ? 'speed-zone data' : null,
+  ].filter((source): source is string => source !== null)
+  const sourceSummary = unavailableSources.length === 2
+    ? unavailableSources.join(' and ')
+    : `${unavailableSources.slice(0, -1).join(', ')} and ${unavailableSources.at(-1)}`
+  const capitalizedSourceSummary = sourceSummary[0].toUpperCase() + sourceSummary.slice(1)
+  const limitations = [
+    crashUnavailable ? 'no crash information has been inferred' : null,
+    speedZonesUnavailable ? 'speed-zone context is not included' : null,
+  ].filter((limitation): limitation is string => limitation !== null)
+  const limitationSummary = limitations.length > 0
+    ? `; ${limitations.join(' and ')}`
+    : ''
+
+  return `${capitalizedSourceSummary} are unavailable. This check uses the remaining available information${limitationSummary}.`
+}
+
 function DepartureComparisonContent({ comparison }: { comparison: DepartureComparison }) {
   const options = [
     { label: 'Now', value: comparison.selected },
@@ -83,6 +124,7 @@ export default function TripResultPage() {
     : result.hotspots.length === 0
       ? 'No major hotspots found'
       : `${result.hotspots.length} major ${result.hotspots.length === 1 ? 'hotspot' : 'hotspots'}`
+  const dataMessage = partialDataMessage(result.data_status)
 
   return (
     <div className="trip-result-page">
@@ -144,9 +186,9 @@ export default function TripResultPage() {
             <span>Leave {formatDeparture(result.alternative_departure.departure_time)}</span>
           </aside>
         )}
-        {result.data_status.weather === 'unavailable' && (
+        {dataMessage && (
           <aside className="result-context-note warning">
-            Weather unavailable — this result uses the other available information.
+            {dataMessage}
           </aside>
         )}
       </div>
