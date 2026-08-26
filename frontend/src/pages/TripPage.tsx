@@ -61,6 +61,7 @@ export default function TripPage() {
           ? requestError.message
           : 'Something went wrong. Please try again.',
       )
+    } finally {
       setIsLoading(false)
     }
   }
