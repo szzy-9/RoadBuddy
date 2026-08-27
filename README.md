@@ -8,14 +8,8 @@
 ### 1. Prerequisites and environment files
 
 - Install Python 3.12 and Node.js 20.19 or later.
-- Put the shared backend environment file at `RoadBuddy/.env`.
-- Do not commit `.env` or `frontend/.env.local`.
-- To enable the Risk Radar map, create `frontend/.env.local`:
-
-```env
-VITE_API_BASE_URL=/api
-VITE_MAPBOX_TOKEN=replace_with_the_public_mapbox_token
-```
+- Put the shared environment files at `RoadBuddy/.env` and `RoadBuddy/frontend/.env.local`.
+- Do not commit `.env` or `.env.local`.
 
 ### 2. Start the backend
 
