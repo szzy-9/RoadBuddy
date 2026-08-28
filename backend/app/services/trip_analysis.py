@@ -1,7 +1,11 @@
 import asyncio
 import json
+import logging
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from time import perf_counter
 
 import httpx
 from sqlalchemy.orm import Session
@@ -37,6 +41,8 @@ from app.services.risk_engine import RULE_VERSION, ConditionFlags, calculate_con
 from app.services.routing import RoutingUnavailable, calculate_route
 from app.services.weather import WeatherConditions, get_weather_at
 
+logger = logging.getLogger("uvicorn.error")
+
 
 class RouteUnavailable(Exception):
     pass
@@ -48,6 +54,27 @@ class DepartureEvaluation:
     factors: list[RiskFactor]
     comparison: DepartureComparison
     alternative: AlternativeDeparture | None
+
+
+@contextmanager
+def _timed_stage(stage: str) -> Iterator[None]:
+    started_at = perf_counter()
+    try:
+        yield
+    except Exception as exc:
+        logger.warning(
+            "Trip check stage '%s' failed after %.2fs (%s)",
+            stage,
+            perf_counter() - started_at,
+            type(exc).__name__,
+        )
+        raise
+    else:
+        logger.info(
+            "Trip check stage '%s' completed in %.2fs",
+            stage,
+            perf_counter() - started_at,
+        )
 
 
 def _difference_summary(
@@ -181,29 +208,33 @@ async def _analyse_production_trip(
     timeout = httpx.Timeout(settings.request_timeout_seconds)
     async with httpx.AsyncClient(timeout=timeout) as client:
         try:
-            origin_coordinates, destination_coordinates = await asyncio.gather(
-                geocode_address(request.origin, settings, client),
-                geocode_address(request.destination, settings, client),
-            )
-            route = await calculate_route(
-                origin_coordinates,
-                destination_coordinates,
-                settings,
-                client,
-            )
+            with _timed_stage("geocoding"):
+                origin_coordinates, destination_coordinates = await asyncio.gather(
+                    geocode_address(request.origin, settings, client),
+                    geocode_address(request.destination, settings, client),
+                )
+            with _timed_stage("routing"):
+                route = await calculate_route(
+                    origin_coordinates,
+                    destination_coordinates,
+                    settings,
+                    client,
+                )
         except (GeocodingUnavailable, RoutingUnavailable) as exc:
             raise RouteUnavailable from exc
 
         route_geojson = json.dumps(route.geometry, separators=(",", ":"))
         try:
-            hotspots = get_route_hotspots(session, route_geojson, use_mock_data=False)
+            with _timed_stage("crash-history query"):
+                hotspots = get_route_hotspots(session, route_geojson, use_mock_data=False)
             crash_status = DataAvailability.AVAILABLE
         except CrashDataUnavailable:
             hotspots = []
             crash_status = DataAvailability.UNAVAILABLE
 
         try:
-            high_speed_zone = route_has_high_speed_zone(session, route_geojson)
+            with _timed_stage("speed-zone query"):
+                high_speed_zone = route_has_high_speed_zone(session, route_geojson)
             speed_status = DataAvailability.AVAILABLE
         except CrashDataUnavailable:
             high_speed_zone = False
@@ -215,6 +246,7 @@ async def _analyse_production_trip(
         later_departure = request.departure_time + timedelta(minutes=30)
         later_midpoint = later_departure + timedelta(minutes=route.duration_minutes / 2)
 
+        weather_started_at = perf_counter()
         weather_results = await asyncio.gather(
             get_weather_at(
                 midpoint_latitude,
@@ -233,7 +265,28 @@ async def _analyse_production_trip(
             return_exceptions=True,
         )
 
-    weather_available = all(isinstance(item, WeatherConditions) for item in weather_results)
+        weather_available = all(
+            isinstance(item, WeatherConditions) for item in weather_results
+        )
+        if weather_available:
+            logger.info(
+                "Trip check stage 'weather' completed in %.2fs",
+                perf_counter() - weather_started_at,
+            )
+        else:
+            failure_types = sorted(
+                {
+                    type(item).__name__
+                    for item in weather_results
+                    if not isinstance(item, WeatherConditions)
+                }
+            )
+            logger.warning(
+                "Trip check stage 'weather' returned unavailable data after %.2fs (%s)",
+                perf_counter() - weather_started_at,
+                ", ".join(failure_types),
+            )
+
     selected_rain = (
         weather_results[0].rain
         if isinstance(weather_results[0], WeatherConditions)

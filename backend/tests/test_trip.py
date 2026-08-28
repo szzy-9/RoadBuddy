@@ -152,3 +152,44 @@ def test_weather_failure_keeps_route_and_marks_weather_unavailable(monkeypatch) 
     assert result.departure_comparison.selected.factor_count == 0
     assert result.departure_comparison.thirty_minutes_later.factor_count == 0
     assert result.departure_comparison.difference_summary is None
+
+
+def test_optional_database_failures_keep_trip_result_available(monkeypatch) -> None:
+    from app.services import trip_analysis
+
+    async def fake_geocode(address, _settings, _client):
+        return Coordinates(longitude=144.9, latitude=-37.8, label=address)
+
+    async def fake_route(_origin, _destination, _settings, _client):
+        return RouteResult(
+            distance_km=12.5,
+            duration_minutes=20,
+            geometry={
+                "type": "LineString",
+                "coordinates": [[144.9, -37.8], [145.0, -37.9]],
+            },
+        )
+
+    async def fake_weather(*_args, **_kwargs):
+        return trip_analysis.WeatherConditions(rain=False, precipitation_mm=0)
+
+    def fail_optional_data(*_args, **_kwargs):
+        raise trip_analysis.CrashDataUnavailable
+
+    monkeypatch.setattr(trip_analysis, "geocode_address", fake_geocode)
+    monkeypatch.setattr(trip_analysis, "calculate_route", fake_route)
+    monkeypatch.setattr(trip_analysis, "get_weather_at", fake_weather)
+    monkeypatch.setattr(trip_analysis, "get_route_hotspots", fail_optional_data)
+    monkeypatch.setattr(trip_analysis, "route_has_high_speed_zone", fail_optional_data)
+    monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
+
+    request = TripCheckRequest.model_validate(VALID_REQUEST)
+    settings = Settings(use_mock_data=False, ors_api_key="test-only")
+    result = asyncio.run(_analyse_production_trip(request, settings, Mock()))
+
+    assert result.route.distance_km == 12.5
+    assert result.hotspots == []
+    assert result.data_status.weather == DataAvailability.AVAILABLE
+    assert result.data_status.crash_data == DataAvailability.UNAVAILABLE
+    assert result.data_status.speed_zones == DataAvailability.UNAVAILABLE
+    assert result.factors == []
