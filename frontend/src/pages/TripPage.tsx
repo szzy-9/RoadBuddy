@@ -69,9 +69,9 @@ export default function TripPage() {
   return (
     <div className="trip-page page-wrap">
       <section className="page-heading">
-        <p className="eyebrow">Pre-journey risk check</p>
-        <h1>Check the road ahead.</h1>
-        <p className="lead">See the conditions that may deserve more care before you leave.</p>
+        {/* <p className="eyebrow">Pre-journey risk check</p> */}
+        {/* <p className="eyebrow">Check the road ahead</p> */}
+        {/* <p className="lead">See the conditions that may deserve more care before you leave.</p> */}
       </section>
 
       {isLoading ? (
@@ -103,11 +103,11 @@ export default function TripPage() {
               onChange={(event) => setDepartureTime(event.target.value)}
             />
           </label>
-          {error ? (
+          {/* {error ? (
             <p className="trip-form-error" role="alert">{error}</p>
           ) : (
             <p className="form-privacy">Addresses are used for this check only and are not stored.</p>
-          )}
+          )} */}
           <button className="button button-primary submit-button" type="submit">
             Check this trip
           </button>

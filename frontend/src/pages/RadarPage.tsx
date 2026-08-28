@@ -168,17 +168,9 @@ export default function RadarPage() {
 
   return (
     <div className="radar-page">
-      <section className="radar-heading">
-        <div>
-          <p className="eyebrow">Risk Radar</p>
-          <h1>Explore crash history around you.</h1>
-        </div>
-        <div className="layer-chip"><span aria-hidden="true" /> Crashes</div>
-      </section>
-
       <div className="radar-search">
         <AddressAutocomplete
-          label="Search a road"
+          label=""
           value={roadQuery}
           onChange={setRoadQuery}
           onSelect={selectRoadLocation}

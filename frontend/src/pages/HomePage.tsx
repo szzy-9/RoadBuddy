@@ -15,17 +15,6 @@ function getInitialHomeState(): HomeState {
   }
 }
 
-function RoadBuddyHeader() {
-  return (
-    <header className="home-header">
-      <span className="home-wordmark" aria-label="RoadBuddy">
-        <span>road</span><span>buddy</span>
-      </span>
-      <span className="home-tonight">TONIGHT</span>
-    </header>
-  )
-}
-
 function HomeListCard({
   icon,
   title,
@@ -73,8 +62,6 @@ export default function HomePage() {
 
   return (
     <section className="home-page">
-      <RoadBuddyHeader />
-
       {homeState === 'first-open' ? (
         <div className="home-state home-state-first">
           <article className="home-primary-card home-first-card">
