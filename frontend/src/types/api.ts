@@ -30,12 +30,26 @@ export interface AlternativeDeparture {
   factor_count: number
 }
 
+export interface DepartureComparisonOption {
+  departure_time: string
+  arrival_time: string
+  concern_level: ConcernLevel
+  factor_count: number
+}
+
+export interface DepartureComparison {
+  selected: DepartureComparisonOption
+  thirty_minutes_later: DepartureComparisonOption
+  difference_summary: string | null
+}
+
 export interface TripCheckResponse {
   route: RouteSummary
   concern_level: ConcernLevel
   factors: RiskFactor[]
   hotspots: TripHotspot[]
   alternative_departure: AlternativeDeparture | null
+  departure_comparison: DepartureComparison
   data_status: {
     weather: DataAvailability
     crash_data: DataAvailability

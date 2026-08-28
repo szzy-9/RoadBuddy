@@ -41,6 +41,25 @@ def test_cluster_detail(client: TestClient) -> None:
     assert response.json()["dark_count"] == 7
 
 
+def test_radar_data_failure_returns_unavailable_without_clusters(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def unavailable(*_args, **_kwargs):
+        raise CrashDataUnavailable
+
+    monkeypatch.setattr("app.api.radar.get_clusters_in_bbox", unavailable)
+
+    response = client.get("/api/radar/clusters?bbox=144.70,-37.90,144.80,-37.82")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "clusters": [],
+        "data_status": "unavailable",
+        "last_updated": None,
+    }
+
+
 def test_spatial_query_boundary_converts_database_failure() -> None:
     class BrokenSession:
         def execute(self, _statement):
@@ -52,4 +71,3 @@ def test_spatial_query_boundary_converts_database_failure() -> None:
             BoundingBox(144.0, -38.0, 145.0, -37.0),
             use_mock_data=False,
         )
-

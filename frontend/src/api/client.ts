@@ -8,6 +8,13 @@ import type {
 } from '../types/api'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
+const DEFAULT_API_TIMEOUT_MS = 15_000
+const TRIP_CHECK_TIMEOUT_MS = 45_000
+
+interface ApiFetchOptions extends RequestInit {
+  timeoutMs?: number
+  timeoutMessage?: string
+}
 
 export class ApiError extends Error {
   constructor(message: string, public status?: number) {
@@ -16,36 +23,69 @@ export class ApiError extends Error {
   }
 }
 
-async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
-  let response: Response
+async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
+  const {
+    timeoutMs = DEFAULT_API_TIMEOUT_MS,
+    timeoutMessage = 'RoadBuddy took too long to respond. Please try again.',
+    signal: externalSignal,
+    ...requestOptions
+  } = options
+  const controller = new AbortController()
+  let timedOut = false
+
+  const handleExternalAbort = () => controller.abort()
+  if (externalSignal?.aborted) {
+    controller.abort()
+  } else {
+    externalSignal?.addEventListener('abort', handleExternalAbort, { once: true })
+  }
+
+  const timeoutId = window.setTimeout(() => {
+    timedOut = true
+    controller.abort()
+  }, timeoutMs)
 
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
-      ...options,
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      ...requestOptions,
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
-        ...options?.headers,
+        ...requestOptions.headers,
       },
     })
-  } catch {
+
+    if (!response.ok) {
+      const body = await response.json().catch(() => null) as { detail?: string } | null
+      throw new ApiError(
+        body?.detail || 'RoadBuddy could not complete that request. Please try again.',
+        response.status,
+      )
+    }
+
+    return await response.json() as T
+  } catch (error) {
+    if (error instanceof ApiError) throw error
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new ApiError(
+        timedOut
+          ? timeoutMessage
+          : 'RoadBuddy could not complete that request. Please try again.',
+      )
+    }
     throw new ApiError('RoadBuddy could not reach the service. Please try again.')
+  } finally {
+    window.clearTimeout(timeoutId)
+    externalSignal?.removeEventListener('abort', handleExternalAbort)
   }
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => null) as { detail?: string } | null
-    throw new ApiError(
-      body?.detail || 'RoadBuddy could not complete that request. Please try again.',
-      response.status,
-    )
-  }
-
-  return response.json() as Promise<T>
 }
 
 export function checkTrip(request: TripCheckRequest): Promise<TripCheckResponse> {
   return apiFetch('/trip/check', {
     method: 'POST',
     body: JSON.stringify(request),
+    timeoutMs: TRIP_CHECK_TIMEOUT_MS,
+    timeoutMessage: 'The trip check took too long. Please try again.',
   })
 }
 

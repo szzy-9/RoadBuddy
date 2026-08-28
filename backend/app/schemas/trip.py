@@ -70,6 +70,19 @@ class AlternativeDeparture(BaseModel):
     factor_count: int = Field(ge=0)
 
 
+class DepartureComparisonOption(BaseModel):
+    departure_time: datetime
+    arrival_time: datetime
+    concern_level: ConcernLevel
+    factor_count: int = Field(ge=0)
+
+
+class DepartureComparison(BaseModel):
+    selected: DepartureComparisonOption
+    thirty_minutes_later: DepartureComparisonOption
+    difference_summary: str | None = None
+
+
 class TripDataStatus(BaseModel):
     weather: DataAvailability
     crash_data: DataAvailability
@@ -82,5 +95,6 @@ class TripCheckResponse(BaseModel):
     factors: list[RiskFactor]
     hotspots: list[TripHotspot]
     alternative_departure: AlternativeDeparture | None
+    departure_comparison: DepartureComparison
     data_status: TripDataStatus
     rule_version: str
