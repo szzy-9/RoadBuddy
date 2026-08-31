@@ -103,11 +103,13 @@ export default function TripPage() {
               onChange={(event) => setDepartureTime(event.target.value)}
             />
           </label>
-          {/* {error ? (
+          {error ? (
             <p className="trip-form-error" role="alert">{error}</p>
           ) : (
-            <p className="form-privacy">Addresses are used for this check only and are not stored.</p>
-          )} */}
+            <p className="form-privacy">
+              Addresses are used for this check only and are not stored.
+            </p>
+          )}
           <button className="button button-primary submit-button" type="submit">
             Check this trip
           </button>
