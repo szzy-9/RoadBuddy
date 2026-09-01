@@ -11,16 +11,16 @@ class RadarDataStatus(StrEnum):
 
 class CrashClusterSummary(BaseModel):
     id: int
-    name: str | None
     crash_count: int = Field(ge=0)
-    dominant_type: str | None
+    eligible_driver_age_crashes: int = Field(ge=0)
+    young_driver_crashes: int = Field(ge=0)
+    young_driver_pct: float | None = Field(default=None, ge=0, le=100)
+    young_driver_pct_displayable: bool
     longitude: float = Field(ge=-180, le=180)
     latitude: float = Field(ge=-90, le=90)
 
 
 class CrashClusterDetail(CrashClusterSummary):
-    wet_count: int = Field(ge=0)
-    dark_count: int = Field(ge=0)
     first_year: int | None = None
     last_year: int | None = None
 

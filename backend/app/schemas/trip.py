@@ -55,11 +55,11 @@ class RiskFactor(BaseModel):
 
 class TripHotspot(BaseModel):
     cluster_id: int
-    name: str | None
     crash_count: int = Field(ge=0)
-    dominant_type: str | None
-    wet_count: int = Field(ge=0)
-    dark_count: int = Field(ge=0)
+    eligible_driver_age_crashes: int = Field(ge=0)
+    young_driver_crashes: int = Field(ge=0)
+    young_driver_pct: float | None = Field(default=None, ge=0, le=100)
+    young_driver_pct_displayable: bool
     longitude: float
     latitude: float
 

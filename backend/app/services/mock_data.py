@@ -107,11 +107,20 @@ def mock_trip_hotspots() -> list[TripHotspot]:
     return [
         TripHotspot(
             cluster_id=cluster["id"],
-            name=cluster["name"],
             crash_count=cluster["crash_count"],
-            dominant_type=cluster["dominant_type"],
-            wet_count=cluster["wet_count"],
-            dark_count=cluster["dark_count"],
+            eligible_driver_age_crashes=cluster["crash_count"],
+            young_driver_crashes=max(1, round(cluster["crash_count"] * 0.35)),
+            young_driver_pct=(
+                round(
+                    100
+                    * max(1, round(cluster["crash_count"] * 0.35))
+                    / cluster["crash_count"],
+                    2,
+                )
+                if cluster["crash_count"] >= 10
+                else None
+            ),
+            young_driver_pct_displayable=cluster["crash_count"] >= 10,
             longitude=cluster["longitude"],
             latitude=cluster["latitude"],
         )
