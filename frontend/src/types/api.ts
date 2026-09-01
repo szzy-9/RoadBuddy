@@ -15,11 +15,11 @@ export interface RiskFactor {
 
 export interface TripHotspot {
   cluster_id: number
-  name: string | null
   crash_count: number
-  dominant_type: string | null
-  wet_count: number
-  dark_count: number
+  eligible_driver_age_crashes: number
+  young_driver_crashes: number
+  young_driver_pct: number | null
+  young_driver_pct_displayable: boolean
   longitude: number
   latitude: number
 }
@@ -76,16 +76,16 @@ export interface LocationSuggestionsResponse {
 
 export interface CrashClusterSummary {
   id: number
-  name: string | null
   crash_count: number
-  dominant_type: string | null
+  eligible_driver_age_crashes: number
+  young_driver_crashes: number
+  young_driver_pct: number | null
+  young_driver_pct_displayable: boolean
   longitude: number
   latitude: number
 }
 
 export interface CrashClusterDetail extends CrashClusterSummary {
-  wet_count: number
-  dark_count: number
   first_year: number | null
   last_year: number | null
 }

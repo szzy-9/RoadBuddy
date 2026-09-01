@@ -27,26 +27,36 @@ export default function ClusterPanel({ cluster, isLoading, error, onClose }: Clu
       {error && <ErrorMessage message={error} />}
       {cluster && !isLoading && (
         <>
-          <p className="eyebrow">Crash history</p>
-          <h2>{cluster.name || 'Unnamed location'}</h2>
+          <p className="eyebrow">Historical context</p>
+          <h2>Crash cluster</h2>
           <p className="cluster-total">
-            <strong>{cluster.crash_count} crashes</strong>
+            <strong>{cluster.crash_count} recorded injury crashes</strong>
             {cluster.first_year && cluster.last_year
               ? ` between ${cluster.first_year} and ${cluster.last_year}`
               : ' in the available dataset'}
           </p>
           <dl className="cluster-facts">
             <div>
-              <dt>Most common</dt>
-              <dd>{cluster.dominant_type || 'Not available'}</dd>
+              <dt>Young drivers</dt>
+              <dd><strong>{cluster.young_driver_crashes}</strong> crashes involved
+              a driver aged 16–25
+              </dd>
             </div>
+            
             <div>
-              <dt>Wet road</dt>
-              <dd><strong>{cluster.wet_count}</strong> of {cluster.crash_count} crashes</dd>
+              <dt>Known-age driver crashes</dt>
+              <dd>
+               <strong>{cluster.eligible_driver_age_crashes}</strong> crashes
+              </dd>
             </div>
+
             <div>
-              <dt>After dark</dt>
-              <dd><strong>{cluster.dark_count}</strong> of {cluster.crash_count} crashes</dd>
+              <dt>Young-driver share</dt>
+              <dd>
+               {cluster.young_driver_pct_displayable && cluster.young_driver_pct !== null
+                 ? `${cluster.young_driver_pct.toFixed(2)}%`
+                 : 'Insufficient historical data'}
+              </dd>
             </div>
           </dl>
           <p className="panel-note">Historical crash records provide context; they do not predict a future crash.</p>

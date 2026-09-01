@@ -93,8 +93,13 @@ export function searchLocations(query: string): Promise<LocationSuggestionsRespo
   return apiFetch(`/trip/locations?q=${encodeURIComponent(query)}`)
 }
 
-export function getRadarClusters(bbox: string): Promise<RadarClustersResponse> {
-  return apiFetch(`/radar/clusters?bbox=${encodeURIComponent(bbox)}`)
+export function getRadarClusters(
+  bbox: string,
+  zoom: number,
+): Promise<RadarClustersResponse> {
+  return apiFetch(
+    `/radar/clusters?bbox=${encodeURIComponent(bbox)}&zoom=${encodeURIComponent(zoom.toFixed(2))}`,
+  )
 }
 
 export function getRadarCluster(clusterId: number): Promise<CrashClusterDetail> {
