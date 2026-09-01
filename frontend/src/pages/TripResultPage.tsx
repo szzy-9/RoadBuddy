@@ -240,13 +240,18 @@ export default function TripResultPage() {
                 ) : result.hotspots.length > 0 ? (
                   <div className="hotspot-list">
                     {result.hotspots.map((hotspot) => (
-                      <article key={hotspot.cluster_id} className="hotspot-row">
-                        <span className="hotspot-count">{hotspot.crash_count}</span>
-                        <div>
-                          <h3>{hotspot.name || 'Unnamed location'}</h3>
-                          <p>{hotspot.dominant_type || 'Crash type unavailable'}</p>
-                        </div>
-                      </article>
+	              <article key={hotspot.cluster_id} className="hotspot-row">
+	               <span className="hotspot-count">{hotspot.crash_count}</span>
+	               <div>
+	                  <h3>{hotspot.crash_count} historical injury crashes</h3>
+	                  <p>
+	                    {hotspot.young_driver_crashes} involved a driver aged 16–25
+	                    {hotspot.young_driver_pct_displayable && hotspot.young_driver_pct !== null
+	                      ? ` · ${hotspot.young_driver_pct.toFixed(2)}% of crashes with known-age drivers`
+	                      : ' · Insufficient historical data for a young-driver percentage'}
+	                  </p>
+	                </div>
+	              </article>          
                     ))}
                   </div>
                 ) : (

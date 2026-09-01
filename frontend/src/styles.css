@@ -779,10 +779,10 @@ h3 { margin-top: 0; }
   padding: 0;
   color: #4c2209;
   background: var(--orange);
-  border: 4px solid rgba(255, 255, 255, .95);
+  border: 3px solid rgba(255, 255, 255, .95);
   border-radius: 50%;
   box-shadow: 0 5px 14px rgba(11, 52, 64, .28);
-  font-size: .75rem;
+  font-size: .68rem;
   font-weight: 800;
   cursor: pointer;
 }
@@ -834,7 +834,7 @@ h3 { margin-top: 0; }
   background: rgba(7, 35, 42, .42);
 }
 
-.radar-sheet { width: 100%; max-height: 76%; overflow-y: auto; }
+.radar-sheet { width: 100%; max-height: 88%; overflow-y: auto; }
 
 .cluster-panel {
   position: relative;

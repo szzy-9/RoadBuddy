@@ -96,10 +96,18 @@ export default function RadarPage() {
         bounds.getNorth(),
       ].map((value) => value.toFixed(6)).join(',')
       try {
-        const response = await getRadarClusters(bbox)
+        const zoom = map.getZoom()
+        const response = await getRadarClusters(bbox, zoom)
         if (requestId !== viewportRequestSequenceRef.current) return
 
-        setClusters(response.clusters)
+        const maxMarkers =
+          zoom < 10 ? 8 :
+          zoom < 12 ? 20 :
+          zoom < 14 ? 50 :
+          100
+
+        setClusters(response.clusters.slice(0, maxMarkers))	
+
         setDataUnavailable(response.data_status === 'unavailable')
         setMapError(null)
         setShowNoCrashHistory(
@@ -143,9 +151,18 @@ export default function RadarPage() {
       const button = document.createElement('button')
       button.type = 'button'
       button.className = `radar-marker${selectedId === cluster.id ? ' selected' : ''}`
-      button.setAttribute('aria-label', `${cluster.crash_count} crashes near ${cluster.name || 'this location'}`)
-      button.textContent = String(cluster.crash_count)
-      const size = Math.max(36, Math.min(62, 30 + Math.sqrt(cluster.crash_count) * 7))
+      button.setAttribute('aria-label', `${cluster.crash_count} historical injury crashes in this area`)
+      const zoom = map.getZoom()
+
+      const minSize = zoom < 10 ? 12 : zoom < 12 ? 20 : 28
+      const maxSize = zoom < 10 ? 18 : zoom < 12 ? 32 : 46
+
+      const size = Math.max(
+        minSize,
+        Math.min(maxSize, minSize + Math.sqrt(cluster.crash_count) * 1.5),
+      )
+
+      button.textContent = zoom >= 10 ? String(cluster.crash_count) : ''
       button.style.width = `${size}px`
       button.style.height = `${size}px`
       button.addEventListener('click', () => void selectCluster(cluster.id))

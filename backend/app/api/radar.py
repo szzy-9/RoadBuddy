@@ -42,11 +42,12 @@ def parse_bbox(bbox: str = Query(..., description="minLon,minLat,maxLon,maxLat")
 @router.get("/clusters", response_model=RadarClustersResponse)
 def clusters(
     bbox: Annotated[BoundingBox, Depends(parse_bbox)],
+    zoom: Annotated[float, Query(ge=5.5, le=24)],
     settings: Annotated[Settings, Depends(get_settings)],
     session: Annotated[Session, Depends(get_db)],
 ) -> RadarClustersResponse:
     try:
-        results = get_clusters_in_bbox(session, bbox, settings.use_mock_data)
+        results = get_clusters_in_bbox(session, bbox, settings.use_mock_data, zoom)
         status = get_crash_dataset_status(session, settings.use_mock_data)
     except CrashDataUnavailable:
         return RadarClustersResponse(
