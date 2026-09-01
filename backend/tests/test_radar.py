@@ -10,7 +10,7 @@ from app.services.crash_query import (
 
 
 def test_radar_bbox_returns_only_visible_clusters(client: TestClient) -> None:
-    response = client.get("/api/radar/clusters?bbox=144.70,-37.90,144.80,-37.82")
+    response = client.get("/api/radar/clusters?bbox=144.70,-37.90,144.80,-37.82&zoom=12")
 
     assert response.status_code == 200
     clusters = response.json()["clusters"]
@@ -28,7 +28,7 @@ def test_radar_bbox_returns_only_visible_clusters(client: TestClient) -> None:
     ],
 )
 def test_radar_bbox_validation(client: TestClient, bbox: str) -> None:
-    response = client.get("/api/radar/clusters", params={"bbox": bbox})
+    response = client.get("/api/radar/clusters", params={"bbox": bbox, "zoom": 12})
 
     assert response.status_code == 422
 
@@ -37,8 +37,11 @@ def test_cluster_detail(client: TestClient) -> None:
     response = client.get("/api/radar/clusters/101")
 
     assert response.status_code == 200
-    assert response.json()["wet_count"] == 9
-    assert response.json()["dark_count"] == 7
+    detail = response.json()
+    assert detail["crash_count"] == 12
+    assert detail["young_driver_crashes"] == 4
+    assert detail["young_driver_pct"] == 33.33
+    assert detail["young_driver_pct_displayable"] is True
 
 
 def test_radar_data_failure_returns_unavailable_without_clusters(
@@ -50,7 +53,7 @@ def test_radar_data_failure_returns_unavailable_without_clusters(
 
     monkeypatch.setattr("app.api.radar.get_clusters_in_bbox", unavailable)
 
-    response = client.get("/api/radar/clusters?bbox=144.70,-37.90,144.80,-37.82")
+    response = client.get("/api/radar/clusters?bbox=144.70,-37.90,144.80,-37.82&zoom=12")
 
     assert response.status_code == 200
     assert response.json() == {
@@ -70,4 +73,5 @@ def test_spatial_query_boundary_converts_database_failure() -> None:
             BrokenSession(),  # type: ignore[arg-type]
             BoundingBox(144.0, -38.0, 145.0, -37.0),
             use_mock_data=False,
+            zoom=12,
         )

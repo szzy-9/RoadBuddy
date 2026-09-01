@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-from sqlalchemy import Select, func, select
+from sqlalchemy import Select, func, select, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -229,29 +229,67 @@ def get_crash_dataset_status(
     )
 
 
-def get_route_hotspots(
+# Radius searched around the origin and destination, in metres. Wide enough to
+# cover the streets around an address, not the roads between two suburbs.
+ENDPOINT_SEARCH_RADIUS_METRES = 1000
+
+
+def get_endpoint_hotspots(
     session: Session,
-    route_geojson: str,
+    origin_longitude: float,
+    origin_latitude: float,
+    destination_longitude: float,
+    destination_latitude: float,
     use_mock_data: bool,
 ) -> list[TripHotspot]:
+    """Find the largest crash clusters near a trip's origin and destination.
+
+    Only the two endpoints are searched, not the roads between them: the check
+    is about the areas the driver starts and finishes in.
+
+    Args:
+        session: Database session.
+        origin_longitude: Origin longitude in decimal degrees.
+        origin_latitude: Origin latitude in decimal degrees.
+        destination_longitude: Destination longitude in decimal degrees.
+        destination_latitude: Destination latitude in decimal degrees.
+        use_mock_data: When true, return the deterministic sample instead.
+
+    Returns:
+        Up to eight hotspots within the search radius of either endpoint,
+        ordered by crash count, highest first.
+
+    Raises:
+        CrashDataUnavailable: When the crash tables cannot be queried.
+    """
     if use_mock_data:
         from app.services.mock_data import mock_trip_hotspots
 
         return mock_trip_hotspots()
 
     try:
-        route = func.ST_SetSRID(func.ST_GeomFromGeoJSON(route_geojson), 4326)
-        # Geography gives the corridor an explicit metre unit while stored
+        endpoints = [
+            func.ST_SetSRID(func.ST_MakePoint(longitude, latitude), 4326)
+            for longitude, latitude in (
+                (origin_longitude, origin_latitude),
+                (destination_longitude, destination_latitude),
+            )
+        ]
+        # Geography gives the radius an explicit metre unit while stored
         # geometries remain SRID 4326.
-        rows = session.execute(
-            _cluster_projection()
-            .where(
+        near_endpoint = or_(
+            *[
                 func.ST_DWithin(
                     func.Geography(CrashCluster200m.geom),
-                    func.Geography(route),
-                    500,
+                    func.Geography(endpoint),
+                    ENDPOINT_SEARCH_RADIUS_METRES,
                 )
-            )
+                for endpoint in endpoints
+            ]
+        )
+        rows = session.execute(
+            _cluster_projection()
+            .where(near_endpoint)
             .order_by(CrashCluster200m.total_crashes.desc())
             .limit(8)
         ).all()

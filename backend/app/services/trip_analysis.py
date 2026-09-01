@@ -17,6 +17,7 @@ from app.schemas.trip import (
     DataAvailability,
     DepartureComparison,
     DepartureComparisonOption,
+    GeoPoint,
     RiskFactor,
     RouteSummary,
     TripCheckRequest,
@@ -25,11 +26,11 @@ from app.schemas.trip import (
 )
 from app.services.crash_query import (
     CrashDataUnavailable,
-    get_route_hotspots,
+    get_endpoint_hotspots,
     route_has_high_speed_zone,
 )
 from app.services.daylight import is_after_dark
-from app.services.geocoding import GeocodingUnavailable, geocode_address
+from app.services.geocoding import Coordinates, GeocodingUnavailable, geocode_address
 from app.services.mock_data import (
     mock_after_dark,
     mock_geocode,
@@ -37,7 +38,12 @@ from app.services.mock_data import (
     mock_route_metrics,
     mock_trip_hotspots,
 )
-from app.services.risk_engine import RULE_VERSION, ConditionFlags, calculate_concern
+from app.services.risk_engine import (
+    RULE_VERSION,
+    ConditionFlags,
+    calculate_concern,
+    summarise_factors,
+)
 from app.services.routing import RoutingUnavailable, calculate_route
 from app.services.weather import WeatherConditions, get_weather_at
 
@@ -54,6 +60,17 @@ class DepartureEvaluation:
     factors: list[RiskFactor]
     comparison: DepartureComparison
     alternative: AlternativeDeparture | None
+
+
+def _to_geo_point(coordinates: Coordinates) -> GeoPoint:
+    """Convert internal geocoding coordinates into the public GeoPoint schema."""
+    return GeoPoint(longitude=coordinates.longitude, latitude=coordinates.latitude)
+
+
+def _tuple_to_geo_point(coordinates: tuple[float, float]) -> GeoPoint:
+    """Convert a mock (longitude, latitude) pair into the public GeoPoint schema."""
+    longitude, latitude = coordinates
+    return GeoPoint(longitude=longitude, latitude=latitude)
 
 
 @contextmanager
@@ -113,12 +130,16 @@ def _evaluate_departures(
             arrival_time=selected_departure + timedelta(minutes=duration_minutes),
             concern_level=selected_level,
             factor_count=len(selected_factors),
+            factors=selected_factors,
+            reason=summarise_factors(selected_factors),
         ),
         thirty_minutes_later=DepartureComparisonOption(
             departure_time=later_departure,
             arrival_time=later_departure + timedelta(minutes=duration_minutes),
             concern_level=later_level,
             factor_count=len(later_factors),
+            factors=later_factors,
+            reason=summarise_factors(later_factors),
         ),
         difference_summary=_difference_summary(selected_flags, later_flags),
     )
@@ -183,6 +204,8 @@ def _analyse_mock_trip(request: TripCheckRequest) -> TripCheckResponse:
         route=RouteSummary(
             origin=request.origin,
             destination=request.destination,
+            origin_point=_tuple_to_geo_point(origin_coordinates),
+            destination_point=_tuple_to_geo_point(destination_coordinates),
             distance_km=distance_km,
             duration_minutes=duration_minutes,
         ),
@@ -226,7 +249,14 @@ async def _analyse_production_trip(
         route_geojson = json.dumps(route.geometry, separators=(",", ":"))
         try:
             with _timed_stage("crash-history query"):
-                hotspots = get_route_hotspots(session, route_geojson, use_mock_data=False)
+                hotspots = get_endpoint_hotspots(
+                    session,
+                    origin_coordinates.longitude,
+                    origin_coordinates.latitude,
+                    destination_coordinates.longitude,
+                    destination_coordinates.latitude,
+                    use_mock_data=False,
+                )
             crash_status = DataAvailability.AVAILABLE
         except CrashDataUnavailable:
             hotspots = []
@@ -323,6 +353,8 @@ async def _analyse_production_trip(
         route=RouteSummary(
             origin=request.origin,
             destination=request.destination,
+            origin_point=_to_geo_point(origin_coordinates),
+            destination_point=_to_geo_point(destination_coordinates),
             distance_km=route.distance_km,
             duration_minutes=route.duration_minutes,
         ),

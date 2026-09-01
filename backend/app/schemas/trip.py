@@ -41,9 +41,20 @@ class LocationSuggestionsResponse(BaseModel):
     suggestions: list[LocationSuggestion]
 
 
+class GeoPoint(BaseModel):
+    """A geographic coordinate pair resolved from a free-text address."""
+
+    longitude: float = Field(ge=-180, le=180)
+    latitude: float = Field(ge=-90, le=90)
+
+
 class RouteSummary(BaseModel):
+    """Origin, destination and headline metrics for a checked route."""
+
     origin: str
     destination: str
+    origin_point: GeoPoint
+    destination_point: GeoPoint
     distance_km: float = Field(ge=0)
     duration_minutes: int = Field(ge=0)
 
@@ -71,10 +82,14 @@ class AlternativeDeparture(BaseModel):
 
 
 class DepartureComparisonOption(BaseModel):
+    """One departure option, with a short reason for its concern level."""
+
     departure_time: datetime
     arrival_time: datetime
     concern_level: ConcernLevel
     factor_count: int = Field(ge=0)
+    factors: list["RiskFactor"] = Field(default_factory=list)
+    reason: str | None = None
 
 
 class DepartureComparison(BaseModel):
@@ -98,3 +113,4 @@ class TripCheckResponse(BaseModel):
     departure_comparison: DepartureComparison
     data_status: TripDataStatus
     rule_version: str
+

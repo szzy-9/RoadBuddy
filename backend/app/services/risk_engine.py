@@ -21,6 +21,30 @@ FACTOR_LABELS = {
     "significant_crash_history": "Relevant historical crash clusters are near the route",
 }
 
+# Terse forms for the departure comparison cards, where the full labels above
+# are too long to sit under a concern badge.
+FACTOR_SHORT_LABELS = {
+    "rain": "rain",
+    "after_dark": "after dark",
+    "high_speed_zone": "high-speed road",
+    "significant_crash_history": "crash history",
+}
+
+
+def summarise_factors(factors: list[RiskFactor]) -> str | None:
+    """Build a short phrase naming why a departure carries its concern level.
+
+    Args:
+        factors: The conditions that applied to this departure option.
+
+    Returns:
+        A comma-separated phrase such as "after dark, crash history", or None
+        when no conditions applied.
+    """
+    if not factors:
+        return None
+    return ", ".join(FACTOR_SHORT_LABELS[factor.type] for factor in factors)
+
 
 def calculate_concern(flags: ConditionFlags) -> tuple[ConcernLevel, list[RiskFactor]]:
     factors = [
