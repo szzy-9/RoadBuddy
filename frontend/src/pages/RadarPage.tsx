@@ -220,13 +220,18 @@ export default function RadarPage() {
       minZoom: 5.5,
       maxBounds: [[140, -39.5], [150, -33]],
       renderWorldCopies: false,
-      attributionControl: true,
+      // The legend takes the bottom-left corner, so the logo moves to the top
+      // left and the attribution is added below at bottom-right. Both must stay
+      // visible to satisfy the Mapbox licence.
+      attributionControl: false,
+      logoPosition: 'top-left',
     })
     mapRef.current = map
     setIsMapReady(true)
     if (import.meta.env.DEV) {
       (window as unknown as { __radarMap?: mapboxgl.Map }).__radarMap = map
     }
+    map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right')
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
 
     const loadViewport = async (searchedAreaId: number | null) => {

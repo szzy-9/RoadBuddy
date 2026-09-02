@@ -4,7 +4,7 @@ export default function LoadingState({ message = 'Checking your route and condit
       <span className="loading-spinner" aria-hidden="true" />
       <div>
         <strong>{message}</strong>
-        <p>This can take a few moments.</p>
+        <p>This can take a few seconds.</p>
       </div>
     </div>
   )

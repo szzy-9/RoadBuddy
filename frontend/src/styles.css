@@ -792,27 +792,30 @@ h3 { margin-top: 0; }
 .map-card > .map-container { position: absolute; inset: 0; overflow: hidden; }
 .map-card > .map-container:focus-visible { outline: 3px solid var(--orange); outline-offset: -3px; }
 
+/*
+ * Legend carries the five-band crash-count scale. Swatch colours come from
+ * CRASH_COUNT_BANDS in RadarPage, so this rule must not set its own background.
+ *
+ * Stacked vertically in the bottom-left corner: a single row was wide enough to
+ * sit under the Mapbox logo, which the licence requires stay visible. The map
+ * moves the logo to the top-left to make room, keeping attribution bottom-right.
+ */
 .map-legend {
   position: absolute;
   z-index: 2;
   bottom: 11px;
   left: 11px;
   display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 9px 11px;
   color: var(--navy);
   background: rgba(255, 255, 255, .94);
   border-radius: 11px;
   font-size: .64rem;
   font-weight: 700;
 }
-
-/*
- * Legend now carries the five-band crash-count scale. Swatch colours come from
- * CRASH_COUNT_BANDS in RadarPage, so this rule must not set its own background.
- */
-.map-legend { gap: 9px; }
 
 .map-legend-title {
   color: var(--navy);
@@ -824,8 +827,9 @@ h3 { margin-top: 0; }
 
 .map-legend-scale {
   display: flex;
-  align-items: center;
-  gap: 9px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
   margin: 0;
   padding: 0;
   list-style: none;
