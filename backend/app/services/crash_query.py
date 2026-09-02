@@ -25,6 +25,25 @@ class ClusterNotFound(Exception):
     pass
 
 
+def _titlecase(value: str) -> str:
+    """Make an uppercase stored value readable.
+
+    Crash road names and DCA descriptions are stored in capitals, e.g.
+    "PRINCES HIGHWAY" and "REAR END(VEHICLES IN SAME LANE)". Only the casing
+    changes, so the text still reflects what the dataset recorded.
+
+    Args:
+        value: The stored value.
+
+    Returns:
+        The same text in sentence case.
+    """
+    # Source values pack a bracket against the preceding word, e.g.
+    # "REAR END(VEHICLES IN SAME LANE)", which reads badly mid-sentence.
+    cleaned = " ".join(value.replace("(", " (").split())
+    return cleaned[:1].upper() + cleaned[1:].lower()
+
+
 def _cluster_projection() -> Select[tuple]:
     return select(
         CrashCluster200m.cluster_id.label("id"),
@@ -170,14 +189,27 @@ def get_cluster_detail(
     first_year = int(year_bounds[0]) if year_bounds[0] is not None else None
     
     # The cluster table stores no road name or condition breakdown, so these are
-    # read from the crashes sitting in the cluster's own grid square.
+    # read from the crashes that snap to the cluster's own grid point. The
+    # crash's stored vicgrid_x/y are a different projection to grid_x/grid_y, so
+    # the geometry is transformed rather than compared against those columns.
+    crash_grid_x = (
+        func.round(
+            func.ST_X(func.ST_Transform(Crash.geom, CLUSTER_GRID_SRID))
+            / CLUSTER_GRID_METRES
+        )
+        * CLUSTER_GRID_METRES
+    )
+    crash_grid_y = (
+        func.round(
+            func.ST_Y(func.ST_Transform(Crash.geom, CLUSTER_GRID_SRID))
+            / CLUSTER_GRID_METRES
+        )
+        * CLUSTER_GRID_METRES
+    )
     in_cluster = (
-        Crash.vicgrid_x.is_not(None),
-        Crash.vicgrid_y.is_not(None),
-        func.floor(Crash.vicgrid_x / CLUSTER_GRID_METRES)
-        == func.floor(row.grid_x / CLUSTER_GRID_METRES),
-        func.floor(Crash.vicgrid_y / CLUSTER_GRID_METRES)
-        == func.floor(row.grid_y / CLUSTER_GRID_METRES),
+        Crash.geom.is_not(None),
+        crash_grid_x == row.grid_x,
+        crash_grid_y == row.grid_y,
     )
 
     try:
@@ -193,13 +225,15 @@ def get_cluster_detail(
             ).where(*in_cluster)
         ).one()
 
-        road_name = session.execute(
-            select(Crash.road_name)
+        # Name and type are stored apart ("PRINCES" + "HIGHWAY"), and the same
+        # name recurs under different types, so both are grouped together.
+        road = session.execute(
+            select(Crash.road_name, Crash.road_type)
             .where(*in_cluster, Crash.road_name.is_not(None))
-            .group_by(Crash.road_name)
+            .group_by(Crash.road_name, Crash.road_type)
             .order_by(func.count().desc())
             .limit(1)
-        ).scalar_one_or_none()
+        ).one_or_none()
 
         dominant_type = None
         if row.crash_count >= MIN_CRASHES_FOR_DOMINANT_TYPE:
@@ -217,9 +251,12 @@ def get_cluster_detail(
     # nothing known, a zero would read as "never happened here in the wet".
     wet_crashes = int(conditions[0]) if conditions[1] else None
     dark_crashes = int(conditions[2]) if conditions[3] else None
-    if dominant_type:
-        dominant_type = " ".join(dominant_type.split())
-        dominant_type = dominant_type[:1].upper() + dominant_type[1:].lower()
+    road_name = (
+        " ".join(word.capitalize() for word in " ".join(p for p in road if p).split())
+        if road
+        else None
+    )
+    dominant_type = _titlecase(dominant_type) if dominant_type else None
 
     return CrashClusterDetail(
         id=row.id,
@@ -291,10 +328,13 @@ def get_crash_dataset_status(
     )
 
 
-# Side length of the clustering grid, in VicGrid metres. Cluster rows store the
-# square's position, so a crash belongs to a cluster when its own VicGrid
-# coordinates fall in the same square.
+# Spacing of the clustering grid, in metres, and the projection its coordinates
+# are expressed in. Cluster rows store the grid point each crash was snapped to,
+# so membership is "rounds to this same point" rather than "falls in this box".
+# Verified against RDS: grid_x/grid_y equal ST_Transform(geom, 32755) exactly,
+# and the rounding below reproduces total_crashes for every cluster checked.
 CLUSTER_GRID_METRES = 200
+CLUSTER_GRID_SRID = 32755
 
 # Below this, "most were X" would rest on one or two records, so the dominant
 # crash type is withheld rather than shown.
