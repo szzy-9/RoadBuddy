@@ -12,7 +12,7 @@ function labelForPath(pathname: string): string {
   const match = LABELS.find(
     (item) => pathname === item.path || pathname.startsWith(`${item.path}/`),
   )
-  return match ? match.label : 'TONIGHT'
+  return match ? match.label : 'HOME'
 }
 
 export default function TopBar() {
