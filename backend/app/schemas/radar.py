@@ -24,6 +24,14 @@ class CrashClusterDetail(CrashClusterSummary):
     first_year: int | None = None
     last_year: int | None = None
 
+    # Derived from the crashes inside the cluster's 200 m grid square. Each is
+    # optional: a cluster whose crashes never recorded a road name, a surface
+    # condition or a light condition reports null rather than a guessed value.
+    road_name: str | None = None
+    dominant_crash_type: str | None = None
+    wet_crashes: int | None = Field(default=None, ge=0)
+    dark_crashes: int | None = Field(default=None, ge=0)
+
 
 class RadarClustersResponse(BaseModel):
     clusters: list[CrashClusterSummary]

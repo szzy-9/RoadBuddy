@@ -99,6 +99,11 @@ export interface CrashClusterSummary {
 export interface CrashClusterDetail extends CrashClusterSummary {
   first_year: number | null
   last_year: number | null
+  /** Optional: absent on backends predating the cluster context fields. */
+  road_name?: string | null
+  dominant_crash_type?: string | null
+  wet_crashes?: number | null
+  dark_crashes?: number | null
 }
 
 export interface RadarClustersResponse {

@@ -138,13 +138,19 @@ def get_cluster_detail(
             latitude=cluster["latitude"],
             first_year=cluster["first_year"],
             last_year=cluster["last_year"],
+            road_name=cluster.get("name"),
+            dominant_crash_type=cluster.get("dominant_type"),
+            wet_crashes=cluster.get("wet_count"),
+            dark_crashes=cluster.get("dark_count"),
         )
 
     try:
 
 
         row = session.execute(
-            _cluster_projection().where(CrashCluster200m.cluster_id == cluster_id)
+            _cluster_projection()
+            .add_columns(CrashCluster200m.grid_x, CrashCluster200m.grid_y)
+            .where(CrashCluster200m.cluster_id == cluster_id)
         ).one_or_none()
     except SQLAlchemyError as exc:
         raise CrashDataUnavailable from exc
@@ -163,6 +169,58 @@ def get_cluster_detail(
     last_year = int(year_bounds[1]) if year_bounds[1] is not None else None
     first_year = int(year_bounds[0]) if year_bounds[0] is not None else None
     
+    # The cluster table stores no road name or condition breakdown, so these are
+    # read from the crashes sitting in the cluster's own grid square.
+    in_cluster = (
+        Crash.vicgrid_x.is_not(None),
+        Crash.vicgrid_y.is_not(None),
+        func.floor(Crash.vicgrid_x / CLUSTER_GRID_METRES)
+        == func.floor(row.grid_x / CLUSTER_GRID_METRES),
+        func.floor(Crash.vicgrid_y / CLUSTER_GRID_METRES)
+        == func.floor(row.grid_y / CLUSTER_GRID_METRES),
+    )
+
+    try:
+        conditions = session.execute(
+            select(
+                func.count().filter(Crash.has_wet_surface.is_(True)),
+                func.count().filter(Crash.has_known_surface.is_(True)),
+                func.count().filter(Crash.light_condition.like("Dark%")),
+                func.count().filter(
+                    Crash.light_condition.is_not(None),
+                    Crash.light_condition != "Unk.",
+                ),
+            ).where(*in_cluster)
+        ).one()
+
+        road_name = session.execute(
+            select(Crash.road_name)
+            .where(*in_cluster, Crash.road_name.is_not(None))
+            .group_by(Crash.road_name)
+            .order_by(func.count().desc())
+            .limit(1)
+        ).scalar_one_or_none()
+
+        dominant_type = None
+        if row.crash_count >= MIN_CRASHES_FOR_DOMINANT_TYPE:
+            dominant_type = session.execute(
+                select(Crash.dca_code_description)
+                .where(*in_cluster, Crash.dca_code_description.is_not(None))
+                .group_by(Crash.dca_code_description)
+                .order_by(func.count().desc())
+                .limit(1)
+            ).scalar_one_or_none()
+    except SQLAlchemyError as exc:
+        raise CrashDataUnavailable from exc
+
+    # A count is reported only where the condition was actually recorded: with
+    # nothing known, a zero would read as "never happened here in the wet".
+    wet_crashes = int(conditions[0]) if conditions[1] else None
+    dark_crashes = int(conditions[2]) if conditions[3] else None
+    if dominant_type:
+        dominant_type = " ".join(dominant_type.split())
+        dominant_type = dominant_type[:1].upper() + dominant_type[1:].lower()
+
     return CrashClusterDetail(
         id=row.id,
         crash_count=row.crash_count,
@@ -178,6 +236,10 @@ def get_cluster_detail(
         latitude=row.latitude,
         first_year=first_year,
         last_year=last_year,
+        road_name=road_name,
+        dominant_crash_type=dominant_type,
+        wet_crashes=wet_crashes,
+        dark_crashes=dark_crashes,
     )
 
 
@@ -227,6 +289,16 @@ def get_crash_dataset_status(
         source=row.source_name,
         licence=row.licence,
     )
+
+
+# Side length of the clustering grid, in VicGrid metres. Cluster rows store the
+# square's position, so a crash belongs to a cluster when its own VicGrid
+# coordinates fall in the same square.
+CLUSTER_GRID_METRES = 200
+
+# Below this, "most were X" would rest on one or two records, so the dominant
+# crash type is withheld rather than shown.
+MIN_CRASHES_FOR_DOMINANT_TYPE = 5
 
 
 # Radius searched around the origin and destination, in metres. Wide enough to
