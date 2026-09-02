@@ -115,7 +115,13 @@ h3 { margin-top: 0; }
   width: 100%;
   min-height: 72px;
   flex: 0 0 auto;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  /* One equal column per tab, centred as a group, so hiding a tab keeps the
+     remaining ones evenly spaced instead of packed to one side. */
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  justify-content: center;
+  max-width: 420px;
+  margin-inline: auto;
   padding: 7px 8px calc(6px + env(safe-area-inset-bottom));
   background: var(--white);
   border-top: 1px solid var(--border);
