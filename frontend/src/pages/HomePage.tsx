@@ -7,15 +7,26 @@ type HomeState = 'first-open' | 'returning'
 
 export const HOME_DEMO_STATE_KEY = 'roadbuddy.homeState'
 
+/**
+ * The home screen currently opens straight on the returning state.
+ *
+ * Temporary: the first-open state offers "+ Add a place", which only flips this
+ * flag and saves nothing, so it promises a feature that does not exist yet.
+ * Restore the stored-state version below once saving a place is real.
+ */
 function getInitialHomeState(): HomeState {
-  try {
-    return window.localStorage.getItem(HOME_DEMO_STATE_KEY) === 'returning'
-      ? 'returning'
-      : 'first-open'
-  } catch {
-    return 'first-open'
-  }
+  return 'returning'
 }
+
+// function getInitialHomeState(): HomeState {
+//   try {
+//     return window.localStorage.getItem(HOME_DEMO_STATE_KEY) === 'returning'
+//       ? 'returning'
+//       : 'first-open'
+//   } catch {
+//     return 'first-open'
+//   }
+// }
 
 /**
  * Sample Victorian trips offered on the home card.
