@@ -1,9 +1,17 @@
 export type ConcernLevel = 'low' | 'medium' | 'higher'
 export type DataAvailability = 'available' | 'unavailable'
 
+export interface GeoPoint {
+  longitude: number
+  latitude: number
+}
+
 export interface RouteSummary {
   origin: string
   destination: string
+  /** Optional: absent on backends predating the coordinate fields. */
+  origin_point?: GeoPoint
+  destination_point?: GeoPoint
   distance_km: number
   duration_minutes: number
 }
@@ -35,6 +43,9 @@ export interface DepartureComparisonOption {
   arrival_time: string
   concern_level: ConcernLevel
   factor_count: number
+  /** Optional: absent on backends predating the per-option reason. */
+  factors?: RiskFactor[]
+  reason?: string | null
 }
 
 export interface DepartureComparison {
@@ -88,6 +99,11 @@ export interface CrashClusterSummary {
 export interface CrashClusterDetail extends CrashClusterSummary {
   first_year: number | null
   last_year: number | null
+  /** Optional: absent on backends predating the cluster context fields. */
+  road_name?: string | null
+  dominant_crash_type?: string | null
+  wet_crashes?: number | null
+  dark_crashes?: number | null
 }
 
 export interface RadarClustersResponse {

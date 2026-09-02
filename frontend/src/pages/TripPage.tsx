@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { checkTrip } from '../api/client'
 import AddressAutocomplete from '../components/AddressAutocomplete'
 import LoadingState from '../components/LoadingState'
+import { saveTripResult } from '../state/tripResult'
 
 function localDateTimeDefault(): string {
   const date = new Date(Date.now() + 30 * 60 * 1000)
@@ -54,7 +55,8 @@ export default function TripPage() {
         destination: destination.trim(),
         departure_time: formattedDeparture,
       })
-      navigate('/trip/result', { state: { tripResult: response } })
+      saveTripResult(response)
+      navigate('/trip/result')
     } catch (requestError) {
       setError(
         requestError instanceof Error

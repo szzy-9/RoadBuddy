@@ -9,6 +9,11 @@ interface AddressAutocompleteProps {
   onSelect?: (suggestion: LocationSuggestion) => void
   label: string
   placeholder: string
+  /**
+   * Treat the initial `value` as an already-chosen suggestion, suppressing the
+   * lookup that a prefilled field would otherwise fire on mount.
+   */
+  initialValueIsSelected?: boolean
 }
 
 export default function AddressAutocomplete({
@@ -17,12 +22,15 @@ export default function AddressAutocomplete({
   onSelect,
   label,
   placeholder,
+  initialValueIsSelected = false,
 }: AddressAutocompleteProps) {
   const inputId = useId()
   const listboxId = `${inputId}-suggestions`
   const containerRef = useRef<HTMLDivElement | null>(null)
   const requestSequence = useRef(0)
-  const selectedLabel = useRef<string | null>(null)
+  const selectedLabel = useRef<string | null>(
+    initialValueIsSelected && value ? value : null,
+  )
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)

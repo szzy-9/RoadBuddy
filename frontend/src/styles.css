@@ -225,7 +225,21 @@ h3 { margin-top: 0; }
 }
 
 .home-first-card { min-height: 278px; background: var(--home-dark-teal); }
-.home-returning-card { min-height: 252px; padding-top: 32px; background: var(--home-navy); }
+.home-returning-card { min-height: 214px; padding-top: 32px; background: var(--home-navy); }
+
+.home-sample-route {
+  margin: 0;
+  color: #a9ccc3;
+  font-size: .84rem;
+  line-height: 1.5;
+}
+
+.home-sample-error {
+  margin: 12px 0 0;
+  color: #ffd9d2;
+  font-size: .82rem;
+  line-height: 1.45;
+}
 
 .home-primary-icon { margin-bottom: 21px; font-size: 1.55rem; line-height: 1; }
 
@@ -266,6 +280,11 @@ h3 { margin-top: 0; }
   font-weight: 750;
   text-decoration: none;
   cursor: pointer;
+}
+
+.home-primary-cta:disabled {
+  opacity: .72;
+  cursor: progress;
 }
 
 .home-separator {
@@ -625,7 +644,17 @@ h3 { margin-top: 0; }
   border-radius: 16px;
 }
 
-.departure-comparison-option > p {
+.departure-option-reason {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-transform: none;
+}
+
+.departure-comparison-option > p:not(.departure-option-reason) {
   margin: 0 0 12px;
   color: var(--green-dark);
   font-size: .66rem;
@@ -673,7 +702,11 @@ h3 { margin-top: 0; }
 .factor-icon { display: grid; width: 36px; height: 36px; flex: 0 0 auto; place-items: center; color: #6f3c0f; background: #fde4c6; border-radius: 11px; }
 
 .hotspot-list { display: grid; gap: 2px; }
-.hotspot-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
+.hotspot-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); color: inherit; text-decoration: none; }
+.hotspot-row:hover h3, .hotspot-row:focus-visible h3 { color: var(--green); }
+.hotspot-row > div { min-width: 0; flex: 1 1 auto; }
+.hotspot-arrow { flex: 0 0 auto; color: var(--green); font-size: 1.05rem; font-weight: 700; }
+.sheet-hint { margin: 0 0 10px; color: var(--muted); font-size: .74rem; }
 .hotspot-count { display: grid; width: 41px; height: 41px; flex: 0 0 auto; place-items: center; color: var(--white); background: var(--navy); border-radius: 13px; font-weight: 800; }
 .hotspot-row h3 { margin: 0 0 3px; font-size: .86rem; }
 .hotspot-row p { margin: 0; color: var(--muted); font-size: .72rem; }
@@ -769,7 +802,46 @@ h3 { margin-top: 0; }
   font-weight: 700;
 }
 
-.map-legend span { width: 14px; height: 14px; background: var(--orange); border: 3px solid var(--white); border-radius: 50%; box-shadow: 0 0 0 1px #b7602d; }
+/*
+ * Legend now carries the five-band crash-count scale. Swatch colours come from
+ * CRASH_COUNT_BANDS in RadarPage, so this rule must not set its own background.
+ */
+.map-legend { gap: 9px; }
+
+.map-legend-title {
+  color: var(--navy);
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.map-legend-scale {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.map-legend-scale li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--navy);
+  font-size: .64rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.map-legend-swatch {
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(11, 52, 64, .25);
+}
 
 .radar-marker-root { display: grid; place-items: center; }
 
@@ -788,7 +860,11 @@ h3 { margin-top: 0; }
 }
 
 .radar-marker:hover,
-.radar-marker.selected { z-index: 5; color: #06291b; background: var(--green); transform: scale(1.08); }
+.radar-marker.selected {
+  z-index: 5;
+  border-color: var(--navy);
+  transform: scale(1.12);
+}
 
 .radar-status-message {
   position: absolute;
@@ -851,11 +927,15 @@ h3 { margin-top: 0; }
 .panel-close { color: var(--white); background: rgba(255, 255, 255, .1); }
 .cluster-total { margin: 0 0 14px; color: #b8c8d4; font-size: .8rem; line-height: 1.4; }
 .cluster-total strong { color: var(--white); }
-.cluster-facts { display: grid; gap: 1px; overflow: hidden; margin: 0; border: 1px solid rgba(255, 255, 255, .1); border-radius: 14px; }
-.cluster-facts div { padding: 10px 12px; background: rgba(255, 255, 255, .055); }
-.cluster-facts dt { margin-bottom: 3px; color: #8fa7b8; font-size: .63rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.cluster-facts dd { margin: 0; font-size: .78rem; }
-.cluster-facts dd strong { color: var(--orange); font-size: .95rem; }
+.cluster-stat-list { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.cluster-stat { display: flex; align-items: flex-start; gap: 9px; color: #cfdde6; font-size: .78rem; line-height: 1.45; }
+.cluster-stat strong { color: var(--white); font-weight: 700; }
+.cluster-stat-dot { width: 9px; height: 9px; flex: 0 0 auto; margin-top: .38em; border-radius: 50%; }
+/* Dot colours follow the crash-count bands used on the map markers, so the
+   panel reads as part of the same scale rather than a second colour language. */
+.cluster-stat-dot-crash-type { background: #b8442a; }
+.cluster-stat-dot-wet { background: #e9a63c; }
+.cluster-stat-dot-dark { background: #7fb2c8; }
 .panel-note { margin: 13px 0 0; color: #8fa7b8; font-size: .65rem; line-height: 1.4; }
 .cluster-panel-empty { display: grid; min-height: 190px; place-content: center; text-align: center; }
 .cluster-panel-empty p { margin: 0; color: #9fb2c2; font-size: .8rem; line-height: 1.5; }
@@ -1115,7 +1195,7 @@ h3 { margin-top: 0; }
   .top-bar { padding-top: 14px; padding-bottom: 13px; }
   .home-page { padding-bottom: 12px; }
   .home-first-card { min-height: 230px; }
-  .home-returning-card { min-height: 210px; padding-top: 24px; }
+  .home-returning-card { min-height: 188px; padding-top: 24px; }
   .home-separator { margin: 15px 0 12px; }
   .home-list-card { min-height: 70px; padding-top: 11px; padding-bottom: 11px; }
   .home-card-stack { gap: 9px; margin-top: 11px; }

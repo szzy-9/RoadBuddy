@@ -57,6 +57,59 @@ def test_trip_check_returns_deterministic_mock_result(client: TestClient) -> Non
     assert payload["alternative_departure"] is None
 
 
+def test_trip_check_returns_route_coordinates(client: TestClient) -> None:
+    response = client.post("/api/trip/check", json=VALID_REQUEST)
+
+    assert response.status_code == 200
+    route = response.json()["route"]
+    for key in ("origin_point", "destination_point"):
+        point = route[key]
+        assert -180 <= point["longitude"] <= 180
+        assert -90 <= point["latitude"] <= 90
+
+
+def test_hotspots_query_uses_endpoints_not_route_geometry(monkeypatch) -> None:
+    from app.services import trip_analysis
+
+    resolved = {
+        VALID_REQUEST["origin"]: (144.6570, -37.8233),
+        VALID_REQUEST["destination"]: (144.9465, -37.8150),
+    }
+    received: dict[str, object] = {}
+
+    async def fake_geocode(address, _settings, _client):
+        longitude, latitude = resolved[address]
+        return Coordinates(longitude=longitude, latitude=latitude, label=address)
+
+    async def fake_route(_origin, _destination, _settings, _client):
+        return RouteResult(
+            distance_km=25.3,
+            duration_minutes=28,
+            geometry={"type": "LineString", "coordinates": [[144.66, -37.82], [144.95, -37.82]]},
+        )
+
+    async def fake_weather(*_args, **_kwargs):
+        return WeatherConditions(rain=False, precipitation_mm=0.0)
+
+    def capture_hotspots(_session, *coordinates, **_kwargs):
+        received["coordinates"] = coordinates
+        return []
+
+    monkeypatch.setattr(trip_analysis, "geocode_address", fake_geocode)
+    monkeypatch.setattr(trip_analysis, "calculate_route", fake_route)
+    monkeypatch.setattr(trip_analysis, "get_weather_at", fake_weather)
+    monkeypatch.setattr(trip_analysis, "get_endpoint_hotspots", capture_hotspots)
+    monkeypatch.setattr(trip_analysis, "route_has_high_speed_zone", lambda *_args: False)
+    monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
+
+    request = TripCheckRequest.model_validate(VALID_REQUEST)
+    settings = Settings(use_mock_data=False, ors_api_key="test-only")
+    asyncio.run(_analyse_production_trip(request, settings, Mock()))
+
+    # Only the two endpoints are passed; the route geometry is not consulted.
+    assert received["coordinates"] == (144.6570, -37.8233, 144.9465, -37.8150)
+
+
 def test_trip_comparison_summarises_rain_easing(client: TestClient) -> None:
     response = client.post(
         "/api/trip/check",
@@ -125,7 +178,7 @@ def test_weather_failure_keeps_route_and_marks_weather_unavailable(monkeypatch) 
     monkeypatch.setattr(trip_analysis, "geocode_address", fake_geocode)
     monkeypatch.setattr(trip_analysis, "calculate_route", fake_route)
     monkeypatch.setattr(trip_analysis, "get_weather_at", fail_weather)
-    monkeypatch.setattr(trip_analysis, "get_route_hotspots", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(trip_analysis, "get_endpoint_hotspots", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(trip_analysis, "route_has_high_speed_zone", lambda *_args: False)
     monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
 
@@ -179,7 +232,7 @@ def test_optional_database_failures_keep_trip_result_available(monkeypatch) -> N
     monkeypatch.setattr(trip_analysis, "geocode_address", fake_geocode)
     monkeypatch.setattr(trip_analysis, "calculate_route", fake_route)
     monkeypatch.setattr(trip_analysis, "get_weather_at", fake_weather)
-    monkeypatch.setattr(trip_analysis, "get_route_hotspots", fail_optional_data)
+    monkeypatch.setattr(trip_analysis, "get_endpoint_hotspots", fail_optional_data)
     monkeypatch.setattr(trip_analysis, "route_has_high_speed_zone", fail_optional_data)
     monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
 
