@@ -392,7 +392,7 @@ export default function RadarPage() {
           value={roadQuery}
           onChange={handleQueryChange}
           onSelect={selectRoadLocation}
-          placeholder="Search a road"
+          placeholder="Search a suburb, road or postcode"
           initialValueIsSelected={focus !== null}
         />
       </div>

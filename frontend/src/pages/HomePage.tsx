@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { checkTrip } from '../api/client'
-import { saveTripResult } from '../state/tripResult'
+import { Link } from 'react-router-dom'
 
 type HomeState = 'first-open' | 'returning'
 
@@ -29,50 +27,18 @@ function getInitialHomeState(): HomeState {
 // }
 
 /**
- * Sample Victorian trips offered on the home card.
+ * What a trip check looks at, shown on the home card so the app explains
+ * itself before asking for an address.
  *
- * Each entry is a real suburb-and-postcode pair the geocoder resolves, so the
- * demo trip runs through the same check as a hand-typed one.
+ * Each entry names a real risk factor the backend returns, so the promise here
+ * matches what the result screen actually shows.
  */
-const SAMPLE_TRIPS: Array<{ origin: string; destination: string }> = [
-  { origin: 'Tarneit VIC 3029', destination: 'Docklands VIC 3008' },
-  { origin: 'Frankston VIC 3199', destination: 'Clayton VIC 3168' },
-  { origin: 'Werribee VIC 3030', destination: 'Carlton VIC 3053' },
-  { origin: 'Dandenong VIC 3175', destination: 'Southbank VIC 3006' },
-  { origin: 'Geelong VIC 3220', destination: 'Footscray VIC 3011' },
-  { origin: 'Craigieburn VIC 3064', destination: 'Richmond VIC 3121' },
-  { origin: 'Ballarat VIC 3350', destination: 'Sunshine VIC 3020' },
-  { origin: 'Pakenham VIC 3810', destination: 'Box Hill VIC 3128' },
+const CHECK_HIGHLIGHTS: Array<{ icon: string; label: string }> = [
+  { icon: '\u{1F327}\uFE0F', label: 'Rain on the way' },
+  { icon: '\u{1F319}', label: 'Driving after dark' },
+  { icon: '\u{1F6A6}', label: 'High-speed roads' },
+  { icon: '\u{1F4CD}', label: 'Past crash hotspots' },
 ]
-
-/** @returns A sample trip chosen at random for this page view. */
-function pickSampleTrip() {
-  return SAMPLE_TRIPS[Math.floor(Math.random() * SAMPLE_TRIPS.length)]
-}
-
-/** @param value - A "Suburb VIC 1234" sample address. @returns The suburb alone. */
-function suburbOf(value: string): string {
-  return value.replace(/\s+VIC\s+\d{4}$/, '')
-}
-
-/**
- * Build the departure timestamp the sample check uses: the current time,
- * matching the default the trip form offers.
- *
- * @returns An ISO 8601 timestamp with the local UTC offset.
- */
-function sampleDepartureTime(): string {
-  const date = new Date(Date.now())
-  const offsetMinutes = -date.getTimezoneOffset()
-  const sign = offsetMinutes >= 0 ? '+' : '-'
-  const absolute = Math.abs(offsetMinutes)
-  const hours = String(Math.floor(absolute / 60)).padStart(2, '0')
-  const minutes = String(absolute % 60).padStart(2, '0')
-  const local = new Date(date.getTime() + offsetMinutes * 60_000)
-    .toISOString()
-    .slice(0, 19)
-  return `${local}${sign}${hours}:${minutes}`
-}
 
 function HomeListCard({
   icon,
@@ -112,35 +78,7 @@ function HomeListCard({
 }
 
 export default function HomePage() {
-  const navigate = useNavigate()
   const [homeState, setHomeState] = useState<HomeState>(getInitialHomeState)
-  // Fixed for the life of this page view, so the label and the check that runs
-  // on tap always describe the same trip.
-  const [sampleTrip] = useState(pickSampleTrip)
-  const [isCheckingSample, setIsCheckingSample] = useState(false)
-  const [sampleError, setSampleError] = useState<string | null>(null)
-
-  async function checkSampleTrip() {
-    if (isCheckingSample) return
-    setSampleError(null)
-    setIsCheckingSample(true)
-    try {
-      const response = await checkTrip({
-        origin: sampleTrip.origin,
-        destination: sampleTrip.destination,
-        departure_time: sampleDepartureTime(),
-      })
-      saveTripResult(response)
-      navigate('/trip/result')
-    } catch (requestError) {
-      setSampleError(
-        requestError instanceof Error
-          ? requestError.message
-          : 'Something went wrong. Please try again.',
-      )
-      setIsCheckingSample(false)
-    }
-  }
 
   function showReturningState() {
     try {
@@ -183,24 +121,23 @@ export default function HomePage() {
       ) : (
         <div className="home-state home-state-returning">
           <article className="home-primary-card home-returning-card">
-            <h1>
-              {suburbOf(sampleTrip.origin)} <span aria-hidden="true">→</span>{' '}
-              {suburbOf(sampleTrip.destination)}
-            </h1>
-            <p className="home-sample-route">
-              {sampleTrip.origin} to {sampleTrip.destination}
+            <p className="home-eyebrow">BEFORE YOU DRIVE</p>
+            <h1>Know what the road throws at you</h1>
+            <p className="home-primary-blurb">
+              Tell us where you are heading and when. We check the conditions on
+              that route and flag what deserves extra care.
             </p>
-            {sampleError ? (
-              <p className="home-sample-error" role="alert">{sampleError}</p>
-            ) : null}
-            <button
-              className="home-primary-cta"
-              type="button"
-              onClick={checkSampleTrip}
-              disabled={isCheckingSample}
-            >
-              {isCheckingSample ? 'Checking this trip…' : 'Check this trip →'}
-            </button>
+            <ul className="home-highlights">
+              {CHECK_HIGHLIGHTS.map((highlight) => (
+                <li key={highlight.label}>
+                  <span aria-hidden="true">{highlight.icon}</span>
+                  {highlight.label}
+                </li>
+              ))}
+            </ul>
+            <Link className="home-primary-cta" to="/trip">
+              Check my trip →
+            </Link>
           </article>
 
           <div className="home-card-stack">
