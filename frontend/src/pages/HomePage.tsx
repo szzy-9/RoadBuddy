@@ -56,13 +56,13 @@ function suburbOf(value: string): string {
 }
 
 /**
- * Build the departure timestamp the sample check uses: 30 minutes from now,
+ * Build the departure timestamp the sample check uses: the current time,
  * matching the default the trip form offers.
  *
  * @returns An ISO 8601 timestamp with the local UTC offset.
  */
 function sampleDepartureTime(): string {
-  const date = new Date(Date.now() + 30 * 60 * 1000)
+  const date = new Date(Date.now())
   const offsetMinutes = -date.getTimezoneOffset()
   const sign = offsetMinutes >= 0 ? '+' : '-'
   const absolute = Math.abs(offsetMinutes)

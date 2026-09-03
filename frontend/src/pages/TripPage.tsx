@@ -6,7 +6,7 @@ import LoadingState from '../components/LoadingState'
 import { saveTripResult } from '../state/tripResult'
 
 function localDateTimeDefault(): string {
-  const date = new Date(Date.now() + 30 * 60 * 1000)
+  const date = new Date(Date.now())
   const offset = date.getTimezoneOffset() * 60_000
   return new Date(date.getTime() - offset).toISOString().slice(0, 16)
 }
