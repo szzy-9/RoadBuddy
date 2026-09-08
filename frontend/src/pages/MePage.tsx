@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { COMPLETED_TOPICS_KEY } from './LearnPage'
+import './MePage.css'
 
 const ALL_TOPICS = [
   'Night driving',

@@ -1,0 +1,59 @@
+/* Not found */
+.not-found-page { display: grid; min-height: 46vh; place-items: center; }
+
+.not-found-card {
+  width: min(560px, 100%);
+  padding: 40px 36px;
+  text-align: center;
+}
+
+.not-found-card h1 {
+  margin: 0 0 14px;
+  color: var(--navy);
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  letter-spacing: -.04em;
+  line-height: 1.1;
+}
+
+.not-found-lead {
+  margin: 0 0 26px;
+  color: var(--muted);
+  font-size: .95rem;
+  line-height: 1.6;
+}
+
+/* The path can be long and arbitrary, so it wraps rather than widening the
+   card or spilling out of it. */
+.not-found-lead code {
+  padding: 2px 6px;
+  overflow-wrap: anywhere;
+  color: var(--navy);
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: .88em;
+}
+
+/* Chained with .button for the same cascade reason as the submit button. */
+.button.not-found-cta {
+  width: 100%;
+  min-height: 54px;
+  color: var(--white);
+  background: var(--navy);
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.button.not-found-cta:hover { background: #16404c; }
+.button.not-found-cta span[aria-hidden] { color: var(--orange); font-size: 1.05rem; }
+
+.not-found-alt {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: .84rem;
+  line-height: 1.55;
+}
+
+.not-found-alt a { color: var(--green-dark); font-weight: 700; text-decoration: none; }
+.not-found-alt a:hover { text-decoration: underline; }

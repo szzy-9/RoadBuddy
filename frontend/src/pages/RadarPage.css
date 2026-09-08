@@ -1,0 +1,238 @@
+/* Radar */
+/* The map fills whatever the shell leaves below the sticky header. The header
+   is the only fixed chrome on desktop, so its height is the single thing
+   subtracted here; the mobile rules add the bottom nav to that. */
+.radar-page {
+  --radar-chrome: 69px;
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  height: calc(100dvh - var(--radar-chrome));
+}
+
+.radar-heading h1 { font-size: clamp(1.5rem, 2.6vw, 2rem); }
+
+/* Floats over the top-left of the map. Width is capped so it does not run the
+   full width of a desktop screen, and it clears the Mapbox logo. */
+.radar-search {
+  position: absolute;
+  z-index: 20;
+  top: 14px;
+  left: 14px;
+  width: min(380px, calc(100% - 28px));
+}
+
+.radar-search input { box-shadow: 0 6px 18px rgba(11, 52, 64, .16); }
+
+.radar-search .address-autocomplete { gap: 5px; }
+
+.radar-search label {
+  color: var(--navy);
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.radar-search input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 13px;
+  color: var(--navy);
+  background: var(--white);
+  border: 1px solid #cfdcda;
+  border-radius: 13px;
+  outline: none;
+}
+
+.radar-search input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(21, 148, 95, .13);
+}
+
+.layer-chip {
+  display: flex;
+  min-height: 34px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  color: var(--navy);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.layer-chip span { width: 9px; height: 9px; background: var(--orange); border-radius: 50%; box-shadow: 0 0 0 3px #fce1c8; }
+
+.radar-layout { display: flex; min-height: 0; flex: 1; }
+
+/* Edge to edge: no border or radius, since the map now meets the viewport
+   rather than sitting on the page background as a card. */
+.map-card {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  background: #dce5df;
+}
+
+.map-card > .map-container { position: absolute; inset: 0; overflow: hidden; }
+.map-card > .map-container:focus-visible { outline: 3px solid var(--orange); outline-offset: -3px; }
+
+/*
+ * Legend carries the five-band crash-count scale. Swatch colours come from
+ * CRASH_COUNT_BANDS in RadarPage, so this rule must not set its own background.
+ *
+ * Stacked vertically in the bottom-left corner: a single row was wide enough to
+ * sit under the Mapbox logo, which the licence requires stay visible. The map
+ * moves the logo to the top-left to make room, keeping attribution bottom-right.
+ */
+.map-legend {
+  position: absolute;
+  z-index: 2;
+  bottom: 14px;
+  left: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 15px;
+  color: var(--navy);
+  background: rgba(255, 255, 255, .94);
+  border-radius: 13px;
+  box-shadow: 0 6px 18px rgba(11, 52, 64, .14);
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.map-legend-title {
+  color: var(--navy);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.map-legend-scale {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.map-legend-scale li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--navy);
+  font-size: .8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.map-legend-swatch {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(11, 52, 64, .25);
+}
+
+.radar-marker-root { display: grid; place-items: center; }
+
+.radar-marker {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #4c2209;
+  background: var(--orange);
+  border: 3px solid rgba(255, 255, 255, .95);
+  border-radius: 50%;
+  box-shadow: 0 5px 14px rgba(11, 52, 64, .28);
+  font-size: .68rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.radar-marker:hover,
+.radar-marker.selected {
+  z-index: 5;
+  border-color: var(--navy);
+  transform: scale(1.12);
+}
+
+.radar-status-message {
+  position: absolute;
+  z-index: 4;
+  top: 10px;
+  right: 48px;
+  left: 10px;
+  padding: 9px 11px;
+  color: #743b29;
+  background: rgba(255, 246, 239, .96);
+  border: 1px solid #edc8bf;
+  border-radius: 11px;
+  font-size: .68rem;
+  line-height: 1.35;
+}
+
+.radar-no-history {
+  position: absolute;
+  z-index: 4;
+  right: 10px;
+  bottom: 52px;
+  left: 10px;
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  color: var(--navy);
+  background: rgba(255, 255, 255, .96);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: .68rem;
+  line-height: 1.35;
+}
+
+.radar-no-history strong { font-size: .76rem; }
+.radar-no-history span { color: var(--muted); }
+
+.radar-sheet-backdrop {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 14px;
+  background: rgba(7, 35, 42, .42);
+}
+
+.radar-sheet { width: min(400px, 100%); max-height: 100%; overflow-y: auto; }
+
+@media (max-width: 820px) {
+  /* The fixed bottom nav covers the foot of the screen here, so the map stops
+     exactly where the nav starts instead of running underneath it. */
+  .radar-page {
+    --radar-chrome: calc(61px + 72px + env(safe-area-inset-bottom));
+  }
+
+  /* Stops short of the right edge so the zoom control stays reachable: the
+     buttons sit about 40px in, plus their own margin. */
+  .radar-search {
+    top: 12px;
+    left: 12px;
+    width: calc(100% - 70px);
+  }
+
+  .radar-search input { min-height: 40px; font-size: .85rem; }
+  .radar-sheet-backdrop { justify-content: stretch; padding: 0; }
+  .radar-sheet { width: 100%; max-height: 88%; }
+}

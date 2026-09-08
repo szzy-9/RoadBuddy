@@ -14,6 +14,21 @@ interface AddressAutocompleteProps {
    * lookup that a prefilled field would otherwise fire on mount.
    */
   initialValueIsSelected?: boolean
+  /**
+   * Treat the current `value` as already resolved, however it arrived.
+   *
+   * Unlike `initialValueIsSelected` this is honoured on every change, so a
+   * field filled by "Use my location" or by the example trip does not fire a
+   * lookup and reopen the dropdown over the form.
+   */
+  valueIsResolved?: boolean
+  /**
+   * Render the label for screen readers only.
+   *
+   * Used where the surrounding form already shows a visible label, so the name
+   * is not printed twice.
+   */
+  hideLabel?: boolean
 }
 
 export default function AddressAutocomplete({
@@ -23,6 +38,8 @@ export default function AddressAutocomplete({
   label,
   placeholder,
   initialValueIsSelected = false,
+  valueIsResolved = false,
+  hideLabel = false,
 }: AddressAutocompleteProps) {
   const inputId = useId()
   const listboxId = `${inputId}-suggestions`
@@ -53,6 +70,18 @@ export default function AddressAutocomplete({
   useEffect(() => {
     const query = value.trim()
     const requestId = ++requestSequence.current
+
+    // Filled from a known-good source (geolocation, the example trip), so there
+    // is nothing to look up and no dropdown to open.
+    if (valueIsResolved) {
+      setSuggestions([])
+      setIsLoading(false)
+      setIsOpen(false)
+      setHasSearched(false)
+      setSearchError(false)
+      setActiveIndex(-1)
+      return
+    }
 
     if (selectedLabel.current === value) {
       selectedLabel.current = null
@@ -97,7 +126,7 @@ export default function AddressAutocomplete({
     }, 300)
 
     return () => window.clearTimeout(timeoutId)
-  }, [value])
+  }, [value, valueIsResolved])
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     requestSequence.current += 1
@@ -148,7 +177,9 @@ export default function AddressAutocomplete({
 
   return (
     <div className="address-autocomplete" ref={containerRef}>
-      <label htmlFor={inputId}><span>{label}</span></label>
+      <label className={hideLabel ? 'sr-only' : undefined} htmlFor={inputId}>
+        <span>{label}</span>
+      </label>
       <input
         id={inputId}
         type="text"

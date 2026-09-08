@@ -1,6 +1,7 @@
 import type { CrashClusterDetail } from '../types/api'
 import ErrorMessage from './ErrorMessage'
 import LoadingState from './LoadingState'
+import './ClusterPanel.css'
 
 interface ClusterPanelProps {
   cluster: CrashClusterDetail | null
@@ -65,7 +66,9 @@ export default function ClusterPanel({ cluster, isLoading, error, onClose }: Clu
 
   return (
     <aside className="cluster-panel" aria-live="polite">
-      <button className="panel-close" type="button" onClick={onClose} aria-label="Close cluster details">×</button>
+      <button className="panel-close" type="button" onClick={onClose} aria-label="Close cluster details">
+        <span aria-hidden="true">✕</span>
+      </button>
       {isLoading && <LoadingState message="Loading cluster details…" />}
       {error && <ErrorMessage message={error} />}
       {cluster && !isLoading && (
