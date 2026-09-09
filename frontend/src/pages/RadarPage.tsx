@@ -10,6 +10,7 @@ import type {
   CrashClusterSummary,
   LocationSuggestion,
 } from '../types/api'
+import './RadarPage.css'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || ''
 
@@ -220,11 +221,11 @@ export default function RadarPage() {
       minZoom: 5.5,
       maxBounds: [[140, -39.5], [150, -33]],
       renderWorldCopies: false,
-      // The legend takes the bottom-left corner, so the logo moves to the top
-      // left and the attribution is added below at bottom-right. Both must stay
-      // visible to satisfy the Mapbox licence.
+      // The legend holds the bottom-left corner and the search box floats over
+      // the top left, so the logo sits bottom-right with the attribution.
+      // Both must stay visible to satisfy the Mapbox licence.
       attributionControl: false,
-      logoPosition: 'top-left',
+      logoPosition: 'bottom-right',
     })
     mapRef.current = map
     setIsMapReady(true)
@@ -319,6 +320,19 @@ export default function RadarPage() {
     return () => { cancelled = true }
   }, [focus, focusPoint])
 
+  // The map now sizes itself from the viewport, so its container changes shape
+  // on rotation, window resize, and when the mobile browser's address bar
+  // collapses. Mapbox only reads its container size when told to, so without
+  // this the canvas keeps the size it had on the first paint.
+  useEffect(() => {
+    const container = mapContainer.current
+    if (!container || !isMapReady) return
+
+    const observer = new ResizeObserver(() => mapRef.current?.resize())
+    observer.observe(container)
+    return () => observer.disconnect()
+  }, [isMapReady])
+
   // Fly once both the resolved point and the map are available. Ordering is not
   // guaranteed: the lookup can finish before or after the map is constructed.
   const hasFlownToFocusRef = useRef(false)
@@ -386,17 +400,6 @@ export default function RadarPage() {
 
   return (
     <div className="radar-page">
-      <div className="radar-search">
-        <AddressAutocomplete
-          label=""
-          value={roadQuery}
-          onChange={handleQueryChange}
-          onSelect={selectRoadLocation}
-          placeholder="Search a suburb, road or postcode"
-          initialValueIsSelected={focus !== null}
-        />
-      </div>
-
       {!MAPBOX_TOKEN ? (
         <div className="map-token-message">
           <span aria-hidden="true">⌖</span>
@@ -407,6 +410,18 @@ export default function RadarPage() {
         <div className="radar-layout">
           <div className="map-card">
             <div ref={mapContainer} className="map-container" aria-label="Map of historical crash clusters" />
+            {/* Floated over the map rather than stacked above it, so the map
+                itself keeps the full height of the screen. */}
+            <div className="radar-search">
+              <AddressAutocomplete
+                label=""
+                value={roadQuery}
+                onChange={handleQueryChange}
+                onSelect={selectRoadLocation}
+                placeholder="Search a suburb, road or postcode"
+                initialValueIsSelected={focus !== null}
+              />
+            </div>
             <div className="map-legend">
               <span className="map-legend-title">Crashes</span>
               <ul className="map-legend-scale">

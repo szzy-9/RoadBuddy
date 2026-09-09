@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './LearnPage.css'
 
 type Lesson = {
   id: string

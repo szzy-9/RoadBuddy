@@ -1,0 +1,115 @@
+/* Learn */
+.learn-page,
+.me-page {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0 18px 14px;
+}
+
+.learn-scroll,
+.me-scroll {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 6px;
+}
+
+.learn-question {
+  padding: 17px;
+  color: var(--white);
+  background: var(--navy);
+  border-radius: 20px;
+}
+
+.learn-pill {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 9px;
+  color: var(--navy);
+  background: var(--orange);
+  border-radius: 6px;
+  font-size: .6rem;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.learn-question h2 {
+  margin: 0 0 13px;
+  font-size: 1.02rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.learn-options { display: grid; gap: 8px; }
+
+.learn-option {
+  width: 100%;
+  padding: 13px 14px;
+  color: var(--navy);
+  background: var(--white);
+  border: 0;
+  border-radius: 12px;
+  font-size: .84rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.learn-option:disabled { cursor: default; }
+.learn-option.correct { color: #082d22; background: var(--light-green); }
+.learn-option.incorrect { color: var(--muted); background: #d3dcd9; }
+
+.learn-verdict {
+  margin-top: 12px;
+  padding: 15px;
+  border-radius: 16px;
+}
+
+.learn-verdict.is-correct { color: #082d22; background: var(--light-green); }
+.learn-verdict.is-incorrect { color: var(--navy); background: #e7edeb; border: 1px dashed #a9bab6; }
+.learn-verdict h3 { margin: 0 0 4px; font-size: .89rem; font-weight: 750; }
+.learn-verdict p { margin: 0; font-size: .8rem; line-height: 1.5; }
+
+.learn-why {
+  margin-top: 11px;
+  padding: 15px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.learn-why p { margin: 0; font-size: .82rem; line-height: 1.6; }
+.learn-why .eyebrow { margin-bottom: 6px; }
+
+.learn-source {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+}
+
+.learn-source .eyebrow { color: var(--muted); }
+.learn-source strong { font-size: .8rem; font-weight: 750; }
+
+.learn-actions { display: grid; gap: 4px; margin-top: 13px; }
+.learn-actions .button:disabled { background: var(--light-green); cursor: default; }
+
+.me-disclaimer {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: .68rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.me-footnote {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: .68rem;
+  line-height: 1.6;
+  text-align: center;
+}
