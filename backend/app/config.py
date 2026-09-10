@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     app_name: str = "RoadBuddy API"
     database_url: str = "postgresql+psycopg://roadbuddy:roadbuddy@localhost:5432/roadbuddy"
     ors_api_key: str | None = None
+    mapbox_token: str | None = None
     open_meteo_base_url: str = "https://api.open-meteo.com/v1"
     allowed_origins: str = "http://localhost:5173"
     use_mock_data: bool = False

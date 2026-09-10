@@ -18,28 +18,28 @@ def _feature(
     longitude: float,
     latitude: float,
     *,
-    region: str | None = None,
-    region_abbreviation: str | None = None,
+    region_name: str | None = None,
+    region_code: str | None = None,
 ) -> dict:
-    properties = {"label": label}
-    if region is not None:
-        properties["region"] = region
-    if region_abbreviation is not None:
-        properties["region_a"] = region_abbreviation
+    region: dict[str, str] = {}
+    if region_name is not None:
+        region["name"] = region_name
+    if region_code is not None:
+        region["region_code"] = region_code
     return {
         "type": "Feature",
-        "properties": properties,
+        "properties": {"full_address": label, "context": {"region": region}},
         "geometry": {"type": "Point", "coordinates": [longitude, latitude]},
     }
 
 
 def _settings() -> Settings:
-    return Settings(ors_api_key="test-only", use_mock_data=False)
+    return Settings(mapbox_token="test-only", use_mock_data=False)
 
 
 def test_autocomplete_short_query_returns_empty_without_request() -> None:
     def handler(_request: httpx.Request) -> httpx.Response:
-        raise AssertionError("ORS must not be called for a short query")
+        raise AssertionError("Mapbox must not be called for a short query")
 
     async def run() -> None:
         async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
@@ -50,33 +50,33 @@ def test_autocomplete_short_query_returns_empty_without_request() -> None:
 
 def test_autocomplete_accepts_victoria_and_filters_other_states() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        assert request.url.host == "api.heigit.org"
-        assert request.url.path == "/pelias/v1/autocomplete"
-        assert request.headers["Authorization"] == "test-only"
-        assert request.url.params["boundary.country"] == "AU"
-        assert request.url.params["size"] == "5"
+        assert request.url.host == "api.mapbox.com"
+        assert request.url.path == "/search/geocode/v6/forward"
+        assert request.url.params["access_token"] == "test-only"
+        assert request.url.params["country"] == "AU"
+        assert request.url.params["limit"] == "5"
         return httpx.Response(
             200,
             json={
                 "features": [
                     _feature(
-                        "Tarneit VIC 3029, Australia",
+                        "Tarneit, Victoria, Australia",
                         144.657,
                         -37.8233,
-                        region="Victoria",
+                        region_name="Victoria",
                     ),
                     _feature(
-                        "Albury NSW 2640, Australia",
+                        "Albury, New South Wales, Australia",
                         146.91,
                         -36.08,
-                        region="New South Wales",
-                        region_abbreviation="NSW",
+                        region_name="New South Wales",
+                        region_code="NSW",
                     ),
                     _feature(
-                        "Docklands VIC 3008, Australia",
+                        "Docklands, Victoria, Australia",
                         144.9465,
                         -37.815,
-                        region_abbreviation="VIC",
+                        region_code="VIC",
                     ),
                     {"properties": {}, "geometry": {}},
                 ]
@@ -90,12 +90,12 @@ def test_autocomplete_accepts_victoria_and_filters_other_states() -> None:
     results = asyncio.run(run())
 
     assert [result.label for result in results] == [
-        "Tarneit VIC 3029, Australia",
-        "Docklands VIC 3008, Australia",
+        "Tarneit, Victoria, Australia",
+        "Docklands, Victoria, Australia",
     ]
 
 
-def test_autocomplete_ors_failure_is_safe() -> None:
+def test_autocomplete_upstream_failure_is_safe() -> None:
     def handler(_request: httpx.Request) -> httpx.Response:
         return httpx.Response(503, json={"error": "upstream detail"})
 
@@ -107,21 +107,36 @@ def test_autocomplete_ors_failure_is_safe() -> None:
     asyncio.run(run())
 
 
-def test_forward_geocoding_uses_ors_and_returns_victoria_result() -> None:
+def test_autocomplete_without_token_is_unavailable() -> None:
+    def handler(_request: httpx.Request) -> httpx.Response:
+        raise AssertionError("Mapbox must not be called without a token")
+
+    async def run() -> None:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            with pytest.raises(GeocodingUnavailable):
+                await autocomplete_address(
+                    "Tarneit",
+                    Settings(mapbox_token=None, use_mock_data=False),
+                    client,
+                )
+
+    asyncio.run(run())
+
+
+def test_forward_geocoding_uses_mapbox_and_returns_victoria_result() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        assert request.url.host == "api.heigit.org"
-        assert request.url.path == "/pelias/v1/search"
-        assert request.headers["Authorization"] == "test-only"
-        assert request.url.params["boundary.rect.min_lon"] == "140.95"
+        assert request.url.host == "api.mapbox.com"
+        assert request.url.path == "/search/geocode/v6/forward"
+        assert request.url.params["bbox"] == "140.95,-39.25,150.05,-33.95"
         return httpx.Response(
             200,
             json={
                 "features": [
                     _feature(
-                        "Docklands VIC 3008, Australia",
+                        "Docklands, Victoria, Australia",
                         144.9465,
                         -37.815,
-                        region="Victoria",
+                        region_name="Victoria",
                     )
                 ]
             },
@@ -133,9 +148,33 @@ def test_forward_geocoding_uses_ors_and_returns_victoria_result() -> None:
 
     result = asyncio.run(run())
 
-    assert result.label == "Docklands VIC 3008, Australia"
+    assert result.label == "Docklands, Victoria, Australia"
     assert result.longitude == 144.9465
     assert result.latitude == -37.815
+
+
+def test_forward_geocoding_without_victorian_match_is_unavailable() -> None:
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "features": [
+                    _feature(
+                        "Albury, New South Wales, Australia",
+                        146.91,
+                        -36.08,
+                        region_code="NSW",
+                    )
+                ]
+            },
+        )
+
+    async def run() -> None:
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            with pytest.raises(GeocodingUnavailable):
+                await geocode_address("Albury", _settings(), client)
+
+    asyncio.run(run())
 
 
 def test_locations_endpoint_returns_empty_for_short_query(client: TestClient) -> None:
@@ -145,7 +184,7 @@ def test_locations_endpoint_returns_empty_for_short_query(client: TestClient) ->
     assert response.json() == {"suggestions": []}
 
 
-def test_locations_endpoint_hides_ors_failure(client: TestClient, monkeypatch) -> None:
+def test_locations_endpoint_hides_upstream_failure(client: TestClient, monkeypatch) -> None:
     async def fail_search(*_args, **_kwargs):
         raise GeocodingUnavailable
 

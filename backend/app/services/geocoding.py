@@ -6,16 +6,13 @@ import httpx
 
 from app.config import Settings
 
-ORS_GEOCODE_BASE_URL = "https://api.heigit.org/pelias/v1"
+MAPBOX_GEOCODE_BASE_URL = "https://api.mapbox.com/search/geocode/v6"
 MAX_GEOCODING_RESULTS = 5
 
-VICTORIA_BOUNDS = {
-    "boundary.country": "AU",
-    "boundary.rect.min_lon": 140.95,
-    "boundary.rect.min_lat": -39.25,
-    "boundary.rect.max_lon": 150.05,
-    "boundary.rect.max_lat": -33.95,
-}
+# Mapbox ranks by relevance within the box but does not clip to it, so results
+# from neighbouring states still come back and are dropped by _is_victorian.
+VICTORIA_BOUNDS = "140.95,-39.25,150.05,-33.95"
+GEOCODE_TYPES = "place,locality,postcode,address,neighborhood,street"
 
 
 class GeocodingUnavailable(Exception):
@@ -37,13 +34,20 @@ class GeocodingSuggestion:
 
 
 def _is_victorian(properties: dict[str, Any]) -> bool:
-    region = properties.get("region")
-    region_abbreviation = properties.get("region_a")
+    context = properties.get("context")
+    if not isinstance(context, dict):
+        return False
+    region = context.get("region")
+    if not isinstance(region, dict):
+        return False
+
+    region_code = region.get("region_code")
+    region_name = region.get("name")
     return (
-        isinstance(region, str)
-        and region.casefold() == "victoria"
-        or isinstance(region_abbreviation, str)
-        and region_abbreviation.upper() == "VIC"
+        isinstance(region_code, str)
+        and region_code.upper() == "VIC"
+        or isinstance(region_name, str)
+        and region_name.casefold() == "victoria"
     )
 
 
@@ -58,7 +62,7 @@ def _parse_victorian_feature(feature: object) -> GeocodingSuggestion | None:
     if not _is_victorian(properties):
         return None
 
-    label = properties.get("label")
+    label = properties.get("full_address") or properties.get("name")
     coordinates = geometry.get("coordinates")
     if not isinstance(label, str) or not label.strip():
         return None
@@ -107,18 +111,33 @@ def _victorian_suggestions(payload: object) -> list[GeocodingSuggestion]:
     return suggestions
 
 
-def _geocoding_params(text: str) -> dict[str, str | int | float]:
+def _geocoding_params(text: str, settings: Settings) -> dict[str, str | int]:
+    if not settings.mapbox_token:
+        raise GeocodingUnavailable("MAPBOX_TOKEN is not configured")
     return {
-        "text": text,
-        "size": MAX_GEOCODING_RESULTS,
-        **VICTORIA_BOUNDS,
+        "q": text,
+        "access_token": settings.mapbox_token,
+        "bbox": VICTORIA_BOUNDS,
+        "country": "AU",
+        "types": GEOCODE_TYPES,
+        "limit": MAX_GEOCODING_RESULTS,
     }
 
 
-def _authorization_headers(settings: Settings) -> dict[str, str]:
-    if not settings.ors_api_key:
-        raise GeocodingUnavailable("ORS_API_KEY is not configured")
-    return {"Authorization": settings.ors_api_key}
+async def _forward_geocode(
+    text: str,
+    settings: Settings,
+    client: httpx.AsyncClient,
+) -> list[GeocodingSuggestion]:
+    try:
+        response = await client.get(
+            f"{MAPBOX_GEOCODE_BASE_URL}/forward",
+            params=_geocoding_params(text, settings),
+        )
+        response.raise_for_status()
+        return _victorian_suggestions(response.json())
+    except (httpx.HTTPError, TypeError, ValueError) as exc:
+        raise GeocodingUnavailable from exc
 
 
 async def autocomplete_address(
@@ -129,17 +148,7 @@ async def autocomplete_address(
     normalized_query = query.strip()
     if len(normalized_query) < 3:
         return []
-
-    try:
-        response = await client.get(
-            f"{ORS_GEOCODE_BASE_URL}/autocomplete",
-            params=_geocoding_params(normalized_query),
-            headers=_authorization_headers(settings),
-        )
-        response.raise_for_status()
-        return _victorian_suggestions(response.json())
-    except (httpx.HTTPError, TypeError, ValueError) as exc:
-        raise GeocodingUnavailable from exc
+    return await _forward_geocode(normalized_query, settings, client)
 
 
 async def geocode_address(
@@ -147,19 +156,10 @@ async def geocode_address(
     settings: Settings,
     client: httpx.AsyncClient,
 ) -> Coordinates:
-    try:
-        response = await client.get(
-            f"{ORS_GEOCODE_BASE_URL}/search",
-            params=_geocoding_params(address.strip()),
-            headers=_authorization_headers(settings),
-        )
-        response.raise_for_status()
-        suggestions = _victorian_suggestions(response.json())
-    except (httpx.HTTPError, TypeError, ValueError) as exc:
-        raise GeocodingUnavailable from exc
-
+    suggestions = await _forward_geocode(address.strip(), settings, client)
     if not suggestions:
         raise GeocodingUnavailable("No Victorian location matched the address")
+
     result = suggestions[0]
     return Coordinates(
         longitude=result.longitude,
