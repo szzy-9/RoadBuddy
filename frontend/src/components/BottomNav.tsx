@@ -18,6 +18,7 @@ export default function BottomNav() {
         <NavLink
           key={item.to}
           to={item.to}
+          data-buddy-target={item.to === '/learn' ? 'learn-nav' : item.to === '/ask' ? 'ask-nav' : undefined}
           aria-label={item.label}
           className={isNavItemActive(item, pathname) ? 'active' : undefined}
         >

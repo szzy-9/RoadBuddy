@@ -177,7 +177,7 @@ export default function TripSearchForm({
   }
 
   return (
-    <form className="card trip-search-form" onSubmit={handleSubmit} noValidate>
+    <form className="card trip-search-form" data-buddy-target="trip-form" onSubmit={handleSubmit} noValidate>
       {title && <h2 className="trip-search-title">{title}</h2>}
       {subtitle && <p className="trip-search-sub">{subtitle}</p>}
 

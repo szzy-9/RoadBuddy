@@ -84,6 +84,24 @@
 
 .me-topic.done .me-topic-state { color: var(--green); }
 
+.me-buddy-replay {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  color: var(--navy);
+  background: transparent;
+  border: 0;
+  font-size: .82rem;
+  font-weight: 750;
+  text-align: left;
+}
+.me-buddy-replay img { flex: none; object-fit: contain; }
+.me-buddy-replay > span:last-child { margin-left: auto; color: var(--green-dark); font-size: 1.1rem; }
+.me-buddy-replay:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+
 .me-next {
   margin-top: 11px;
   padding: 14px 15px;
