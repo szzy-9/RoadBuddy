@@ -1,20 +1,8 @@
 import { useState } from 'react'
-import { COMPLETED_TOPICS_KEY } from './LearnPage'
+import { clearCompletedTopics, LESSONS, readCompletedTopics } from '../data/lessons'
 import './MePage.css'
 
-const ALL_TOPICS = [
-  'Night driving',
-  'Wet roads',
-  'Freeway merging',
-  'Fatigue',
-  'Unsealed roads',
-  'Wildlife at dusk',
-  'Single-lane overtaking',
-  'Roundabouts',
-  'School zones',
-  'Towing',
-  'Heavy rain and hail',
-]
+const ALL_TOPICS = LESSONS.map((lesson) => lesson.topic)
 
 const SOURCES: Array<[string, string]> = [
   ['Victoria Road Crash Data', 'CC BY 4.0'],
@@ -26,24 +14,11 @@ const SOURCES: Array<[string, string]> = [
 
 const REFRESH_DATE = '12 August 2026'
 
-function readCompletedTopics(): string[] {
-  try {
-    const stored = window.localStorage.getItem(COMPLETED_TOPICS_KEY)
-    return stored ? (JSON.parse(stored) as string[]) : []
-  } catch {
-    return []
-  }
-}
-
 export default function MePage() {
   const [completed, setCompleted] = useState<string[]>(readCompletedTopics)
 
   function clearData() {
-    try {
-      window.localStorage.removeItem(COMPLETED_TOPICS_KEY)
-    } catch {
-      // Clearing is best effort; the view still resets below.
-    }
+    clearCompletedTopics()
     setCompleted([])
   }
 

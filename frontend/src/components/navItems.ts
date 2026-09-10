@@ -1,9 +1,6 @@
 /**
  * The primary destinations, shared by the desktop header nav and the mobile
  * bottom nav so the two cannot drift apart.
- *
- * Learn and Me are deliberately absent: their routes still exist and can be
- * reached directly, but they are not part of this iteration's navigation.
  */
 export interface NavItem {
   to: string;
@@ -27,6 +24,16 @@ export const NAV_ITEMS: NavItem[] = [
     to: "/radar",
     label: "Radar",
     path: "M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zM10 6v4l3 2",
+  },
+  {
+    to: "/learn",
+    label: "Learn",
+    path: "M3 4.5c2.3 0 4.3.6 7 2v10c-2.7-1.4-4.7-2-7-2V4.5Zm14 0c-2.3 0-4.3.6-7 2v10c2.7-1.4 4.7-2 7-2V4.5Z",
+  },
+  {
+    to: "/me",
+    label: "Me",
+    path: "M10 3a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm-5 14c.4-3.2 2.1-5 5-5s4.6 1.8 5 5H5Z",
   },
 ];
 
