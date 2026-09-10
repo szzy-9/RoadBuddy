@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import TripSearchForm from '../components/TripSearchForm'
 import './HomePage.css'
+import OnboardingTutorial from '../components/OnboardingTutorial'
 
 /**
  * What a trip check involves, in the order the user experiences it.
@@ -74,6 +75,7 @@ export default function HomePage() {
           <p className="home-refresh-text">Crash data refreshed 12 Aug 2026</p>
         </div>
       </div>
+      <OnboardingTutorial />
     </div>
   )
 }
