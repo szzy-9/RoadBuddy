@@ -4,6 +4,7 @@ import LoadingState from '../components/LoadingState'
 import TripSearchForm from '../components/TripSearchForm'
 import { reverseGeocodeAll } from '../api/reverseGeocode'
 import { useTripResult } from '../state/tripResult'
+import { getTripLessonIds, LESSONS } from '../data/lessons'
 import type {
   ConcernLevel,
   DepartureComparisonOption,
@@ -348,6 +349,8 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
   // asserting a condition nothing actually measured. Filtered here rather than
   // relying on the response to omit it.
   const shownFactors = result.factors.filter((factor) => factor.type !== 'rain')
+  const prepLessons = getTripLessonIds(result.factors)
+    .flatMap((id) => LESSONS.filter((lesson) => lesson.id === id))
 
   // A long route can return a dozen clusters, which buries the ones that
   // matter. Show the worst few by crash count and point at the Radar for the
@@ -437,6 +440,27 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
               <p className="empty-note">
                 No concern conditions were identified for this trip.
               </p>
+            )}
+
+            {prepLessons.length > 0 && (
+              <section className="trip-prep" aria-labelledby="trip-prep-title">
+                <div className="trip-prep-heading">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M3 4.5c2.3 0 4.3.6 7 2v10c-2.7-1.4-4.7-2-7-2V4.5Zm14 0c-2.3 0-4.3.6-7 2v10c2.7-1.4 4.7-2 7-2V4.5Z" />
+                  </svg>
+                  <h3 id="trip-prep-title">Prep this trip</h3>
+                </div>
+                <div className="trip-prep-topics">
+                  {prepLessons.map((lesson) => (
+                    <span className="trip-prep-chip" key={lesson.id}>
+                      <span aria-hidden="true">{lesson.icon}</span> {lesson.shortLabel}
+                    </span>
+                  ))}
+                </div>
+                <Link className="trip-prep-action" to="/learn?mode=trip">
+                  <span aria-hidden="true">▶</span> 2-min prep
+                </Link>
+              </section>
             )}
 
             <div className="compare-heading">

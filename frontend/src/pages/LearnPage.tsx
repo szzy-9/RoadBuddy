@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
-import { addCompletedTopics, LESSONS } from '../data/lessons'
+import { useSearchParams } from 'react-router-dom'
+import { addCompletedTopics, getTripLessonIds, LESSONS } from '../data/lessons'
 import type { Lesson } from '../data/lessons'
+import { useTripResult } from '../state/tripResult'
 import './LearnPage.css'
 
 type PracticeMode =
   | { kind: 'mock' }
   | { kind: 'quick' }
   | { kind: 'topic'; topicId: Lesson['id'] }
+  | { kind: 'trip'; lessonIds: Lesson['id'][] }
 
 type PracticeSession = {
   mode: PracticeMode
@@ -28,7 +31,27 @@ function shuffledLessons(): Lesson[] {
 }
 
 export default function LearnPage() {
-  const [session, setSession] = useState<PracticeSession | null>(null)
+  const [searchParams] = useSearchParams()
+  const [tripResult] = useTripResult()
+  const tripLessonIds = searchParams.get('mode') === 'trip' && tripResult
+    ? getTripLessonIds(tripResult.factors)
+    : []
+
+  // Reset on a different trip match or a return to /learn, without a landing
+  // screen flash before trip practice. This remains the same quiz UI.
+  return <LearnPractice key={tripLessonIds.join(',') || 'practice'} tripLessonIds={tripLessonIds} />
+}
+
+function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
+  const [session, setSession] = useState<PracticeSession | null>(() => (
+    tripLessonIds.length > 0 ? {
+      mode: { kind: 'trip', lessonIds: tripLessonIds },
+      lessons: tripLessonIds.flatMap((id) => LESSONS.filter((lesson) => lesson.id === id)),
+      questionIndex: 0,
+      answers: [],
+      finished: false,
+    } : null
+  ))
   const questionHeading = useRef<HTMLHeadingElement>(null)
   const launcherButton = useRef<HTMLButtonElement>(null)
   const questionIndex = session?.questionIndex
@@ -40,9 +63,11 @@ export default function LearnPage() {
   }, [questionIndex, finished])
 
   function startPractice(mode: PracticeMode) {
-    const lessons = mode.kind === 'topic'
-      ? LESSONS.filter((lesson) => lesson.id === mode.topicId)
-      : shuffledLessons().slice(0, mode.kind === 'quick' ? 3 : 4)
+    const lessons = mode.kind === 'trip'
+      ? mode.lessonIds.flatMap((id) => LESSONS.filter((lesson) => lesson.id === id))
+      : mode.kind === 'topic'
+        ? LESSONS.filter((lesson) => lesson.id === mode.topicId)
+        : shuffledLessons().slice(0, mode.kind === 'quick' ? 3 : 4)
 
     setSession({ mode, lessons, questionIndex: 0, answers: [], finished: false })
   }

@@ -1,3 +1,5 @@
+import type { RiskFactor } from '../types/api'
+
 export type Lesson = {
   id: 'wet' | 'night' | 'merge' | 'fatigue'
   topic: string
@@ -67,6 +69,15 @@ export const LESSONS: Lesson[] = [
     },
   },
 ]
+
+/** Match only reported conditions, in a stable Night then Wet order. */
+export function getTripLessonIds(factors: readonly RiskFactor[]): Lesson['id'][] {
+  const types = new Set(factors.map((factor) => factor.type))
+  const lessonIds: Lesson['id'][] = []
+  if (types.has('after_dark')) lessonIds.push('night')
+  if (types.has('rain')) lessonIds.push('wet')
+  return lessonIds
+}
 
 export const COMPLETED_TOPICS_KEY = 'roadbuddy.completedTopics'
 

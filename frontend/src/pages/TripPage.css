@@ -236,6 +236,50 @@
 
 .condition-icon { color: var(--green-dark); font-size: .95rem; }
 
+/* Trip-matched practice; uses only the existing lesson topics. */
+.trip-prep {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 22px;
+  padding: 14px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.trip-prep-heading { display: flex; align-items: center; gap: 8px; }
+.trip-prep-heading svg { width: 24px; height: 24px; flex: none; color: var(--green-dark); }
+.trip-prep-heading h3 { margin: 0; font-size: .94rem; font-weight: 800; }
+.trip-prep-topics { display: flex; flex-wrap: wrap; gap: 8px; }
+.trip-prep-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  color: var(--navy);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: .76rem;
+  font-weight: 750;
+}
+.trip-prep-chip > span { color: var(--green-dark); }
+.trip-prep-action {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  color: var(--navy);
+  background: var(--orange);
+  border-radius: 12px;
+  font-size: .82rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+.trip-prep-action:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 3px; }
+
 /* Departure comparison */
 .compare-heading {
   display: flex;
