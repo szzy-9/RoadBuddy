@@ -1,5 +1,8 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import { isNavItemActive, NAV_ITEMS } from './navItems'
+import { useBuddyGuide } from '../state/BuddyGuideContext'
+import koalaReadingIcon from '../assets/koala-reading.png'
+import koalaReadingWinkIcon from '../assets/koala-reading-wink.png'
 
 /**
  * The sticky site header.
@@ -12,6 +15,7 @@ import { isNavItemActive, NAV_ITEMS } from './navItems'
  */
 export default function TopBar() {
   const { pathname } = useLocation()
+  const { openGuide } = useBuddyGuide()
 
   return (
     <header className="top-bar">
@@ -25,6 +29,7 @@ export default function TopBar() {
             <NavLink
               key={item.to}
               to={item.to}
+              data-buddy-target={item.to === '/learn' ? 'learn-nav' : item.to === '/ask' ? 'ask-nav' : undefined}
               className={isNavItemActive(item, pathname) ? 'nav-button active' : 'nav-button'}
             >
               <svg className="nav-icon" viewBox="0 0 20 20" aria-hidden="true">
@@ -35,8 +40,13 @@ export default function TopBar() {
           ))}
         </nav>
 
-        {/* Balances the wordmark so the nav stays centred on the header.*/}
-        <span className="top-bar-note" aria-hidden="true" />
+        <button className="buddy-launcher" type="button" aria-label="Meet Buddy" onClick={openGuide}>
+          <span className="buddy-launcher-icon" aria-hidden="true">
+            <img className="buddy-koala-normal" src={koalaReadingIcon} alt="" draggable="false" />
+            <img className="buddy-koala-wink" src={koalaReadingWinkIcon} alt="" draggable="false" />
+          </span>
+          <span>Buddy</span>
+        </button>
       </div>
     </header>
   )

@@ -3,6 +3,8 @@ import { Outlet, useLocation } from 'react-router-dom'
 import BottomNav from './BottomNav'
 import ScrollToTop from './ScrollToTop'
 import TopBar from './TopBar'
+import OnboardingTutorial from './OnboardingTutorial'
+import { BuddyGuideProvider } from '../state/BuddyGuideContext'
 
 /**
  * Routes that fill the viewport themselves instead of sitting inside the
@@ -20,15 +22,18 @@ export default function AppShell() {
   )
 
   return (
-    <div className="app-shell">
-      <ScrollToTop />
-      <TopBar />
-      <main className={isFullBleed ? 'main-content full-bleed' : 'main-content'}>
-        <Suspense fallback={<div className="route-loading" role="status">Opening RoadBuddy…</div>}>
-          <Outlet />
-        </Suspense>
-      </main>
-      <BottomNav />
-    </div>
+    <BuddyGuideProvider>
+      <div className="app-shell">
+        <ScrollToTop />
+        <TopBar />
+        <main className={isFullBleed ? 'main-content full-bleed' : 'main-content'}>
+          <Suspense fallback={<div className="route-loading" role="status">Opening RoadBuddy…</div>}>
+            <Outlet />
+          </Suspense>
+        </main>
+        <BottomNav />
+        <OnboardingTutorial />
+      </div>
+    </BuddyGuideProvider>
   )
 }

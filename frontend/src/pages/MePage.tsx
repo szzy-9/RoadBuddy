@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { clearCompletedTopics, LESSONS, readCompletedTopics } from '../data/lessons'
+import { useBuddyGuide } from '../state/BuddyGuideContext'
+import koalaReadingIcon from '../assets/koala-reading.png'
 import './MePage.css'
 
 const ALL_TOPICS = LESSONS.map((lesson) => lesson.topic)
@@ -16,6 +18,7 @@ const REFRESH_DATE = '12 August 2026'
 
 export default function MePage() {
   const [completed, setCompleted] = useState<string[]>(readCompletedTopics)
+  const { openGuide } = useBuddyGuide()
 
   function clearData() {
     clearCompletedTopics()
@@ -51,6 +54,11 @@ export default function MePage() {
               </div>
             )
           })}
+          <button className="me-buddy-replay" type="button" onClick={openGuide}>
+            <img src={koalaReadingIcon} alt="" width="32" height="32" />
+            <span>Replay Buddy</span>
+            <span aria-hidden="true">→</span>
+          </button>
         </section>
 
         {nextTopic && (
