@@ -14,10 +14,19 @@ import './RadarPage.css'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || ''
 
-/** Melbourne CBD - the default view, and where clearing the search returns to. */
+/** Melbourne CBD - the view the map opens on. */
 const MELBOURNE_CBD: [number, number] = [144.9631, -37.8136]
 const DEFAULT_ZOOM = 9.7
 const FOCUS_ZOOM = 15
+
+/** Zoom levels a search target may sit within before a move counts as nearby. */
+const NEARBY_ZOOM_TOLERANCE = 1.5
+/** Duration of the short pan used for a nearby move. */
+const NEARBY_PAN_MS = 300
+/** Grace period after a pan before the camera is forced to the target. */
+const PAN_SETTLE_GRACE_MS = 150
+/** Tolerance for deciding a pan actually reached its target. */
+const ARRIVAL_EPSILON = 1e-4
 
 /**
  * Five-band intensity scale for crash counts.
@@ -157,15 +166,26 @@ export default function RadarPage() {
   selectClusterRef.current = selectCluster
 
   /**
-   * Fly the map to a place and reload clusters for wherever it lands.
+   * Move the map to a place and reload clusters for wherever it lands.
+   *
+   * Mapbox `flyTo` arcs: on a long move it zooms out, travels, then zooms back
+   * in. That reads as the map throwing away the user's place before finding the
+   * new one. Google Maps does not do this, so neither do we.
+   *
+   * The camera therefore cuts straight to the target unless the target is
+   * already on screen at roughly the zoom we are settling at, in which case a
+   * short pan keeps the surroundings legible. An instant cut is also the only
+   * reliable option in a background tab, where browsers throttle the animation
+   * loop and an animated move can silently never arrive.
    *
    * @param target - Coordinates to centre on.
    * @param zoom - Zoom level to settle at.
+   * @param instant - Force a cut, skipping the on-screen pan.
    */
-  const flyTo = useCallback((
+  const moveTo = useCallback((
     target: { longitude: number; latitude: number },
     zoom: number,
-    { animate = true }: { animate?: boolean } = {},
+    { instant = false }: { instant?: boolean } = {},
   ) => {
     const map = mapRef.current
     if (!map) return
@@ -173,10 +193,30 @@ export default function RadarPage() {
     map.stop()
     pendingSearchRef.current = ++searchSequenceRef.current
     const camera = { center: [target.longitude, target.latitude] as [number, number], zoom }
-    // jumpTo does not depend on the animation loop, which browsers throttle in
-    // a background tab; flyTo would silently leave the camera where it was.
-    if (animate) map.flyTo({ ...camera, essential: false })
-    else map.jumpTo(camera)
+
+    const bounds = map.getBounds()
+    const isNearby = !instant
+      && bounds !== null
+      && bounds.contains(camera.center)
+      && Math.abs(map.getZoom() - zoom) <= NEARBY_ZOOM_TOLERANCE
+
+    if (!isNearby) {
+      map.jumpTo(camera)
+      return
+    }
+
+    // Browsers throttle the animation loop in a background tab, where an eased
+    // move can stall and strand the camera short of the target while the search
+    // box already reads as the new place. Settle it outright if that happens.
+    map.easeTo({ ...camera, duration: NEARBY_PAN_MS, essential: true })
+    window.setTimeout(() => {
+      if (mapRef.current !== map) return
+      const settled = map.getCenter()
+      const arrived = Math.abs(settled.lng - camera.center[0]) < ARRIVAL_EPSILON
+        && Math.abs(settled.lat - camera.center[1]) < ARRIVAL_EPSILON
+        && Math.abs(map.getZoom() - zoom) < ARRIVAL_EPSILON
+      if (!arrived) map.jumpTo(camera)
+    }, NEARBY_PAN_MS + PAN_SETTLE_GRACE_MS)
   }, [])
 
   /**
@@ -187,11 +227,15 @@ export default function RadarPage() {
   const selectRoadLocation = useCallback((suggestion: LocationSuggestion) => {
     closeCluster()
     setShowNoCrashHistory(false)
-    flyTo(suggestion, FOCUS_ZOOM)
-  }, [closeCluster, flyTo])
+    moveTo(suggestion, FOCUS_ZOOM)
+  }, [closeCluster, moveTo])
 
   /**
-   * Handle search-box edits, returning to Melbourne CBD once it is cleared.
+   * Handle search-box edits.
+   *
+   * Clearing the box clears the search, not the view. Snapping back to
+   * Melbourne would throw away wherever the user had panned to, which is never
+   * what emptying a text field is asking for.
    *
    * @param value - The new search text.
    */
@@ -201,11 +245,7 @@ export default function RadarPage() {
 
     closeCluster()
     setShowNoCrashHistory(false)
-    flyTo(
-      { longitude: MELBOURNE_CBD[0], latitude: MELBOURNE_CBD[1] },
-      DEFAULT_ZOOM,
-    )
-  }, [closeCluster, flyTo])
+  }, [closeCluster])
 
   // Create the map once. Cluster loading lives here because it is driven by
   // Mapbox events rather than React state.
@@ -339,12 +379,12 @@ export default function RadarPage() {
   useEffect(() => {
     if (!resolvedFocus || hasFlownToFocusRef.current || !isMapReady || !mapRef.current) return
     hasFlownToFocusRef.current = true
-    flyTo(
+    moveTo(
       { longitude: resolvedFocus[0], latitude: resolvedFocus[1] },
       FOCUS_ZOOM,
-      { animate: false },
+      { instant: true },
     )
-  }, [resolvedFocus, flyTo, isMapReady])
+  }, [resolvedFocus, moveTo, isMapReady])
 
   // Rebuild markers only when the cluster set itself changes.
   useEffect(() => {
