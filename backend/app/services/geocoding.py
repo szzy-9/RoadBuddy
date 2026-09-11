@@ -12,6 +12,7 @@ MAX_GEOCODING_RESULTS = 5
 # Mapbox ranks by relevance within the box but does not clip to it, so results
 # from neighbouring states still come back and are dropped by _is_victorian.
 VICTORIA_BOUNDS = "140.95,-39.25,150.05,-33.95"
+# MELBOURNE_PROXIMITY = "144.9631,-37.8136"
 GEOCODE_TYPES = "place,locality,postcode,address,neighborhood,street"
 
 
@@ -120,6 +121,7 @@ def _geocoding_params(text: str, settings: Settings) -> dict[str, str | int]:
         "bbox": VICTORIA_BOUNDS,
         "country": "AU",
         "types": GEOCODE_TYPES,
+        # "proximity": MELBOURNE_PROXIMITY,
         "limit": MAX_GEOCODING_RESULTS,
     }
 
