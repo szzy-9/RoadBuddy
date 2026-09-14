@@ -15,6 +15,22 @@ export type Lesson = {
   }
 }
 
+export type LessonFeedback = {
+  isCorrect: boolean
+  explanation: string
+}
+
+export function getLessonFeedback(
+  lesson: Lesson,
+  selectedAnswerIndex: number | null,
+): LessonFeedback | null {
+  if (selectedAnswerIndex === null) return null
+  return {
+    isCorrect: selectedAnswerIndex === lesson.answerIndex,
+    explanation: lesson.why,
+  }
+}
+
 const ROAD_TO_SOLO_DRIVING = {
   name: 'Road to Solo Driving',
   href: 'https://www.vicroads.vic.gov.au/-/media/files/formsandpublications/licences/english---road-to-solo-driving-handbook.ashx',

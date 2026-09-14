@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { addCompletedTopics, getTripLessonIds, LESSONS } from '../data/lessons'
+import { addCompletedTopics, getLessonFeedback, getTripLessonIds, LESSONS } from '../data/lessons'
 import type { Lesson } from '../data/lessons'
 import { useTripResult } from '../state/tripResult'
 import './LearnPage.css'
@@ -151,7 +151,8 @@ function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
 
   const lesson = session.lessons[session.questionIndex]
   const answered = session.answers[session.questionIndex] ?? null
-  const isCorrect = answered === lesson.answerIndex
+  const feedback = getLessonFeedback(lesson, answered)
+  const isCorrect = feedback?.isCorrect ?? false
   const isLastQuestion = session.questionIndex === session.lessons.length - 1
 
   return (
@@ -190,10 +191,10 @@ function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
         </div>
       </section>
 
-      {answered !== null && (
+      {feedback !== null && (
         <section className={`learn-feedback ${isCorrect ? 'is-correct' : 'is-incorrect'}`} aria-live="polite">
           <span className="learn-verdict-mark" role="img" aria-label={isCorrect ? 'Correct' : 'Incorrect'}>{isCorrect ? '✓' : '×'}</span>
-          <p>{lesson.why}</p>
+          <p>{feedback.explanation}</p>
           <a className="learn-source" href={lesson.source.href} target="_blank" rel="noreferrer"><span aria-hidden="true">↗</span> {lesson.source.name}</a>
         </section>
       )}
