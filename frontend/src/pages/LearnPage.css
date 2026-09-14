@@ -135,11 +135,6 @@
 }
 
 .learn-option:disabled { cursor: default; }
-
-.learn-option.selected {
-  background: #fff4db;
-  border-color: var(--orange);
-}
 .learn-option.correct { color: var(--navy); background: var(--light-green); border-color: var(--green); }
 .learn-option.incorrect { color: var(--rust); background: var(--white); border-color: var(--rust); }
 .learn-answer-mark { flex: none; font-size: 1.25rem; }
