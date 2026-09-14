@@ -192,3 +192,151 @@ class CrashCluster200m(Base):
         nullable=False,
     )
 
+class LearningSource(Base):
+    __tablename__ = "learning_source"
+
+    source_id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    publisher: Mapped[str] = mapped_column(String(200), nullable=False)
+    source_title: Mapped[str] = mapped_column(String(240), nullable=False)
+    source_type: Mapped[str | None] = mapped_column(String(80))
+    jurisdiction: Mapped[str | None] = mapped_column(String(80))
+    source_url: Mapped[str | None] = mapped_column(Text)
+    licence_or_terms: Mapped[str | None] = mapped_column(Text)
+    edition_or_version: Mapped[str | None] = mapped_column(String(160))
+    last_verified: Mapped[date | None] = mapped_column(Date)
+    status: Mapped[str] = mapped_column(
+        String(40),
+        nullable=False,
+        default="active",
+    )
+
+
+class LearningTopic(Base):
+    __tablename__ = "learning_topic"
+
+    topic_id: Mapped[str] = mapped_column(String(80), primary_key=True)
+    topic_name: Mapped[str] = mapped_column(String(160), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+
+    trip_matchable: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+
+
+class KnowledgeItem(Base):
+    __tablename__ = "knowledge_item"
+
+    knowledge_id: Mapped[str] = mapped_column(String(80), primary_key=True)
+
+    topic_id: Mapped[str] = mapped_column(
+        ForeignKey("learning_topic.topic_id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    source_id: Mapped[str] = mapped_column(
+        ForeignKey("learning_source.source_id"),
+        nullable=False,
+    )
+
+    title: Mapped[str] = mapped_column(String(240), nullable=False)
+    reviewed_summary: Mapped[str] = mapped_column(Text, nullable=False)
+
+    source_section: Mapped[str | None] = mapped_column(Text)
+    audience: Mapped[str | None] = mapped_column(Text)
+    keywords: Mapped[str | None] = mapped_column(Text)
+    qualifiers: Mapped[str | None] = mapped_column(Text)
+
+    status: Mapped[str] = mapped_column(
+        String(40),
+        nullable=False,
+        default="review",
+    )
+
+    reviewed_at: Mapped[date | None] = mapped_column(Date)
+
+
+class LearningQuestion(Base):
+    __tablename__ = "learning_question"
+
+    question_id: Mapped[str] = mapped_column(String(80), primary_key=True)
+
+    knowledge_id: Mapped[str] = mapped_column(
+        ForeignKey("knowledge_item.knowledge_id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    topic_id: Mapped[str] = mapped_column(
+        ForeignKey("learning_topic.topic_id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    source_id: Mapped[str] = mapped_column(
+        ForeignKey("learning_source.source_id"),
+        nullable=False,
+    )
+
+    subtopic: Mapped[str | None] = mapped_column(String(120))
+    difficulty: Mapped[str] = mapped_column(String(40), nullable=False)
+    question_type: Mapped[str] = mapped_column(String(60), nullable=False)
+
+    question_text: Mapped[str] = mapped_column(Text, nullable=False)
+    correct_option: Mapped[str] = mapped_column(String(10), nullable=False)
+    explanation: Mapped[str] = mapped_column(Text, nullable=False)
+
+    source_section: Mapped[str | None] = mapped_column(Text)
+
+    review_status: Mapped[str] = mapped_column(
+        String(40),
+        nullable=False,
+        default="review",
+    )
+
+    serve: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+    )
+
+    scenario_type: Mapped[str | None] = mapped_column(String(80))
+    scenario_description: Mapped[str | None] = mapped_column(Text)
+    scenario_hazards: Mapped[str | None] = mapped_column(Text)
+    scenario_decision_point: Mapped[str | None] = mapped_column(Text)
+    media_reference: Mapped[str | None] = mapped_column(Text)
+
+
+class LearningQuestionOption(Base):
+    __tablename__ = "learning_question_option"
+
+    question_id: Mapped[str] = mapped_column(
+        ForeignKey("learning_question.question_id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+
+    option_key: Mapped[str] = mapped_column(
+        String(10),
+        primary_key=True,
+    )
+
+    option_text: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class QuestionTripCondition(Base):
+    __tablename__ = "question_trip_condition"
+
+    question_id: Mapped[str] = mapped_column(
+        ForeignKey("learning_question.question_id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+
+    condition_key: Mapped[str] = mapped_column(
+        String(80),
+        primary_key=True,
+    )
