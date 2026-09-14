@@ -162,28 +162,76 @@ export interface LearnOption {
 export interface LearnSource {
   id: string
   name: string
-  section: string
-  url: string
+  section: string | null
+  url: string | null
 }
 
 export interface LearnScenario {
   type: string
-  description: string
+  description: string | null
   hazards: string[]
-  decision_point: string
-  media_reference: string
+  decision_point: string | null
+  media_reference: string | null
 }
 
-export interface LearnQuestion {
+export interface LearnTopic {
+  id: string
+  name: string
+  description: string | null
+  trip_matchable: boolean
+}
+
+export interface LearnTopicsResponse {
+  topics: LearnTopic[]
+}
+
+export interface MockTestQuestion {
   id: string
   topic_id: string
-  subtopic: string
   difficulty: string
   question_type: string
   prompt: string
   options: LearnOption[]
-  source: LearnSource
   scenario: LearnScenario | null
+}
+
+export interface LearnQuestionPrompt extends MockTestQuestion {
+  subtopic: string | null
+  source: LearnSource
+}
+
+export interface LearnQuestion extends LearnQuestionPrompt {
+  explanation: string
+}
+
+export interface LearnQuestionsResponse {
+  questions: LearnQuestion[]
+}
+
+export interface MockTestResponse {
+  total_questions: number
+  pass_mark_percent: number
+  questions: MockTestQuestion[]
+}
+
+export interface MockTestAnswer {
+  question_id: string
+  selected_option: string
+}
+
+export interface MockTestGradeRequest {
+  answers: MockTestAnswer[]
+}
+
+export type MockTestQuestionResult = LearnAnswerResponse
+
+export interface MockTestGradeResponse {
+  score: number
+  total: number
+  percentage: number
+  pass_mark_percent: number
+  passed: boolean
+  results: MockTestQuestionResult[]
 }
 
 export interface TripLessonRequest {
@@ -194,7 +242,7 @@ export interface TripLessonResponse {
   available: boolean
   matched_risk_factors: RiskFactor['type'][]
   matched_topics: string[]
-  questions: LearnQuestion[]
+  questions: LearnQuestionPrompt[]
 }
 
 export interface LearnAnswerRequest {

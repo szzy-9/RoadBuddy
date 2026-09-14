@@ -14,6 +14,10 @@
 }
 
 .learn-launcher { justify-content: center; gap: 26px; }
+.learn-launcher, .learn-quiz, .learn-result:has(.learn-review) {
+  height: auto;
+  min-height: calc(100dvh - 101px);
+}
 .learn-mode-cards { display: grid; gap: 14px; }
 
 .learn-mode-card {
@@ -55,6 +59,8 @@
 
 .learn-topic-card > span { color: var(--green); font-size: 1.7rem; }
 .learn-topic-card strong { font-size: .92rem; }
+.learn-topic-copy { display: grid; min-width: 0; gap: 6px; }
+.learn-topic-copy small { color: var(--muted); font-size: .75rem; line-height: 1.4; }
 .learn-quick-card:hover, .learn-topic-card:hover { border-color: var(--green); }
 
 .learn-mode-card:focus-visible,
@@ -129,6 +135,7 @@
 }
 
 .learn-option:disabled { cursor: default; }
+.learn-option.selected { border-color: var(--orange); }
 .learn-option.correct { color: var(--navy); background: var(--light-green); border-color: var(--green); }
 .learn-option.incorrect { color: var(--rust); background: var(--white); border-color: var(--rust); }
 .learn-answer-mark { flex: none; font-size: 1.25rem; }
@@ -180,10 +187,21 @@
 .learn-score.is-incorrect { border-color: var(--orange); }
 .learn-result h2 { margin: 0; font-size: 1.4rem; }
 .learn-result-actions { display: grid; width: 100%; max-width: 320px; grid-template-columns: 1fr 1fr; gap: 12px; }
+.learn-navigation { display: flex; flex: none; gap: 12px; margin-top: auto; }
+.learn-navigation .learn-next { flex: 1; margin-top: 0; }
+.learn-review { display: grid; width: 100%; gap: 12px; }
+.learn-review h3 { margin: 0; font-size: 1rem; }
+.learn-review details { padding: 14px; background: var(--white); border: 1px solid var(--border); border-radius: 16px; }
+.learn-review summary { cursor: pointer; font-size: .86rem; font-weight: 700; }
+.learn-review p { font-size: .82rem; line-height: 1.5; }
 
 @media (max-width: 820px) {
   .main-content:has(> .learn-page) { padding: 12px 0 calc(84px + env(safe-area-inset-bottom)); }
   .learn-page { height: calc(100dvh - 157px - env(safe-area-inset-bottom)); gap: 12px; }
+  .learn-launcher, .learn-quiz, .learn-result:has(.learn-review) {
+    height: auto;
+    min-height: calc(100dvh - 157px - env(safe-area-inset-bottom));
+  }
   .learn-launcher { gap: 24px; }
 }
 

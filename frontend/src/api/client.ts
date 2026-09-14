@@ -2,6 +2,11 @@ import type {
   CrashClusterDetail,
   LearnAnswerRequest,
   LearnAnswerResponse,
+  LearnTopicsResponse,
+  LearnQuestionsResponse,
+  MockTestResponse,
+  MockTestGradeRequest,
+  MockTestGradeResponse,
   LocationSuggestionsResponse,
   RadarClustersResponse,
   RadarStatusResponse,
@@ -118,6 +123,25 @@ export function getTripLesson(
   request: TripLessonRequest,
 ): Promise<TripLessonResponse> {
   return apiFetch('/learn/trip-lesson', {
+    method: 'POST',
+    body: JSON.stringify(request),
+  })
+}
+
+export function getLearnTopics(): Promise<LearnTopicsResponse> {
+  return apiFetch('/learn/topics')
+}
+
+export function getLearnQuestions(topicId: string): Promise<LearnQuestionsResponse> {
+  return apiFetch(`/learn/questions?topic=${encodeURIComponent(topicId)}`)
+}
+
+export function getMockTest(seed?: number): Promise<MockTestResponse> {
+  return apiFetch(`/learn/mock-test${seed === undefined ? '' : `?seed=${encodeURIComponent(seed)}`}`)
+}
+
+export function gradeMockTest(request: MockTestGradeRequest): Promise<MockTestGradeResponse> {
+  return apiFetch('/learn/mock-test/grade', {
     method: 'POST',
     body: JSON.stringify(request),
   })
