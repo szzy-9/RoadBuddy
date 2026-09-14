@@ -5,7 +5,7 @@ import TripSearchForm from '../components/TripSearchForm'
 import TripRouteMap from '../components/TripRouteMap'
 import { reverseGeocodeAll } from '../api/reverseGeocode'
 import { useTripResult } from '../state/tripResult'
-import { getTripLessonIds, LESSONS } from '../data/lessons'
+import { getTripLesson } from '../api/client'
 import type {
   ConcernLevel,
   DepartureComparisonOption,
@@ -329,6 +329,9 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
   // each name replaces its fallback label as it arrives.
   const [hotspotNames, setHotspotNames] = useState<Record<number, string>>({})
 
+  const [tripLesson, setTripLesson] = useState<Awaited<ReturnType<typeof getTripLesson>> | null>(null)
+  const [tripLessonLoading, setTripLessonLoading] = useState(false)
+
   const hotspots = result.hotspots
   useEffect(() => {
     if (hotspots.length === 0) return
@@ -350,9 +353,33 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
   // asserting a condition nothing actually measured. Filtered here rather than
   // relying on the response to omit it.
   const shownFactors = result.factors.filter((factor) => factor.type !== 'rain')
-  const prepLessons = getTripLessonIds(result.factors)
-    .flatMap((id) => LESSONS.filter((lesson) => lesson.id === id))
+ 
 
+  useEffect(() => {
+    const riskFactors = result.factors.map((factor) => factor.type)
+
+    if (riskFactors.length === 0) {
+      setTripLesson(null)
+      return
+    }
+
+    setTripLessonLoading(true)
+
+    getTripLesson({
+      risk_factors: riskFactors,
+    })
+      .then((lesson) => {
+        setTripLesson(lesson)
+      })
+      .catch(() => {
+        setTripLesson(null)
+      })
+      .finally(() => {
+        setTripLessonLoading(false)
+      })
+  }, [result.factors])
+  
+    
   // A long route can return a dozen clusters, which buries the ones that
   // matter. Show the worst few by crash count and point at the Radar for the
   // rest; sorted here rather than trusting the response's order.
@@ -444,26 +471,46 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
               </p>
             )}
 
-            {prepLessons.length > 0 && (
-              <section className="trip-prep" aria-labelledby="trip-prep-title">
-                <div className="trip-prep-heading">
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M3 4.5c2.3 0 4.3.6 7 2v10c-2.7-1.4-4.7-2-7-2V4.5Zm14 0c-2.3 0-4.3.6-7 2v10c2.7-1.4 4.7-2 7-2V4.5Z" />
-                  </svg>
-                  <h3 id="trip-prep-title">Prep this trip</h3>
-                </div>
-                <div className="trip-prep-topics">
-                  {prepLessons.map((lesson) => (
-                    <span className="trip-prep-chip" key={lesson.id}>
-                      <span aria-hidden="true">{lesson.icon}</span> {lesson.shortLabel}
-                    </span>
-                  ))}
-                </div>
-                <Link className="trip-prep-action" to="/learn?mode=trip">
-                  <span aria-hidden="true">▶</span> 2-min prep
-                </Link>
-              </section>
-            )}
+           {tripLessonLoading && (
+             <section className="trip-prep" aria-live="polite">
+               <p>Finding a short prep lesson for this trip…</p>
+             </section>
+           )}
+
+           {!tripLessonLoading && tripLesson?.available && (
+             <section className="trip-prep" aria-labelledby="trip-prep-title">
+               <div className="trip-prep-heading">
+                 <svg
+                   viewBox="0 0 20 20"
+                   fill="none"
+                   stroke="currentColor"
+                   strokeWidth="1.6"
+                   strokeLinecap="round"
+                   strokeLinejoin="round"
+                   aria-hidden="true"
+                 >
+                   <path d="M3 4.5c2.3 0 4.3.6 7 2v10c-2.7-1.4-4.7-2-7-2V4.5Zm14 0c-2.3 0-4.3.6-7 2v10c2.7-1.4 4.7-2 7-2V4.5Z" />
+                 </svg>
+                 <h3 id="trip-prep-title">Prep this trip</h3>
+               </div>
+
+               <div className="trip-prep-topics">
+                 {tripLesson.matched_topics.map((topic) => (
+                   <span className="trip-prep-chip" key={topic}>
+                     {topic.replaceAll('_', ' ')}
+                   </span>
+                 ))}
+               </div>
+
+               <Link
+                 className="trip-prep-action"
+                 to="/learn?mode=trip"
+                 state={{ tripLesson }}
+               >
+                 <span aria-hidden="true">▶</span> 2-min prep
+               </Link>
+             </section>
+           )}	
 
             <div className="compare-heading">
               <h3>Would later feel different?</h3>

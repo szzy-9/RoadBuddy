@@ -1,10 +1,14 @@
 import type {
   CrashClusterDetail,
+  LearnAnswerRequest,
+  LearnAnswerResponse,
   LocationSuggestionsResponse,
   RadarClustersResponse,
   RadarStatusResponse,
   TripCheckRequest,
   TripCheckResponse,
+  TripLessonRequest,
+  TripLessonResponse,
 } from '../types/api'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
@@ -109,3 +113,26 @@ export function getRadarCluster(clusterId: number): Promise<CrashClusterDetail> 
 export function getRadarStatus(): Promise<RadarStatusResponse> {
   return apiFetch('/radar/status')
 }
+
+export function getTripLesson(
+  request: TripLessonRequest,
+): Promise<TripLessonResponse> {
+  return apiFetch('/learn/trip-lesson', {
+    method: 'POST',
+    body: JSON.stringify(request),
+  })
+}
+
+export function checkLearnAnswer(
+  questionId: string,
+  request: LearnAnswerRequest,
+): Promise<LearnAnswerResponse> {
+  return apiFetch(
+    `/learn/questions/${encodeURIComponent(questionId)}/answer`,
+    {
+      method: 'POST',
+      body: JSON.stringify(request),
+    },
+  )
+}
+
