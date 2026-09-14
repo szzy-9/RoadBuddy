@@ -340,3 +340,57 @@ class QuestionTripCondition(Base):
         String(80),
         primary_key=True,
     )
+
+class LearningMockTestConfig(Base):
+    __tablename__ = "learning_mock_test_config"
+
+    blueprint_id: Mapped[str] = mapped_column(
+        String(40),
+        primary_key=True,
+    )
+
+    total_questions: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    pass_mark_percent: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+
+
+class LearningMockTestQuota(Base):
+    __tablename__ = "learning_mock_test_quota"
+
+    blueprint_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            "learning_mock_test_config.blueprint_id",
+            ondelete="CASCADE",
+        ),
+        primary_key=True,
+    )
+
+    topic_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            "learning_topic.topic_id",
+            ondelete="CASCADE",
+        ),
+        primary_key=True,
+    )
+
+    question_count: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    minimum_difficulty: Mapped[str] = mapped_column(
+        String(40),
+        nullable=False,
+    )

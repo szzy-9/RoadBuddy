@@ -9,6 +9,8 @@ from sqlalchemy.dialects.postgresql import insert
 from app.database.connection import SessionLocal
 from app.database.models import (
     KnowledgeItem,
+    LearningMockTestConfig,
+    LearningMockTestQuota,
     LearningQuestion,
     LearningQuestionOption,
     LearningSource,
@@ -194,6 +196,46 @@ def upsert_questions(session, questions: list[dict]) -> None:
                 )
             )
 
+def upsert_mock_blueprint(session, blueprint: dict) -> None:
+    blueprint_id = "default"
+
+    config_stmt = insert(LearningMockTestConfig).values(
+        blueprint_id=blueprint_id,
+        total_questions=blueprint["totalQuestions"],
+        pass_mark_percent=blueprint["passMarkPercent"],
+        active=True,
+    )
+
+    config_stmt = config_stmt.on_conflict_do_update(
+        index_elements=[
+            LearningMockTestConfig.blueprint_id
+        ],
+        set_={
+            "total_questions": config_stmt.excluded.total_questions,
+            "pass_mark_percent": config_stmt.excluded.pass_mark_percent,
+            "active": config_stmt.excluded.active,
+        },
+    )
+
+    session.execute(config_stmt)
+
+    session.execute(
+        delete(LearningMockTestQuota).where(
+            LearningMockTestQuota.blueprint_id == blueprint_id
+        )
+    )
+
+    for quota in blueprint["quotas"]:
+        session.add(
+            LearningMockTestQuota(
+                blueprint_id=blueprint_id,
+                topic_id=quota["topicId"],
+                question_count=quota["questionCount"],
+                minimum_difficulty=quota["minimumDifficulty"],
+            )
+        )
+
+
 
 def main() -> None:
     content = load_content()
@@ -204,6 +246,10 @@ def main() -> None:
             upsert_topics(session, content["topics"])
             upsert_knowledge_items(session, content["knowledgeItems"])
             upsert_questions(session, content["questions"])
+            upsert_mock_blueprint(
+                session,
+                content["mockBlueprint"],
+            )
 
             session.commit()
         except Exception:
