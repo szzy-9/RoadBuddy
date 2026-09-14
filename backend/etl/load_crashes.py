@@ -20,7 +20,6 @@ from sqlalchemy import text
 
 from app.database.connection import engine
 
-
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
 CRASH_FILE = DATA_DIR / "victorian_road_crash_data.csv"
