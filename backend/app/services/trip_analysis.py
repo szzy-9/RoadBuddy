@@ -12,6 +12,7 @@ from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from app.config import Settings
+from app.schemas.indicator import IndicatorExplanation
 from app.schemas.trip import (
     AlternativeDeparture,
     ConcernLevel,
@@ -34,6 +35,7 @@ from app.services.crash_query import (
 )
 from app.services.daylight import is_after_dark
 from app.services.geocoding import Coordinates, GeocodingUnavailable, geocode_address
+from app.services.indicator_explanations import TRIP_INDICATOR_LIMITATIONS
 from app.services.mock_data import (
     mock_after_dark,
     mock_geocode,
@@ -123,9 +125,19 @@ def _evaluate_departures(
     duration_minutes: int,
     selected_flags: ConditionFlags,
     later_flags: ConditionFlags,
+    selected_explanations: dict[str, IndicatorExplanation] | None = None,
+    later_explanations: dict[str, IndicatorExplanation] | None = None,
 ) -> DepartureEvaluation:
     selected_level, selected_factors = calculate_concern(selected_flags)
     later_level, later_factors = calculate_concern(later_flags)
+    selected_factors = [
+        factor.model_copy(update={"explanation": (selected_explanations or {}).get(factor.type)})
+        for factor in selected_factors
+    ]
+    later_factors = [
+        factor.model_copy(update={"explanation": (later_explanations or {}).get(factor.type)})
+        for factor in later_factors
+    ]
     later_departure = selected_departure + timedelta(minutes=30)
 
     comparison = DepartureComparison(
@@ -162,6 +174,62 @@ def _evaluate_departures(
         comparison=comparison,
         alternative=alternative,
     )
+
+
+def _trip_factor_explanations(
+    flags: ConditionFlags,
+    midpoint: datetime,
+    weather: WeatherConditions | None,
+    qualifying_hotspot_count: int,
+) -> dict[str, IndicatorExplanation]:
+    """Describe only the available observations behind the evaluated factors."""
+    explanations: dict[str, IndicatorExplanation] = {}
+    if flags.rain and weather is not None:
+        explanations["rain"] = IndicatorExplanation(
+            source="Open-Meteo",
+            trigger=(f"{weather.precipitation_mm:g} mm precipitation is forecast "
+                     "around the route midpoint."),
+            limitation=TRIP_INDICATOR_LIMITATIONS["rain"],
+        )
+    if flags.after_dark:
+        explanations["after_dark"] = IndicatorExplanation(
+            source="Astral daylight calculation",
+            trigger=(f"The journey midpoint at {midpoint:%H:%M} is after dark "
+                     "at the route midpoint."),
+            limitation=TRIP_INDICATOR_LIMITATIONS["after_dark"],
+        )
+    if flags.high_speed_zone:
+        explanations["high_speed_zone"] = IndicatorExplanation(
+            source="Vicmap Speed Zones",
+            trigger="The route intersects a recorded high-speed zone.",
+            limitation=TRIP_INDICATOR_LIMITATIONS["high_speed_zone"],
+        )
+    if flags.significant_crash_history and qualifying_hotspot_count:
+        subject = ("1 nearby crash cluster has" if qualifying_hotspot_count == 1
+                   else f"{qualifying_hotspot_count} nearby crash clusters have")
+        explanations["significant_crash_history"] = IndicatorExplanation(
+            source="Victorian Road Crash Data",
+            trigger=f"{subject} at least 5 recorded injury crashes.",
+            limitation=TRIP_INDICATOR_LIMITATIONS["significant_crash_history"],
+        )
+    return explanations
+
+
+def _mock_factor_explanations(departure: datetime) -> dict[str, IndicatorExplanation]:
+    """The development sample evaluates its boolean conditions at departure."""
+    triggers = {
+        "rain": f"The sample rain condition is enabled for departure at {departure:%H:%M}.",
+        "after_dark": f"The sample marks departure at {departure:%H:%M} as after dark.",
+        "high_speed_zone": "The sample route is flagged as including a high-speed road.",
+        "significant_crash_history": "The sample route is flagged for significant crash history.",
+    }
+    return {
+        factor_type: IndicatorExplanation(
+            source="RoadBuddy development sample", trigger=trigger,
+            limitation=TRIP_INDICATOR_LIMITATIONS[factor_type],
+        )
+        for factor_type, trigger in triggers.items()
+    }
 
 
 async def analyse_trip(
@@ -223,6 +291,8 @@ def _analyse_mock_trip(request: TripCheckRequest) -> TripCheckResponse:
         duration_minutes,
         selected_flags,
         later_flags,
+        selected_explanations=_mock_factor_explanations(request.departure_time),
+        later_explanations=_mock_factor_explanations(later_time),
     )
 
     return TripCheckResponse(
@@ -413,11 +483,22 @@ async def _analyse_production_trip(
         after_dark=is_after_dark(midpoint_latitude, midpoint_longitude, later_midpoint),
         **static_flags,
     )
+    qualifying_hotspot_count = sum(hotspot.crash_count >= 5 for hotspot in hotspots)
     departure_evaluation = _evaluate_departures(
         request.departure_time,
         route.duration_minutes,
         selected_flags,
         later_flags,
+        selected_explanations=_trip_factor_explanations(
+            selected_flags, journey_midpoint,
+            weather_results[0] if isinstance(weather_results[0], WeatherConditions) else None,
+            qualifying_hotspot_count,
+        ),
+        later_explanations=_trip_factor_explanations(
+            later_flags, later_midpoint,
+            weather_results[1] if isinstance(weather_results[1], WeatherConditions) else None,
+            qualifying_hotspot_count,
+        ),
     )
 
     return TripCheckResponse(

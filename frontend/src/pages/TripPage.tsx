@@ -352,32 +352,34 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
   // Weather is not wired up on the backend yet, so a rain factor would be
   // asserting a condition nothing actually measured. Filtered here rather than
   // relying on the response to omit it.
-  const shownFactors = result.factors.filter((factor) => factor.type !== 'rain')
+//   const shownFactors = result.factors.filter((factor) => factor.type !== 'rain')
  
+    const shownFactors = result.factors
+  const prepLessons = getTripLessonIds(result.factors)
+    .flatMap((id) => LESSONS.filter((lesson) => lesson.id === id))
 
-  useEffect(() => {
-    const riskFactors = result.factors.map((factor) => factor.type)
+//   useEffect(() => {
+//   const riskFactors = result.factors.map((factor) => factor.type)
+//     if (riskFactors.length === 0) {
+//       setTripLesson(null)
+//       return
+//     }
 
-    if (riskFactors.length === 0) {
-      setTripLesson(null)
-      return
-    }
+//     setTripLessonLoading(true)
 
-    setTripLessonLoading(true)
-
-    getTripLesson({
-      risk_factors: riskFactors,
-    })
-      .then((lesson) => {
-        setTripLesson(lesson)
-      })
-      .catch(() => {
-        setTripLesson(null)
-      })
-      .finally(() => {
-        setTripLessonLoading(false)
-      })
-  }, [result.factors])
+//     getTripLesson({
+//       risk_factors: riskFactors,
+//     })
+//       .then((lesson) => {
+//         setTripLesson(lesson)
+//       })
+//       .catch(() => {
+//         setTripLesson(null)
+//       })
+//       .finally(() => {
+//         setTripLessonLoading(false)
+//       })
+//   }, [result.factors])
   
     
   // A long route can return a dozen clusters, which buries the ones that
@@ -458,10 +460,22 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
               <ul className="conditions">
                 {shownFactors.map((factor) => (
                   <li className="condition" key={factor.type}>
-                    <span className="condition-icon" aria-hidden="true">
-                      {FACTOR_ICONS[factor.type]}
+                    <span className="condition-label">
+                      <span className="condition-icon" aria-hidden="true">
+                        {FACTOR_ICONS[factor.type]}
+                      </span>
+                      {factor.label}
                     </span>
-                    {factor.label}
+                    {factor.explanation && (
+                      <details className="condition-why">
+                        <summary>Why?</summary>
+                        <p><strong>Source:</strong> {factor.explanation.source}</p>
+                        <p><strong>Triggered by:</strong> {factor.explanation.trigger}</p>
+                        {factor.explanation.limitation && (
+                          <p><strong>Limitation:</strong> {factor.explanation.limitation}</p>
+                        )}
+                      </details>
+                    )}
                   </li>
                 ))}
               </ul>

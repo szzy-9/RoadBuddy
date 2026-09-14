@@ -2,7 +2,7 @@ import asyncio
 import json
 from datetime import datetime, timedelta
 from types import SimpleNamespace
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -20,6 +20,25 @@ VALID_REQUEST = {
     "origin": "Tarneit VIC 3029",
     "destination": "Docklands VIC 3008",
     "departure_time": "2026-08-25T22:40:00+10:00",
+}
+
+EXPECTED_TRIP_LIMITATIONS = {
+    "rain": (
+        "Does not account for local visibility, road drainage, standing water or "
+        "rapidly changing weather along every part of the route."
+    ),
+    "after_dark": (
+        "Does not account for street lighting, headlight condition, glare or "
+        "the driver's actual visibility."
+    ),
+    "high_speed_zone": (
+        "Does not account for the driver's actual speed, temporary speed restrictions, "
+        "traffic flow or current roadworks."
+    ),
+    "significant_crash_history": (
+        "Historical crash records do not account for current traffic, passengers or "
+        "individual driver behaviour, and do not predict a future crash."
+    ),
 }
 
 
@@ -60,6 +79,84 @@ def test_trip_check_returns_deterministic_mock_result(client: TestClient) -> Non
     assert comparison["thirty_minutes_later"]["factor_count"] == 4
     assert comparison["difference_summary"] == "Rain is forecast for the later option."
     assert payload["alternative_departure"] is None
+    for factors in (
+        payload["factors"], comparison["selected"]["factors"],
+        comparison["thirty_minutes_later"]["factors"],
+    ):
+        for factor in factors:
+            assert factor["explanation"]["source"] == "RoadBuddy development sample"
+            assert factor["explanation"]["trigger"]
+            assert factor["explanation"]["limitation"] == EXPECTED_TRIP_LIMITATIONS[factor["type"]]
+
+
+def test_trip_factor_explanation_is_optional_and_structured() -> None:
+    from app.schemas.trip import RiskFactor
+
+    legacy = RiskFactor(type="rain", label="Rain")
+    assert legacy.explanation is None
+    explanation = {
+        "source": "Open-Meteo", "trigger": "0.35 mm precipitation is forecast.",
+        "limitation": EXPECTED_TRIP_LIMITATIONS["rain"],
+    }
+    factor = RiskFactor(type="rain", label="Rain", explanation=explanation)
+    assert factor.model_dump()["explanation"] == explanation
+
+
+def test_production_trip_explanations_use_each_departures_actual_data(monkeypatch) -> None:
+    from app.schemas.trip import TripHotspot
+    from app.services import trip_analysis
+
+    monkeypatch.setattr(trip_analysis, "geocode_address", AsyncMock(return_value=Coordinates(
+        longitude=144.9, latitude=-37.8, label="Test location",
+    )))
+    monkeypatch.setattr(trip_analysis, "calculate_route", AsyncMock(return_value=RouteResult(
+        1.2, 20, {"type": "LineString", "coordinates": [[144.9, -37.8], [144.91, -37.8]]},
+    )))
+    weather = AsyncMock(side_effect=[
+        WeatherConditions(rain=True, precipitation_mm=0.35),
+        WeatherConditions(rain=True, precipitation_mm=1.75),
+    ])
+    monkeypatch.setattr(trip_analysis, "get_weather_at", weather)
+    monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_: True)
+    monkeypatch.setattr(trip_analysis, "route_has_high_speed_zone", lambda *_: True)
+    hotspots = [TripHotspot(
+        cluster_id=index, crash_count=count, eligible_driver_age_crashes=count,
+        young_driver_crashes=1, young_driver_pct_displayable=False,
+        longitude=144.9, latitude=-37.8,
+    ) for index, count in enumerate([5, 4, 12])]
+    monkeypatch.setattr(trip_analysis, "get_endpoint_hotspots", lambda *_, **__: hotspots)
+    monkeypatch.setattr(trip_analysis, "get_route_segment_crash_counts",
+                        lambda _session, segments: {segment.index: 0 for segment in segments})
+    request = TripCheckRequest.model_validate({
+        **VALID_REQUEST, "departure_time": "2026-08-25T21:17:00+10:00",
+    })
+    result = asyncio.run(_analyse_production_trip(request, Settings(use_mock_data=False), Mock()))
+    selected = {factor.type: factor.model_dump()["explanation"] for factor in result.factors}
+    later = {factor.type: factor.model_dump()["explanation"]
+             for factor in result.departure_comparison.thirty_minutes_later.factors}
+    assert result.factors == result.departure_comparison.selected.factors
+    for factors, precipitation, midpoint in [(selected, "0.35", "21:27"),
+                                              (later, "1.75", "21:57")]:
+        assert factors["rain"] == {
+            "source": "Open-Meteo",
+            "trigger": f"{precipitation} mm precipitation is forecast around the route midpoint.",
+            "limitation": EXPECTED_TRIP_LIMITATIONS["rain"],
+        }
+        assert factors["after_dark"] == {
+            "source": "Astral daylight calculation",
+            "trigger": f"The journey midpoint at {midpoint} is after dark at the route midpoint.",
+            "limitation": EXPECTED_TRIP_LIMITATIONS["after_dark"],
+        }
+        assert factors["high_speed_zone"] == {
+            "source": "Vicmap Speed Zones",
+            "trigger": "The route intersects a recorded high-speed zone.",
+            "limitation": EXPECTED_TRIP_LIMITATIONS["high_speed_zone"],
+        }
+        assert factors["significant_crash_history"] == {
+            "source": "Victorian Road Crash Data",
+            "trigger": "2 nearby crash clusters have at least 5 recorded injury crashes.",
+            "limitation": EXPECTED_TRIP_LIMITATIONS["significant_crash_history"],
+        }
 
 
 def test_trip_check_returns_route_coordinates(client: TestClient) -> None:

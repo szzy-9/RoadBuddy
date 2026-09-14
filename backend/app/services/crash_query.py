@@ -6,8 +6,10 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database.models import Crash, CrashCluster200m, DatasetSnapshot, SourceMetadata
+from app.schemas.indicator import IndicatorExplanation
 from app.schemas.radar import CrashClusterDetail, CrashClusterSummary, RadarStatusResponse
 from app.schemas.trip import RouteRiskSegment, TripHotspot
+from app.services.indicator_explanations import RADAR_CLUSTER_LIMITATION
 from app.services.mock_data import MOCK_CLUSTERS, MOCK_DATASET_UPDATED
 
 
@@ -203,6 +205,11 @@ def get_cluster_detail(
             dominant_crash_type=cluster.get("dominant_type"),
             wet_crashes=cluster.get("wet_count"),
             dark_crashes=cluster.get("dark_count"),
+            explanation=IndicatorExplanation(
+                source="RoadBuddy development sample",
+                trigger=f"{crash_count} recorded injury crashes are grouped in this crash cluster.",
+                limitation=RADAR_CLUSTER_LIMITATION,
+            ),
         )
 
     try:
@@ -301,6 +308,11 @@ def get_cluster_detail(
         dominant_crash_type=dominant_type,
         wet_crashes=wet_crashes,
         dark_crashes=dark_crashes,
+        explanation=IndicatorExplanation(
+            source="Victorian Road Crash Data",
+            trigger=f"{row.crash_count} recorded injury crashes are grouped in this crash cluster.",
+            limitation=RADAR_CLUSTER_LIMITATION,
+        ),
     )
 
 
