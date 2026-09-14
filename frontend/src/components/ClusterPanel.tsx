@@ -100,6 +100,9 @@ export default function ClusterPanel({ cluster, isLoading, error, onClose }: Clu
               <summary>Why?</summary>
               <p><strong>Source:</strong> {cluster.explanation.source}</p>
               <p><strong>Triggered by:</strong> {cluster.explanation.trigger}</p>
+              {cluster.explanation.limitation && (
+                <p><strong>Limitation:</strong> {cluster.explanation.limitation}</p>
+              )}
             </details>
           )}
           <p className="panel-note">Historical crash records provide context; they do not predict a future crash.</p>

@@ -4,6 +4,7 @@ export type DataAvailability = 'available' | 'unavailable'
 export interface IndicatorExplanation {
   source: string
   trigger: string
+  limitation?: string
 }
 
 export interface GeoPoint {

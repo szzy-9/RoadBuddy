@@ -22,6 +22,25 @@ VALID_REQUEST = {
     "departure_time": "2026-08-25T22:40:00+10:00",
 }
 
+EXPECTED_TRIP_LIMITATIONS = {
+    "rain": (
+        "Does not account for local visibility, road drainage, standing water or "
+        "rapidly changing weather along every part of the route."
+    ),
+    "after_dark": (
+        "Does not account for street lighting, headlight condition, glare or "
+        "the driver's actual visibility."
+    ),
+    "high_speed_zone": (
+        "Does not account for the driver's actual speed, temporary speed restrictions, "
+        "traffic flow or current roadworks."
+    ),
+    "significant_crash_history": (
+        "Historical crash records do not account for current traffic, passengers or "
+        "individual driver behaviour, and do not predict a future crash."
+    ),
+}
+
 
 def test_health(client: TestClient) -> None:
     response = client.get("/api/health")
@@ -67,6 +86,7 @@ def test_trip_check_returns_deterministic_mock_result(client: TestClient) -> Non
         for factor in factors:
             assert factor["explanation"]["source"] == "RoadBuddy development sample"
             assert factor["explanation"]["trigger"]
+            assert factor["explanation"]["limitation"] == EXPECTED_TRIP_LIMITATIONS[factor["type"]]
 
 
 def test_trip_factor_explanation_is_optional_and_structured() -> None:
@@ -74,7 +94,10 @@ def test_trip_factor_explanation_is_optional_and_structured() -> None:
 
     legacy = RiskFactor(type="rain", label="Rain")
     assert legacy.explanation is None
-    explanation = {"source": "Open-Meteo", "trigger": "0.35 mm precipitation is forecast."}
+    explanation = {
+        "source": "Open-Meteo", "trigger": "0.35 mm precipitation is forecast.",
+        "limitation": EXPECTED_TRIP_LIMITATIONS["rain"],
+    }
     factor = RiskFactor(type="rain", label="Rain", explanation=explanation)
     assert factor.model_dump()["explanation"] == explanation
 
@@ -117,18 +140,22 @@ def test_production_trip_explanations_use_each_departures_actual_data(monkeypatc
         assert factors["rain"] == {
             "source": "Open-Meteo",
             "trigger": f"{precipitation} mm precipitation is forecast around the route midpoint.",
+            "limitation": EXPECTED_TRIP_LIMITATIONS["rain"],
         }
         assert factors["after_dark"] == {
             "source": "Astral daylight calculation",
             "trigger": f"The journey midpoint at {midpoint} is after dark at the route midpoint.",
+            "limitation": EXPECTED_TRIP_LIMITATIONS["after_dark"],
         }
         assert factors["high_speed_zone"] == {
             "source": "Vicmap Speed Zones",
             "trigger": "The route intersects a recorded high-speed zone.",
+            "limitation": EXPECTED_TRIP_LIMITATIONS["high_speed_zone"],
         }
         assert factors["significant_crash_history"] == {
             "source": "Victorian Road Crash Data",
             "trigger": "2 nearby crash clusters have at least 5 recorded injury crashes.",
+            "limitation": EXPECTED_TRIP_LIMITATIONS["significant_crash_history"],
         }
 
 
