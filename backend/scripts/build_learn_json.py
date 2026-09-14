@@ -16,7 +16,6 @@ from datetime import date, datetime
 from pathlib import Path
 
 import pandas as pd
-
 from rewrites import EXCLUDED, REWRITES
 
 BUNDLE_VERSION = "1.0.0"
@@ -102,7 +101,12 @@ def build_options(row: pd.Series, rng: random.Random, position: int) -> tuple[li
     rng.shuffle(distractors)
     texts = distractors[:position] + [correct_text] + distractors[position:]
 
-    options = [{"key": key, "text": text} for key, text in zip(OPTION_KEYS, texts)]
+    # strict= surfaces a row whose options are short or duplicated, rather than
+    # silently dropping answers off the end of the question.
+    options = [
+        {"key": key, "text": text}
+        for key, text in zip(OPTION_KEYS, texts, strict=True)
+    ]
     return options, OPTION_KEYS[position]
 
 

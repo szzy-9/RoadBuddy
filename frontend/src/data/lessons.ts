@@ -1,7 +1,7 @@
 import type { RiskFactor } from '../types/api'
 
 export type Lesson = {
-  id: 'wet' | 'night' | 'merge' | 'fatigue'
+  id: 'wet' | 'night' | 'merge' | 'fatigue' | 'high_speed' | 'crash_history'
   topic: string
   shortLabel: string
   icon: string
@@ -12,6 +12,22 @@ export type Lesson = {
   source: {
     name: string
     href: string
+  }
+}
+
+export type LessonFeedback = {
+  isCorrect: boolean
+  explanation: string
+}
+
+export function getLessonFeedback(
+  lesson: Lesson,
+  selectedAnswerIndex: number | null,
+): LessonFeedback | null {
+  if (selectedAnswerIndex === null) return null
+  return {
+    isCorrect: selectedAnswerIndex === lesson.answerIndex,
+    explanation: lesson.why,
   }
 }
 
@@ -68,14 +84,56 @@ export const LESSONS: Lesson[] = [
       href: 'https://www.tac.vic.gov.au/road-safety/staying-safe/tired-driving',
     },
   },
+  // learn_content.json: SPEED_Q002; its speed_management topic carries high_speed_zone.
+  {
+    id: 'high_speed',
+    topic: 'Speed Management',
+    shortLabel: 'Speed',
+    icon: '◷',
+    question: 'Why does higher speed make avoiding a sudden hazard harder?',
+    options: [
+      'It automatically switches off vehicle safety systems',
+      'It increases the distance needed to react and stop',
+      "It removes the driver's responsibility to scan",
+      'It makes road signs harder to read legally',
+    ],
+    answerIndex: 1,
+    why: 'Higher speed increases stopping distance and leaves less time and distance to respond to unexpected hazards.',
+    source: {
+      name: 'Road to Solo Driving',
+      href: 'https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit',
+    },
+  },
+  // learn_content.json: HAZARD_Q009 (significant_crash_history).
+  {
+    id: 'crash_history',
+    topic: 'Hazard Perception & Scanning',
+    shortLabel: 'Crash history',
+    icon: '◉',
+    question: 'Risk Radar shows recorded crashes near part of your route. What is the appropriate learning message?',
+    options: [
+      'The road has been made safer since those crashes were recorded',
+      'Use the history as context and stay alert for current hazards',
+      'Those records show where the next crash is most likely to occur',
+      'The recorded crash count should determine your speed there',
+    ],
+    answerIndex: 1,
+    why: 'Historical crash records can provide context, but they do not predict a future crash.',
+    source: {
+      name: 'Road to Solo Driving',
+      href: 'https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit',
+    },
+  },
 ]
 
-/** Match only reported conditions, in a stable Night then Wet order. */
+/** Match only reported conditions, in a stable Night, Wet, Speed, Crash history order. */
 export function getTripLessonIds(factors: readonly RiskFactor[]): Lesson['id'][] {
   const types = new Set(factors.map((factor) => factor.type))
   const lessonIds: Lesson['id'][] = []
   if (types.has('after_dark')) lessonIds.push('night')
   if (types.has('rain')) lessonIds.push('wet')
+  if (types.has('high_speed_zone')) lessonIds.push('high_speed')
+  if (types.has('significant_crash_history')) lessonIds.push('crash_history')
   return lessonIds
 }
 

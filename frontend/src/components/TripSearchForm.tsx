@@ -4,6 +4,7 @@ import { checkTrip } from '../api/client'
 import { reverseGeocode } from '../api/reverseGeocode'
 import AddressAutocomplete from '../components/AddressAutocomplete'
 import { localDateTimeDefault, withLocalOffset } from '../lib/datetime'
+import type { GeoPoint, LocationSuggestion } from '../types/api'
 import { saveTripResult } from '../state/tripResult'
 import './TripSearchForm.css'
 
@@ -38,6 +39,14 @@ interface TripSearchFormProps {
    */
   initialOrigin?: string
   initialDestination?: string
+  /**
+   * The points the prefilled addresses already resolved to.
+   *
+   * Carried over so re-checking an unedited trip routes from the same places,
+   * rather than looking the labels up again and moving the trip.
+   */
+  initialOriginPoint?: GeoPoint | null
+  initialDestinationPoint?: GeoPoint | null
   /** Supporting line under the submit button, in place of the privacy note. */
   footnote?: string
   /**
@@ -74,6 +83,16 @@ function currentPosition(): Promise<GeolocationPosition> {
 }
 
 /**
+ * Keep only the coordinates from a chosen suggestion.
+ *
+ * @param suggestion The suggestion the user picked.
+ * @returns Its position, without the label.
+ */
+function toGeoPoint(suggestion: LocationSuggestion): GeoPoint {
+  return { longitude: suggestion.longitude, latitude: suggestion.latitude }
+}
+
+/**
  * The trip entry form, shared by the home screen and the trip screen.
  *
  * Both screens submit the same way, so the request, validation and navigation
@@ -88,6 +107,8 @@ export default function TripSearchForm({
   showExample = false,
   initialOrigin = '',
   initialDestination = '',
+  initialOriginPoint = null,
+  initialDestinationPoint = null,
   // footnote,
   onLoadingChange,
 }: TripSearchFormProps) {
@@ -103,6 +124,15 @@ export default function TripSearchForm({
   const [originIsResolved, setOriginIsResolved] = useState(Boolean(initialOrigin))
   const [destinationIsResolved, setDestinationIsResolved] = useState(
     Boolean(initialDestination),
+  )
+  // The coordinates behind a picked suggestion, sent so the server routes from
+  // the place the user chose rather than re-reading the label. A point of
+  // interest label has no address behind it, so re-reading "Chadstone Shopping
+  // Centre, Melbourne 3145" finds street number 3145 on a road named Melbourne,
+  // in Wodonga. Cleared whenever the text changes, since it no longer matches.
+  const [originPoint, setOriginPoint] = useState<GeoPoint | null>(initialOriginPoint)
+  const [destinationPoint, setDestinationPoint] = useState<GeoPoint | null>(
+    initialDestinationPoint,
   )
 
   async function handleUseLocation() {
@@ -161,6 +191,8 @@ export default function TripSearchForm({
         origin: origin.trim(),
         destination: destination.trim(),
         departure_time: formattedDeparture,
+        ...(originPoint ? { origin_point: originPoint } : {}),
+        ...(destinationPoint ? { destination_point: destinationPoint } : {}),
       })
       saveTripResult(response)
       navigate('/trip')
@@ -200,8 +232,10 @@ export default function TripSearchForm({
           value={origin}
           onChange={(value) => {
             setOriginIsResolved(false)
+            setOriginPoint(null)
             setOrigin(value)
           }}
+          onSelect={(suggestion) => setOriginPoint(toGeoPoint(suggestion))}
           valueIsResolved={originIsResolved}
           placeholder="Suburb or address"
         />
@@ -215,8 +249,10 @@ export default function TripSearchForm({
           value={destination}
           onChange={(value) => {
             setDestinationIsResolved(false)
+            setDestinationPoint(null)
             setDestination(value)
           }}
+          onSelect={(suggestion) => setDestinationPoint(toGeoPoint(suggestion))}
           valueIsResolved={destinationIsResolved}
           placeholder="Suburb or address"
         />

@@ -83,10 +83,23 @@ export interface TripCheckResponse {
   rule_version: string
 }
 
+export interface GeoPoint {
+  longitude: number
+  latitude: number
+}
+
 export interface TripCheckRequest {
   origin: string
   destination: string
   departure_time: string
+  /**
+   * The coordinates behind a picked suggestion.
+   *
+   * Sent so the server routes from the exact place the user chose. Omitted for
+   * an address typed without picking, which the server still geocodes.
+   */
+  origin_point?: GeoPoint
+  destination_point?: GeoPoint
 }
 
 export interface LocationSuggestion {

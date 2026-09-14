@@ -31,6 +31,28 @@ interface AddressAutocompleteProps {
   hideLabel?: boolean
 }
 
+/** Victorian postcodes occupy 3000-3999; no other state uses that range. */
+const VICTORIA_POSTCODE_PATTERN = /^3\d{3}$/
+
+/**
+ * Explain an empty result for a number-only query.
+ *
+ * A bare number is ambiguous: it reads as a postcode attempt or as a house
+ * number with the street left off, and neither can match on its own. The
+ * generic empty state makes a working search look broken, so say which it is.
+ *
+ * @param query The trimmed text in the field.
+ * @returns The guidance line, or null where the generic message is right.
+ */
+function numericQueryHint(query: string): string | null {
+  if (!/^\d+$/.test(query)) return null
+  if (VICTORIA_POSTCODE_PATTERN.test(query)) return null
+  if (query.length === 4) {
+    return 'Victorian postcodes start with 3. Add a street or suburb to search by number.'
+  }
+  return 'Add a street name after the number, like "1452 High Street".'
+}
+
 export default function AddressAutocomplete({
   value,
   onChange,
@@ -219,7 +241,7 @@ export default function AddressAutocomplete({
             </li>
           ) : suggestions.length === 0 ? (
             <li className="address-suggestion-status" role="status">
-              No Victorian locations found
+              {numericQueryHint(value.trim()) ?? 'No Victorian locations found'}
             </li>
           ) : suggestions.map((suggestion, index) => (
             <li key={`${suggestion.label}-${suggestion.longitude}-${suggestion.latitude}`}>

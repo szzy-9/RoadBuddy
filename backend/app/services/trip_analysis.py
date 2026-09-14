@@ -177,8 +177,18 @@ async def analyse_trip(
 
 def _analyse_mock_trip(request: TripCheckRequest) -> TripCheckResponse:
 
-    origin_coordinates = mock_geocode(request.origin)
-    destination_coordinates = mock_geocode(request.destination)
+    # Honour a picked point here too, so mock runs exercise the same path the
+    # real one takes rather than always hashing the label to a point.
+    origin_coordinates = (
+        (request.origin_point.longitude, request.origin_point.latitude)
+        if request.origin_point is not None
+        else mock_geocode(request.origin)
+    )
+    destination_coordinates = (
+        (request.destination_point.longitude, request.destination_point.latitude)
+        if request.destination_point is not None
+        else mock_geocode(request.destination)
+    )
     distance_km, duration_minutes = mock_route_metrics(
         origin_coordinates,
         destination_coordinates,
@@ -240,6 +250,27 @@ def _analyse_mock_trip(request: TripCheckRequest) -> TripCheckResponse:
     )
 
 
+async def _resolve_endpoint(
+    address: str,
+    point: GeoPoint | None,
+    settings: Settings,
+    client: httpx.AsyncClient,
+) -> Coordinates:
+    """Locate one end of the trip.
+
+    A point arrives when the user picked the address from the suggestion list,
+    and it is the same coordinate that produced the label they chose, so it is
+    used as-is. Only free text they typed without picking needs a lookup.
+    """
+    if point is not None:
+        return Coordinates(
+            longitude=point.longitude,
+            latitude=point.latitude,
+            label=address,
+        )
+    return await geocode_address(address, settings, client)
+
+
 async def _analyse_production_trip(
     request: TripCheckRequest,
     settings: Settings,
@@ -250,8 +281,15 @@ async def _analyse_production_trip(
         try:
             with _timed_stage("geocoding"):
                 origin_coordinates, destination_coordinates = await asyncio.gather(
-                    geocode_address(request.origin, settings, client),
-                    geocode_address(request.destination, settings, client),
+                    _resolve_endpoint(
+                        request.origin, request.origin_point, settings, client
+                    ),
+                    _resolve_endpoint(
+                        request.destination,
+                        request.destination_point,
+                        settings,
+                        client,
+                    ),
                 )
             with _timed_stage("routing"):
                 route = await calculate_route(
