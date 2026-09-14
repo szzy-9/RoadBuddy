@@ -1,0 +1,5388 @@
+{
+  "meta": {
+    "bundleVersion": "1.0.0",
+    "generatedAt": "2026-09-13",
+    "sourceWorkbook": "RoadBuddy_-_Question_Bank_100_Questions_V2__updated_.xlsx",
+    "counts": {
+      "topics": 12,
+      "knowledgeItems": 19,
+      "questionsTotal": 100,
+      "questionsServed": 91,
+      "questionsExcluded": 9,
+      "answerKeyDistribution": {
+        "A": 23,
+        "B": 23,
+        "C": 23,
+        "D": 22
+      }
+    },
+    "notices": {
+      "notOfficial": "Practice content only. RoadBuddy is a student project and is not an official Victorian licence test.",
+      "sourceVerification": "Handbook sections and page numbers are taken from the Road to Solo Driving edition named in sources[].edition and must be re-checked against the current edition before release."
+    }
+  },
+  "conditionKeyMap": {
+    "after_dark": "after_dark",
+    "raining": "rain",
+    "wet_surface": "rain",
+    "historical_crash_context": "significant_crash_history",
+    "future_speed_zone_context": "high_speed_zone",
+    "future_fatigue_context": null
+  },
+  "sources": [
+    {
+      "id": "SRC_001",
+      "publisher": "Department of Transport and Planning / Transport Victoria",
+      "title": "Road to Solo Driving",
+      "type": "official_driver_handbook",
+      "jurisdiction": "Victoria",
+      "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit",
+      "licenceOrTerms": "Use the official handbook as the primary content source. Paraphrase learning content and re-check time-sensitive road rules before release.",
+      "edition": "Road to Solo Driving — updated March 2023 / April 2023 edition",
+      "lastVerified": "2026-09-10",
+      "status": "active"
+    },
+    {
+      "id": "SRC_002",
+      "publisher": "Department of Transport and Planning / Transport Victoria",
+      "title": "Prepare for your learner permit",
+      "type": "official_source_landing_page",
+      "jurisdiction": "Victoria",
+      "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit",
+      "licenceOrTerms": "Use to retrieve/check the current Road to Solo Driving handbook and learner-permit preparation pathway.",
+      "edition": "Live Transport Victoria page",
+      "lastVerified": "2026-09-10",
+      "status": "reference_only"
+    },
+    {
+      "id": "SRC_003",
+      "publisher": "Department of Transport and Planning / Transport Victoria",
+      "title": "Learner and probationary driver road rules",
+      "type": "official_road_rules_page",
+      "jurisdiction": "Victoria",
+      "url": "https://transport.vic.gov.au/road-and-active-transport/road-rules-and-safety/learner-and-probationary-driver-road-rules",
+      "licenceOrTerms": "Use as a specific official source for current learner and probationary driver requirements; verify relevant rules before production release.",
+      "edition": "Live Transport Victoria page",
+      "lastVerified": "2026-09-10",
+      "status": "active"
+    }
+  ],
+  "topics": [
+    {
+      "id": "night_driving",
+      "name": "Night Driving & Visibility",
+      "description": "Visibility, scanning, hazard anticipation and safe-speed awareness after dark.",
+      "tripMatchable": true,
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "active": true
+    },
+    {
+      "id": "wet_weather",
+      "name": "Wet Weather & Slippery Roads",
+      "description": "Visibility, slippery surfaces, speed choice and following distance in wet conditions.",
+      "tripMatchable": true,
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "active": true
+    },
+    {
+      "id": "speed_management",
+      "name": "Speed Management",
+      "description": "Speed limits, safe speed below the limit, stopping distance and adapting to conditions.",
+      "tripMatchable": false,
+      "conditionKeys": [
+        "future_speed_zone_context"
+      ],
+      "riskFactorTypes": [
+        "high_speed_zone"
+      ],
+      "active": true
+    },
+    {
+      "id": "hazard_awareness",
+      "name": "Hazard Perception & Scanning",
+      "description": "Identifying, assessing and responding to potential hazards; mirrors, scanning and head checks.",
+      "tripMatchable": true,
+      "conditionKeys": [
+        "historical_crash_context"
+      ],
+      "riskFactorTypes": [
+        "significant_crash_history"
+      ],
+      "active": true
+    },
+    {
+      "id": "following_distance",
+      "name": "Following Distance & Safety Margin",
+      "description": "Maintaining space and increasing the gap when visibility or road conditions are poorer.",
+      "tripMatchable": true,
+      "conditionKeys": [
+        "after_dark",
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "after_dark",
+        "rain"
+      ],
+      "active": true
+    },
+    {
+      "id": "intersections",
+      "name": "Intersections & Giving Way",
+      "description": "Traffic lights, Stop/Give Way requirements, pedestrians, T-intersections and roundabouts.",
+      "tripMatchable": false,
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "active": true
+    },
+    {
+      "id": "signs_markings",
+      "name": "Road Signs & Markings",
+      "description": "Regulatory/warning signs, lane/dividing lines, road-work signs and lane-control signals.",
+      "tripMatchable": false,
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "active": true
+    },
+    {
+      "id": "sharing_road",
+      "name": "Sharing the Road",
+      "description": "Cooperative driving and awareness of pedestrians, cyclists, motorcyclists, trams and heavy vehicles.",
+      "tripMatchable": false,
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "active": true
+    },
+    {
+      "id": "distraction",
+      "name": "Distraction & Devices",
+      "description": "Mobile-device restrictions, attention management and other common distractions.",
+      "tripMatchable": false,
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "active": true
+    },
+    {
+      "id": "p_plate_rules",
+      "name": "P-plate Rules",
+      "description": "Core P1/P2 conditions, including zero BAC, plates, devices and selected restrictions.",
+      "tripMatchable": false,
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "active": true
+    },
+    {
+      "id": "fatigue",
+      "name": "Fatigue & Journey Readiness",
+      "description": "Recognising fatigue risk and understanding why late-night driving can be demanding.",
+      "tripMatchable": false,
+      "conditionKeys": [
+        "future_fatigue_context"
+      ],
+      "riskFactorTypes": [],
+      "active": true
+    },
+    {
+      "id": "vehicle_safety",
+      "name": "Vehicle Safety & Maintenance",
+      "description": "Seatbelts, vehicle safety features, tyres and basic maintenance awareness.",
+      "tripMatchable": false,
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "active": true
+    }
+  ],
+  "knowledgeItems": [
+    {
+      "id": "NIGHT_001",
+      "topicId": "night_driving",
+      "title": "Why night driving needs more caution",
+      "summary": "At night a driver cannot see as far ahead or around the vehicle, so anticipating potential hazards is harder.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Managing risk — Strategy 5: Driving safely at night, p.63",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "after_dark",
+        "visibility",
+        "hazards"
+      ],
+      "qualifiers": "Use as general learning guidance, not as a claim that a crash will occur.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "NIGHT_002",
+      "topicId": "night_driving",
+      "title": "Speed choice after dark",
+      "summary": "The handbook advises keeping speed down at night so there is more time to identify and respond to hazards.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Managing risk — Strategy 5: Driving safely at night, p.63",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "after_dark",
+        "speed",
+        "hazards"
+      ],
+      "qualifiers": "Speed must still comply with the posted limit and current road conditions.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "WET_001",
+      "topicId": "wet_weather",
+      "title": "Wet roads and visibility",
+      "summary": "Heavy rain can reduce visibility and make roads slippery; drivers should reduce speed and, when conditions are severe, may need to stop safely and wait for improvement.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Safe speeds for different needs, pp.81–82",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "rain",
+        "wet_surface",
+        "visibility",
+        "slippery"
+      ],
+      "qualifiers": "Do not infer current weather from historical crash records.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "WET_002",
+      "topicId": "wet_weather",
+      "title": "Slippery roads after rain",
+      "summary": "Rain can make roads slippery, including when oil and dirt are brought to the surface; drivers should slow down and increase space from the vehicle ahead.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Slippery roads, p.82",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "rain",
+        "slippery",
+        "following_distance"
+      ],
+      "qualifiers": null,
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "SPEED_001",
+      "topicId": "speed_management",
+      "title": "Speed limit versus safe speed",
+      "summary": "A speed-limit sign gives the maximum legal speed in good conditions; the driver still has to choose a safe speed at or below that limit for the actual conditions.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Speed limits / Safe speeds for different needs, pp.79–81",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "speed_limit",
+        "conditions",
+        "safe_speed"
+      ],
+      "qualifiers": "Do not use this to infer the posted limit of a specific road unless validated speed-zone data is available.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "SPEED_002",
+      "topicId": "speed_management",
+      "title": "Speed and stopping distance",
+      "summary": "Higher speed substantially increases stopping distance, reducing the time and distance available to respond to a hazard.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — How quickly can you stop?, p.83",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "speed",
+        "stopping_distance",
+        "reaction"
+      ],
+      "qualifiers": "Use the handbook's examples as learning context; avoid presenting them as exact results for every vehicle/road condition.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "HAZARD_001",
+      "topicId": "hazard_awareness",
+      "title": "Hazard perception",
+      "summary": "Hazard perception means identifying possible dangers, assessing what may happen, and responding early enough to deal with the risk.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Learning to drive — Hazard perception, p.39",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "hazard",
+        "anticipation",
+        "risk"
+      ],
+      "qualifiers": null,
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "HAZARD_002",
+      "topicId": "hazard_awareness",
+      "title": "Scanning and blind spots",
+      "summary": "Mirrors alone do not show every area around a vehicle; scanning and quick head checks help a driver detect hazards in blind spots when manoeuvring.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Learning to drive — Hazard perception / blind spots, pp.39–41",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "scan",
+        "head_check",
+        "blind_spot",
+        "mirrors"
+      ],
+      "qualifiers": "A head check should be quick; do not encourage prolonged looking away from the road ahead.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "FOLLOW_001",
+      "topicId": "following_distance",
+      "title": "Minimum following-time guidance",
+      "summary": "In good conditions, most drivers should leave at least a two-second gap to the vehicle in front.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Managing risk — Strategy 3: Give yourself some space, p.61",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "following_distance",
+        "two_seconds",
+        "safety_margin"
+      ],
+      "qualifiers": "The handbook says 'most drivers'; do not describe two seconds as a universal fixed legal distance.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "FOLLOW_002",
+      "topicId": "following_distance",
+      "title": "Increase the gap in harder conditions",
+      "summary": "A larger following gap, such as three or four seconds, is presented as a safer option for young drivers and in poor visibility, darkness, wet/slippery roads, heavy loads or gravel.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Managing risk — Following distance, p.62",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "following_distance",
+        "after_dark",
+        "wet_surface",
+        "visibility"
+      ],
+      "qualifiers": "This is safety guidance, not a fixed universal rule for every situation.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "INTER_001",
+      "topicId": "intersections",
+      "title": "Traffic-light meanings",
+      "summary": "Red requires stopping; yellow requires stopping unless it cannot be done safely; green permits entry only when the intersection will not be blocked.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Traffic controls at intersections, p.98",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "traffic_lights",
+        "intersection",
+        "red",
+        "yellow",
+        "green"
+      ],
+      "qualifiers": null,
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "INTER_002",
+      "topicId": "intersections",
+      "title": "Roundabout entry",
+      "summary": "When entering a roundabout, drivers must give way to vehicles already in the roundabout and to trams entering or approaching it.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Giving way at roundabouts, p.107",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "roundabout",
+        "give_way",
+        "tram"
+      ],
+      "qualifiers": null,
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "SIGNS_001",
+      "topicId": "signs_markings",
+      "title": "Regulatory versus warning signs",
+      "summary": "Regulatory signs state what a road user must or must not do, while warning signs alert drivers to possible danger ahead.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Road signs, pp.84–90",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "regulatory_signs",
+        "warning_signs"
+      ],
+      "qualifiers": null,
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "SIGNS_002",
+      "topicId": "signs_markings",
+      "title": "Continuous dividing lines",
+      "summary": "A single continuous dividing line restricts overtaking and U-turns, while limited crossing can still be permitted in specific situations described by the rules.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Road markings, pp.91–92",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "road_markings",
+        "continuous_line",
+        "overtaking"
+      ],
+      "qualifiers": "Preserve listed exceptions; do not simplify to 'never cross a continuous line'.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "DISTRACT_001",
+      "topicId": "distraction",
+      "title": "P-driver device restrictions",
+      "summary": "Learner, P1 and P2 drivers face strict limits on touching or using portable/mounted devices while driving; navigation/audio should be set up before driving, subject to current rules.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Managing risk — Mobile phones and electronic devices, pp.53–54; P1/P2 conditions, pp.22–23",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "mobile_phone",
+        "device",
+        "navigation",
+        "distraction"
+      ],
+      "qualifiers": "Rules may change; re-verify against current Victorian requirements before release.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "title": "Zero BAC for probationary drivers",
+      "summary": "P1 and P2 probationary drivers must have zero blood alcohol concentration while driving.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Alcohol, p.71; P1/P2 conditions, pp.22–23",
+      "audience": [
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "p1",
+        "p2",
+        "zero_bac"
+      ],
+      "qualifiers": "Re-verify current rules before release.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "FATIGUE_001",
+      "topicId": "fatigue",
+      "title": "Late-night driving and fatigue",
+      "summary": "Fatigue can impair attention, judgement and reflexes; the handbook identifies 10 pm–6 am as hours when people may normally be sleeping and advises avoiding driving when tired.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Managing risk — Fatigue, p.57",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "fatigue",
+        "overnight",
+        "22_06",
+        "attention"
+      ],
+      "qualifiers": "Do not infer that every late-night driver is fatigued; use as learning context only.",
+      "status": "approved",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "SHARE_001",
+      "topicId": "sharing_road",
+      "title": "Sharing the road with vulnerable road users",
+      "summary": "Drivers should scan for pedestrians, cyclists and motorcyclists, allow appropriate space, and anticipate that these road users may be less visible or more vulnerable in a collision.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Rules and responsibilities — Sharing the road, pp.125–144",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "pedestrian",
+        "cyclist",
+        "motorcyclist",
+        "sharing_road"
+      ],
+      "qualifiers": "Use current road-rule material to verify any exact passing-distance or tram-specific legal requirement.",
+      "status": "review",
+      "reviewedAt": "2026-09-10"
+    },
+    {
+      "id": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "title": "Basic vehicle safety before driving",
+      "summary": "Safe driving includes checking that the vehicle is roadworthy and that important safety items such as tyres, lights, windows and restraints are in suitable condition.",
+      "sourceId": "SRC_001",
+      "sourceSection": "Managing risk — Vehicle safety and maintenance, pp.58–59",
+      "audience": [
+        "learner",
+        "p1",
+        "p2"
+      ],
+      "keywords": [
+        "vehicle",
+        "tyres",
+        "lights",
+        "seatbelt",
+        "maintenance"
+      ],
+      "qualifiers": "Exact legal standards should be checked against current Victorian requirements where a question depends on a numeric threshold.",
+      "status": "review",
+      "reviewedAt": "2026-09-10"
+    }
+  ],
+  "questions": [
+    {
+      "id": "NIGHT_Q001",
+      "knowledgeId": "NIGHT_001",
+      "topicId": "night_driving",
+      "subtopic": "visibility",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why does night driving usually require more hazard awareness than daytime driving?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Because visibility ahead and around the vehicle is reduced"
+        },
+        {
+          "key": "B",
+          "text": "Because traffic always moves faster at night"
+        },
+        {
+          "key": "C",
+          "text": "Because mirrors cannot be used after dark"
+        },
+        {
+          "key": "D",
+          "text": "Because road signs stop applying after dark"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Reduced visibility makes it harder to see and anticipate potential hazards, so the driver needs more time and attention.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Strategy 5: Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "NIGHT_Q002",
+      "knowledgeId": "NIGHT_002",
+      "topicId": "night_driving",
+      "subtopic": "safe_speed",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You are driving after dark and can see less of the road ahead than during the day. What is the best general response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rely only on the vehicle in front to identify hazards"
+        },
+        {
+          "key": "B",
+          "text": "Reduce speed as needed so you have more time to identify hazards"
+        },
+        {
+          "key": "C",
+          "text": "Keep the same speed regardless of visibility"
+        },
+        {
+          "key": "D",
+          "text": "Increase speed so the trip finishes sooner"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "The handbook recommends keeping speed down at night because reduced visibility makes hazard anticipation harder.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Strategy 5: Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Night suburban road; headlights illuminate only a limited distance ahead and a parked vehicle partly blocks the view.",
+        "hazards": [
+          "reduced visibility",
+          "parked vehicle",
+          "late hazard detection"
+        ],
+        "decisionPoint": "Choose a speed that gives enough time to identify and respond to hazards.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "WET_Q001",
+      "knowledgeId": "WET_001",
+      "topicId": "wet_weather",
+      "subtopic": "visibility",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Heavy rain is reducing visibility and the road is becoming slippery. Which response best matches the handbook guidance?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Maintain the posted maximum speed because it is always safe"
+        },
+        {
+          "key": "B",
+          "text": "Accelerate through slippery sections to reduce time on them"
+        },
+        {
+          "key": "C",
+          "text": "Slow down and be prepared to stop safely if conditions become too difficult"
+        },
+        {
+          "key": "D",
+          "text": "Drive closer to the vehicle ahead so you can follow its lights"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Heavy rain can reduce visibility and grip, so speed should be reduced and severe conditions may require stopping safely until they improve.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Safe speeds for different needs, pp.81–82",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Heavy rain begins during a suburban trip. Water is visible on the road and the vehicle ahead is harder to see.",
+        "hazards": [
+          "heavy rain",
+          "wet surface",
+          "reduced visibility"
+        ],
+        "decisionPoint": "Choose how speed and stopping readiness should change.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "WET_Q002",
+      "knowledgeId": "WET_002",
+      "topicId": "wet_weather",
+      "subtopic": "slippery_surface",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "When a road becomes slippery after rain, what should you do about the gap to the vehicle ahead?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use the shoulder to create extra space"
+        },
+        {
+          "key": "B",
+          "text": "Reduce the gap so another vehicle cannot merge"
+        },
+        {
+          "key": "C",
+          "text": "Keep exactly the same gap in every condition"
+        },
+        {
+          "key": "D",
+          "text": "Increase the gap and reduce speed for the conditions"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "The handbook advises slowing down and keeping more distance because wet or slippery roads reduce the available safety margin.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Slippery roads, p.82",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SPEED_Q001",
+      "knowledgeId": "SPEED_001",
+      "topicId": "speed_management",
+      "subtopic": "speed_limit",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What does a posted speed-limit sign represent in good conditions?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The maximum legal speed, while a lower speed may still be safer for the conditions"
+        },
+        {
+          "key": "B",
+          "text": "A target speed that drivers should always reach"
+        },
+        {
+          "key": "C",
+          "text": "A recommendation that can be ignored in light traffic"
+        },
+        {
+          "key": "D",
+          "text": "The minimum speed for all vehicles"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "A speed limit is the maximum legal speed in good conditions; drivers still need to choose a safe speed for the actual environment.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Speed limits / Safe speeds for different needs, pp.79–81",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SPEED_Q002",
+      "knowledgeId": "SPEED_002",
+      "topicId": "speed_management",
+      "subtopic": "stopping_distance",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why does higher speed make avoiding a sudden hazard harder?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It automatically switches off vehicle safety systems"
+        },
+        {
+          "key": "B",
+          "text": "It increases the distance needed to react and stop"
+        },
+        {
+          "key": "C",
+          "text": "It removes the driver's responsibility to scan"
+        },
+        {
+          "key": "D",
+          "text": "It makes road signs harder to read legally"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Higher speed increases stopping distance and leaves less time and distance to respond to unexpected hazards.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "How quickly can you stop?, p.83",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q001",
+      "knowledgeId": "HAZARD_001",
+      "topicId": "hazard_awareness",
+      "subtopic": "definition",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which description best matches hazard perception?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Memorising every road name before a trip"
+        },
+        {
+          "key": "B",
+          "text": "Only reacting after a danger has already happened"
+        },
+        {
+          "key": "C",
+          "text": "Identifying possible dangers, assessing what may happen, and responding in time"
+        },
+        {
+          "key": "D",
+          "text": "Checking only the vehicle immediately in front"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Hazard perception combines identifying potential hazards, assessing their risk and responding early enough to manage them.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Hazard perception, p.39",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "historical_crash_context"
+      ],
+      "riskFactorTypes": [
+        "significant_crash_history"
+      ],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q002",
+      "knowledgeId": "HAZARD_002",
+      "topicId": "hazard_awareness",
+      "subtopic": "head_check",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Before changing lanes, why can a quick head check still be necessary even after using your mirrors?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Mirrors are only intended for parking"
+        },
+        {
+          "key": "B",
+          "text": "A head check replaces the need to signal"
+        },
+        {
+          "key": "C",
+          "text": "A head check tells you the speed limit"
+        },
+        {
+          "key": "D",
+          "text": "Mirrors may leave blind spots that do not show every nearby road user"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Blind spots can remain even with correctly adjusted mirrors, so a quick head check helps confirm the space beside the vehicle is clear.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Blind spots and scanning, pp.39–41",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The dashcam vehicle prepares to change lanes while another vehicle is travelling in the adjacent lane near the rear quarter.",
+        "hazards": [
+          "blind spot",
+          "lane change",
+          "adjacent vehicle"
+        ],
+        "decisionPoint": "Decide whether mirrors alone provide enough information before moving lanes.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FOLLOW_Q001",
+      "knowledgeId": "FOLLOW_001",
+      "topicId": "following_distance",
+      "subtopic": "two_second_gap",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "In good conditions, what following-time gap does the handbook say most drivers should leave at minimum?",
+      "options": [
+        {
+          "key": "A",
+          "text": "At least two seconds"
+        },
+        {
+          "key": "B",
+          "text": "About half a second"
+        },
+        {
+          "key": "C",
+          "text": "Exactly ten seconds"
+        },
+        {
+          "key": "D",
+          "text": "Exactly one car length"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "The handbook says most drivers should be at least two seconds behind the vehicle in front in good conditions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Strategy 3: Give yourself some space, p.61",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FOLLOW_Q002",
+      "knowledgeId": "FOLLOW_002",
+      "topicId": "following_distance",
+      "subtopic": "poor_conditions",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You are driving at night on a wet road. Compared with good daytime conditions, what should happen to your following gap?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Following distance no longer matters at night"
+        },
+        {
+          "key": "B",
+          "text": "It should generally be larger"
+        },
+        {
+          "key": "C",
+          "text": "It must stay exactly two seconds in every situation"
+        },
+        {
+          "key": "D",
+          "text": "It should be smaller so other cars cannot enter it"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "The handbook presents a larger three- or four-second gap as a safer option for young drivers and in darkness or wet/slippery conditions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Following distance, p.62",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark",
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "after_dark",
+        "rain"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The vehicle is travelling after dark on a wet road behind another car.",
+        "hazards": [
+          "wet surface",
+          "darkness",
+          "following distance"
+        ],
+        "decisionPoint": "Decide whether the usual good-condition following gap is enough.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "INTER_Q001",
+      "knowledgeId": "INTER_001",
+      "topicId": "intersections",
+      "subtopic": "traffic_lights",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "A traffic light turns yellow as you approach. What is the general rule described in the handbook?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Accelerate to enter before it turns red"
+        },
+        {
+          "key": "B",
+          "text": "Stop only when another vehicle is waiting"
+        },
+        {
+          "key": "C",
+          "text": "Stop unless you are unable to stop safely"
+        },
+        {
+          "key": "D",
+          "text": "Treat yellow exactly like green"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Yellow means stop unless stopping cannot be done safely.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Traffic controls at intersections, p.98",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "INTER_Q002",
+      "knowledgeId": "INTER_002",
+      "topicId": "intersections",
+      "subtopic": "roundabout",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "When entering a roundabout, who must you give way to?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Nobody if you arrived first"
+        },
+        {
+          "key": "B",
+          "text": "Only the largest vehicle"
+        },
+        {
+          "key": "C",
+          "text": "Only vehicles approaching from the left"
+        },
+        {
+          "key": "D",
+          "text": "Vehicles already in the roundabout, and trams entering or approaching it"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "The handbook requires entering drivers to give way to vehicles already in the roundabout and to trams entering or approaching.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Giving way at roundabouts, p.107",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SIGNS_Q001",
+      "knowledgeId": "SIGNS_001",
+      "topicId": "signs_markings",
+      "subtopic": "sign_types",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What is the main difference between a regulatory sign and a warning sign?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Regulatory signs state what you must or must not do; warning signs alert you to possible danger"
+        },
+        {
+          "key": "B",
+          "text": "Regulatory signs only apply at night; warning signs only apply during the day"
+        },
+        {
+          "key": "C",
+          "text": "Warning signs create parking permits; regulatory signs show tourist attractions"
+        },
+        {
+          "key": "D",
+          "text": "There is no functional difference"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Regulatory signs impose requirements, while warning signs alert drivers to hazards or changing road conditions ahead.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Road signs, pp.84–90",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SIGNS_Q002",
+      "knowledgeId": "SIGNS_002",
+      "topicId": "signs_markings",
+      "subtopic": "continuous_line",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "Which statement about a single continuous dividing line is the most accurate?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It can always be crossed whenever traffic is light"
+        },
+        {
+          "key": "B",
+          "text": "It generally prevents overtaking and U-turns, while specific permitted exceptions still exist"
+        },
+        {
+          "key": "C",
+          "text": "It means the road is one-way"
+        },
+        {
+          "key": "D",
+          "text": "It is only a visual guide with no road-rule effect"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "The handbook restricts overtaking and U-turns across a single continuous dividing line but lists specific situations where crossing may still be permitted.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Road markings, pp.91–92",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "DISTRACT_Q001",
+      "knowledgeId": "DISTRACT_001",
+      "topicId": "distraction",
+      "subtopic": "mobile_devices",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "A P1 driver wants navigation for a trip. Which approach best matches the handbook's device guidance?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Use social media only while stopped at a red light"
+        },
+        {
+          "key": "B",
+          "text": "Type the destination while moving if traffic is light"
+        },
+        {
+          "key": "C",
+          "text": "Set up navigation before driving and avoid interacting with the portable device while driving"
+        },
+        {
+          "key": "D",
+          "text": "Hold the phone below the window line so it is less distracting"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "For learner and probationary drivers, navigation or audio should be set up before driving and device interaction while driving is tightly restricted.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Mobile phones and devices, pp.53–54; P1 rules, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A P1 driver has just started a trip and realises the navigation destination has not been set.",
+        "hazards": [
+          "mobile device",
+          "navigation",
+          "P1 restriction"
+        ],
+        "decisionPoint": "Decide how navigation should be set up without creating distraction while moving.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "PPLATE_Q001",
+      "knowledgeId": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "subtopic": "bac",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What BAC requirement applies to P1 and P2 probationary drivers in the handbook?",
+      "options": [
+        {
+          "key": "A",
+          "text": "There is no BAC condition for probationary drivers"
+        },
+        {
+          "key": "B",
+          "text": "Below 0.05"
+        },
+        {
+          "key": "C",
+          "text": "Below 0.08"
+        },
+        {
+          "key": "D",
+          "text": "Zero BAC"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "The handbook states that P1 and P2 probationary drivers must have zero BAC while driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Alcohol, p.71; P1/P2 conditions, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FATIGUE_Q001",
+      "knowledgeId": "FATIGUE_001",
+      "topicId": "fatigue",
+      "subtopic": "overnight",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why does the handbook identify late-night hours as an important fatigue consideration?",
+      "options": [
+        {
+          "key": "A",
+          "text": "They are hours when people may normally be sleeping, and fatigue can reduce attention and judgement"
+        },
+        {
+          "key": "B",
+          "text": "All roads become legally one-way at night"
+        },
+        {
+          "key": "C",
+          "text": "Road rules stop applying after 10 pm"
+        },
+        {
+          "key": "D",
+          "text": "Vehicle brakes work less effectively at a fixed clock time"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Fatigue can affect attention, judgement and reflexes, and driving during normal sleeping hours can increase fatigue risk.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Fatigue, p.57",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "approved",
+      "distractorsRewritten": false,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "NIGHT_Q003",
+      "knowledgeId": "NIGHT_001",
+      "topicId": "night_driving",
+      "subtopic": "scanning",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "On an unfamiliar road at night, what is the best reason to scan well ahead?",
+      "options": [
+        {
+          "key": "A",
+          "text": "To work out where the next speed-limit sign will be"
+        },
+        {
+          "key": "B",
+          "text": "To identify possible hazards earlier"
+        },
+        {
+          "key": "C",
+          "text": "Because looking further ahead makes oncoming headlights less dazzling"
+        },
+        {
+          "key": "D",
+          "text": "To keep the vehicle centred between the lane markings"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Scanning ahead gives more time to identify and respond to hazards when visibility is reduced.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Dashcam-style view on an unfamiliar unlit road. The road bends ahead and roadside details are difficult to see.",
+        "hazards": [
+          "night visibility",
+          "unfamiliar road",
+          "bend"
+        ],
+        "decisionPoint": "Decide where to direct attention and how far ahead to scan.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "NIGHT_Q004",
+      "knowledgeId": "NIGHT_002",
+      "topicId": "night_driving",
+      "subtopic": "safe_speed",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "If darkness makes it harder to see what is ahead, which speed choice is safest?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The posted limit, since it already allows for night conditions"
+        },
+        {
+          "key": "B",
+          "text": "Slightly faster, so less time is spent on the dark section"
+        },
+        {
+          "key": "C",
+          "text": "A speed that lets you respond within the distance you can see"
+        },
+        {
+          "key": "D",
+          "text": "The same speed as the vehicle in front, so the gap stays constant"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "The posted limit is a maximum; visibility and other conditions can require a lower safe speed.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "NIGHT_Q005",
+      "knowledgeId": "NIGHT_001",
+      "topicId": "night_driving",
+      "subtopic": "hazard_awareness",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which factor is most directly affected when daylight is lost?",
+      "options": [
+        {
+          "key": "A",
+          "text": "How quickly the brakes can slow the vehicle"
+        },
+        {
+          "key": "B",
+          "text": "How far the vehicle travels while you react"
+        },
+        {
+          "key": "C",
+          "text": "How much grip the tyres have on the road surface"
+        },
+        {
+          "key": "D",
+          "text": "How far and clearly you can see hazards"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Night driving reduces visibility, which makes early hazard detection more difficult.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "WET_Q003",
+      "knowledgeId": "WET_002",
+      "topicId": "wet_weather",
+      "subtopic": "following_distance",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Why is extra following space useful on a wet road?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It gives more time and distance to respond if grip is reduced"
+        },
+        {
+          "key": "B",
+          "text": "It means braking can be left later and applied harder"
+        },
+        {
+          "key": "C",
+          "text": "It allows you to maintain a higher speed safely"
+        },
+        {
+          "key": "D",
+          "text": "It prevents aquaplaning entirely"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Wet or slippery surfaces can reduce the available safety margin, so more space helps the driver respond safely.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Slippery roads, p.82",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Traffic is moving steadily on a wet road. The vehicle ahead brakes unexpectedly near an intersection.",
+        "hazards": [
+          "wet surface",
+          "rear-end risk",
+          "intersection"
+        ],
+        "decisionPoint": "Decide how much following space is useful before the braking event develops.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "WET_Q004",
+      "knowledgeId": "WET_001",
+      "topicId": "wet_weather",
+      "subtopic": "visibility",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What can heavy rain affect at the same time?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Visibility, but not grip, because tyres are designed to clear water"
+        },
+        {
+          "key": "B",
+          "text": "Visibility and road grip"
+        },
+        {
+          "key": "C",
+          "text": "Grip, but not visibility, because the wipers restore your view"
+        },
+        {
+          "key": "D",
+          "text": "Neither, provided you stay under the posted limit"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Heavy rain can reduce visibility and make the road surface more slippery.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Safe speeds for different needs, pp.81–82",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "WET_Q005",
+      "knowledgeId": "WET_001",
+      "topicId": "wet_weather",
+      "subtopic": "decision_making",
+      "difficulty": "challenge",
+      "type": "scenario_multiple_choice",
+      "prompt": "Rain becomes so heavy that you cannot see the road clearly enough to continue safely. What should you do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Stop in the left lane and wait there with your lights on"
+        },
+        {
+          "key": "B",
+          "text": "Turn on the hazard lights and continue at the same speed"
+        },
+        {
+          "key": "C",
+          "text": "Find a safe place to stop and wait for conditions to improve"
+        },
+        {
+          "key": "D",
+          "text": "Slow to a crawl and stay in the left lane until it eases"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "When conditions become too severe to continue safely, the handbook indicates that stopping safely and waiting can be appropriate.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Safe speeds for different needs, pp.81–82",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Rain becomes so heavy that lane markings and vehicles ahead are difficult to see clearly.",
+        "hazards": [
+          "very poor visibility",
+          "heavy rain",
+          "wet surface"
+        ],
+        "decisionPoint": "Decide whether continuing to drive is still safe.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SPEED_Q003",
+      "knowledgeId": "SPEED_001",
+      "topicId": "speed_management",
+      "subtopic": "conditions",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "The posted limit is 60 km/h, but visibility is poor. What does the posted limit mean?",
+      "options": [
+        {
+          "key": "A",
+          "text": "60 km/h is safe in any condition because it is the posted limit"
+        },
+        {
+          "key": "B",
+          "text": "You should hold 60 km/h so you do not obstruct other traffic"
+        },
+        {
+          "key": "C",
+          "text": "The limit becomes advisory once visibility drops"
+        },
+        {
+          "key": "D",
+          "text": "60 km/h is the maximum in suitable conditions; a lower speed may be safer"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "A posted speed limit is a maximum, not a requirement to travel at that speed when conditions call for slower driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Speed limits / Safe speeds, pp.79–81",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A 60 km/h sign is visible, but rain and spray make the road ahead difficult to see.",
+        "hazards": [
+          "posted limit",
+          "poor visibility",
+          "wet conditions"
+        ],
+        "decisionPoint": "Decide whether the posted maximum is also the appropriate current driving speed.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SPEED_Q004",
+      "knowledgeId": "SPEED_002",
+      "topicId": "speed_management",
+      "subtopic": "stopping_distance",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Two drivers see the same hazard, but one is travelling faster. What is generally true?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The faster driver needs more distance to stop"
+        },
+        {
+          "key": "B",
+          "text": "The difference only becomes significant above 100 km/h"
+        },
+        {
+          "key": "C",
+          "text": "The faster driver reacts sooner because they are concentrating harder"
+        },
+        {
+          "key": "D",
+          "text": "Both need the same distance, since the brakes are the same"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Higher speed increases stopping distance and reduces the margin available to respond.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — How quickly can you stop?, p.83",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Two vehicles approach the same sudden hazard; one is travelling noticeably faster than the other.",
+        "hazards": [
+          "speed",
+          "stopping distance",
+          "sudden hazard"
+        ],
+        "decisionPoint": "Identify how speed changes the distance and time available to stop.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SPEED_Q005",
+      "knowledgeId": "SPEED_001",
+      "topicId": "speed_management",
+      "subtopic": "safe_speed",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Who is responsible for choosing a speed that is safe for the current conditions?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The vehicle's speed-limiting or driver-assistance systems"
+        },
+        {
+          "key": "B",
+          "text": "The driver"
+        },
+        {
+          "key": "C",
+          "text": "The driver in front, whose speed you should match"
+        },
+        {
+          "key": "D",
+          "text": "Whoever set the posted speed limit for that road"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Drivers must adapt their speed to the road, traffic, visibility and other conditions while staying within the legal limit.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Safe speeds for different needs, pp.79–81",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q003",
+      "knowledgeId": "HAZARD_001",
+      "topicId": "hazard_awareness",
+      "subtopic": "anticipation",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You see a ball roll onto the road from between parked cars. What is the best hazard-perception response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Stop immediately in the traffic lane and wait"
+        },
+        {
+          "key": "B",
+          "text": "Sound the horn and maintain your speed"
+        },
+        {
+          "key": "C",
+          "text": "Anticipate that a person may follow and prepare to respond"
+        },
+        {
+          "key": "D",
+          "text": "Steer around the ball without slowing"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Hazard perception includes anticipating what may happen next, not only reacting to what is already directly visible.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Learning to drive — Hazard perception, p.39",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "historical_crash_context"
+      ],
+      "riskFactorTypes": [
+        "significant_crash_history"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A ball rolls from between parked cars into the road. No person is visible yet.",
+        "hazards": [
+          "parked cars",
+          "hidden pedestrian",
+          "developing hazard"
+        ],
+        "decisionPoint": "Anticipate what may happen next and choose an early response.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q004",
+      "knowledgeId": "HAZARD_002",
+      "topicId": "hazard_awareness",
+      "subtopic": "scanning",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why should a driver scan beyond the vehicle immediately in front?",
+      "options": [
+        {
+          "key": "A",
+          "text": "So you can match the speed of the fastest vehicle ahead"
+        },
+        {
+          "key": "B",
+          "text": "To judge whether you are permitted to overtake"
+        },
+        {
+          "key": "C",
+          "text": "Because the vehicle in front will brake before you need to"
+        },
+        {
+          "key": "D",
+          "text": "To detect developing hazards earlier"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Looking further ahead supports earlier identification and assessment of potential hazards.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Learning to drive — Hazard perception, pp.39–41",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q005",
+      "knowledgeId": "HAZARD_002",
+      "topicId": "hazard_awareness",
+      "subtopic": "blind_spot",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "What is the purpose of a quick head check before a lane change?",
+      "options": [
+        {
+          "key": "A",
+          "text": "To check an area that may not be visible in the mirrors"
+        },
+        {
+          "key": "B",
+          "text": "To check the gap behind is large enough to brake in"
+        },
+        {
+          "key": "C",
+          "text": "To confirm the indicator is flashing"
+        },
+        {
+          "key": "D",
+          "text": "To signal to the driver beside you that you intend to move"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "A quick head check helps detect road users in blind spots that mirrors may not show.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Learning to drive — Blind spots, pp.39–41",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FOLLOW_Q003",
+      "knowledgeId": "FOLLOW_001",
+      "topicId": "following_distance",
+      "subtopic": "measurement",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why is a time gap useful for judging following distance?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It gives the same stopping distance in every condition"
+        },
+        {
+          "key": "B",
+          "text": "It adjusts naturally as traffic speed changes"
+        },
+        {
+          "key": "C",
+          "text": "It works out the same for every length of vehicle"
+        },
+        {
+          "key": "D",
+          "text": "It is the legal minimum that police enforce"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "A time-based gap is a practical way to maintain space as speed changes.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Give yourself some space, pp.61–62",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FOLLOW_Q004",
+      "knowledgeId": "FOLLOW_002",
+      "topicId": "following_distance",
+      "subtopic": "visibility",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Fog or darkness reduces how well you can see. What should happen to your safety margin behind another vehicle?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reduce it so the tail-lights ahead stay clearly visible"
+        },
+        {
+          "key": "B",
+          "text": "Keep it the same and use high beam instead"
+        },
+        {
+          "key": "C",
+          "text": "Increase it"
+        },
+        {
+          "key": "D",
+          "text": "Replace it with a fixed distance measured in car lengths"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Poor visibility is one of the conditions where the handbook recommends a larger following gap.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Following distance, p.62",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Fog reduces the distance the driver can see while following another vehicle.",
+        "hazards": [
+          "fog",
+          "poor visibility",
+          "rear-end risk"
+        ],
+        "decisionPoint": "Choose how the safety margin should change.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FOLLOW_Q005",
+      "knowledgeId": "FOLLOW_002",
+      "topicId": "following_distance",
+      "subtopic": "young_driver",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which gap does the handbook present as a safer option for young drivers in more difficult conditions?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The same two seconds, since the rule does not change"
+        },
+        {
+          "key": "B",
+          "text": "One second, provided you are travelling below 60 km/h"
+        },
+        {
+          "key": "C",
+          "text": "Two car lengths for every 10 km/h of speed"
+        },
+        {
+          "key": "D",
+          "text": "A larger three- or four-second gap"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "The handbook presents three or four seconds as a safer option for young drivers and in more difficult conditions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Following distance, p.62",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "INTER_Q003",
+      "knowledgeId": "INTER_001",
+      "topicId": "intersections",
+      "subtopic": "green_light",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "The light is green but traffic is blocking the intersection. What should you do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Wait until there is room to clear the intersection"
+        },
+        {
+          "key": "B",
+          "text": "Enter slowly so you do not hold up the vehicle behind"
+        },
+        {
+          "key": "C",
+          "text": "Enter if the light will stay green long enough"
+        },
+        {
+          "key": "D",
+          "text": "Enter on the green and wait behind the far line"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "A green light does not permit you to enter if you would block the intersection.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Traffic controls at intersections, p.98",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The traffic light is green, but vehicles are queued across the far side of the intersection.",
+        "hazards": [
+          "green light",
+          "blocked intersection",
+          "cross traffic"
+        ],
+        "decisionPoint": "Decide whether to enter when there is no room to clear the intersection.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "INTER_Q004",
+      "knowledgeId": "INTER_001",
+      "topicId": "intersections",
+      "subtopic": "red_light",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What must you generally do at a red traffic light?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Stop only if another vehicle is crossing"
+        },
+        {
+          "key": "B",
+          "text": "Stop"
+        },
+        {
+          "key": "C",
+          "text": "Slow down and proceed if the way is clear"
+        },
+        {
+          "key": "D",
+          "text": "Give way rather than stop when no other vehicle is present"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "A red traffic light requires the driver to stop.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Traffic controls at intersections, p.98",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "INTER_Q005",
+      "knowledgeId": "INTER_002",
+      "topicId": "intersections",
+      "subtopic": "roundabout",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You approach a roundabout while another vehicle is already travelling in it. What is your responsibility?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Enter first if you reached the line before them"
+        },
+        {
+          "key": "B",
+          "text": "Give way only to vehicles approaching from your right"
+        },
+        {
+          "key": "C",
+          "text": "Give way before entering"
+        },
+        {
+          "key": "D",
+          "text": "Give way only if the other vehicle is indicating"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Drivers entering a roundabout must give way to vehicles already in the roundabout.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Giving way at roundabouts, p.107",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The dashcam vehicle approaches a roundabout while another vehicle is already circulating through it.",
+        "hazards": [
+          "roundabout",
+          "entering traffic",
+          "give way"
+        ],
+        "decisionPoint": "Decide who must be given priority before entering.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SIGNS_Q003",
+      "knowledgeId": "SIGNS_001",
+      "topicId": "signs_markings",
+      "subtopic": "regulatory",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which type of sign tells road users what they must or must not do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Guide or direction sign"
+        },
+        {
+          "key": "B",
+          "text": "Warning sign"
+        },
+        {
+          "key": "C",
+          "text": "Temporary roadworks marker"
+        },
+        {
+          "key": "D",
+          "text": "Regulatory sign"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Regulatory signs communicate road-rule requirements.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Road signs, pp.84–90",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SIGNS_Q004",
+      "knowledgeId": "SIGNS_001",
+      "topicId": "signs_markings",
+      "subtopic": "warning",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What is the main purpose of a warning sign?",
+      "options": [
+        {
+          "key": "A",
+          "text": "To alert you to a possible hazard or changed road condition ahead"
+        },
+        {
+          "key": "B",
+          "text": "To mark the point where a road rule stops applying"
+        },
+        {
+          "key": "C",
+          "text": "To set a legally enforceable speed limit for that section"
+        },
+        {
+          "key": "D",
+          "text": "To show the distance to the next town"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Warning signs help drivers anticipate hazards or changing road conditions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Road signs, pp.84–90",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SIGNS_Q005",
+      "knowledgeId": "SIGNS_002",
+      "topicId": "signs_markings",
+      "subtopic": "road_lines",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "Why should RoadBuddy avoid teaching 'you can never cross a continuous dividing line' as an absolute rule?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Because the rule only applies overseas"
+        },
+        {
+          "key": "B",
+          "text": "Because the handbook lists specific permitted exceptions"
+        },
+        {
+          "key": "C",
+          "text": "Because drivers may ignore lines at night"
+        },
+        {
+          "key": "D",
+          "text": "Because continuous lines have no meaning"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "The handbook describes restrictions as well as specific exceptions, so an absolute statement would be misleading.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Road markings, pp.91–92",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks what RoadBuddy should teach, not a road rule."
+    },
+    {
+      "id": "SHARE_Q001",
+      "knowledgeId": "SHARE_001",
+      "topicId": "sharing_road",
+      "subtopic": "vulnerable_users",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why should drivers take extra care around pedestrians, cyclists and motorcyclists?",
+      "options": [
+        {
+          "key": "A",
+          "text": "They always have right of way in every situation"
+        },
+        {
+          "key": "B",
+          "text": "They can be less protected and sometimes harder to see"
+        },
+        {
+          "key": "C",
+          "text": "They are required to wear high-visibility clothing at all times"
+        },
+        {
+          "key": "D",
+          "text": "They are not permitted on roads with a limit above 60 km/h"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "These road users are more vulnerable in a collision and can be less conspicuous, so scanning and space are important.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Sharing the road, pp.125–144",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SHARE_Q002",
+      "knowledgeId": "SHARE_001",
+      "topicId": "sharing_road",
+      "subtopic": "cyclists",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You are approaching a cyclist on a narrow road. What is the safest general approach?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Cross the centre line at once regardless of oncoming traffic"
+        },
+        {
+          "key": "B",
+          "text": "Pass immediately, staying as close as the lane allows"
+        },
+        {
+          "key": "C",
+          "text": "Slow down, assess the available space and pass only when it can be done safely"
+        },
+        {
+          "key": "D",
+          "text": "Stay directly behind until the cyclist leaves the road"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Safe sharing requires patience, scanning and appropriate space rather than forcing a pass.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Sharing the road, pp.125–144",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A cyclist is travelling ahead on a narrow road with limited space for overtaking.",
+        "hazards": [
+          "cyclist",
+          "narrow road",
+          "passing space"
+        ],
+        "decisionPoint": "Decide whether to pass immediately or wait until adequate space is available.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SHARE_Q003",
+      "knowledgeId": "SHARE_001",
+      "topicId": "sharing_road",
+      "subtopic": "pedestrians",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Why should you scan carefully near parked cars and pedestrian areas?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Parked cars reduce the width available to oncoming traffic"
+        },
+        {
+          "key": "B",
+          "text": "Pedestrian areas always carry a lower speed limit"
+        },
+        {
+          "key": "C",
+          "text": "Pedestrians must give way to vehicles already on the road"
+        },
+        {
+          "key": "D",
+          "text": "A pedestrian may emerge from a place where they were hidden from view"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Scanning helps detect vulnerable road users who may be obscured until they are close to the traffic lane.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Sharing the road, pp.125–144",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Parked cars line a shopping street and pedestrians are moving between vehicles near the kerb.",
+        "hazards": [
+          "pedestrians",
+          "parked cars",
+          "hidden movement"
+        ],
+        "decisionPoint": "Decide where to scan and what hazard may emerge.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SHARE_Q004",
+      "knowledgeId": "SHARE_001",
+      "topicId": "sharing_road",
+      "subtopic": "motorcycles",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What is a useful reason to look specifically for motorcycles in traffic?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Their smaller size can make them less noticeable"
+        },
+        {
+          "key": "B",
+          "text": "They cannot brake as quickly as a car can"
+        },
+        {
+          "key": "C",
+          "text": "They must be given way to at every intersection"
+        },
+        {
+          "key": "D",
+          "text": "They are permitted to travel faster than other traffic"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Motorcycles can be less conspicuous than larger vehicles, so active scanning is important.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Sharing the road, pp.125–144",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SHARE_Q005",
+      "knowledgeId": "SHARE_001",
+      "topicId": "sharing_road",
+      "subtopic": "cooperation",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What best describes cooperative road use?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Always giving way, even where you have priority"
+        },
+        {
+          "key": "B",
+          "text": "Anticipating other road users and leaving appropriate time and space"
+        },
+        {
+          "key": "C",
+          "text": "Matching the speed of surrounding traffic whatever the limit"
+        },
+        {
+          "key": "D",
+          "text": "Keeping to the left lane at all times"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Safe road sharing depends on anticipation, patience and adequate safety margins.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Sharing the road, pp.125–144",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "DISTRACT_Q002",
+      "knowledgeId": "DISTRACT_001",
+      "topicId": "distraction",
+      "subtopic": "setup_before_trip",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "When is the best time for a probationary driver to set a navigation destination?",
+      "options": [
+        {
+          "key": "A",
+          "text": "While stopped in a queue of traffic"
+        },
+        {
+          "key": "B",
+          "text": "As soon as you notice the route is wrong"
+        },
+        {
+          "key": "C",
+          "text": "Before starting to drive"
+        },
+        {
+          "key": "D",
+          "text": "While stopped at a red light"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Setting up navigation before driving reduces distraction and supports compliance with device restrictions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Mobile phones and electronic devices, pp.53–54",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "DISTRACT_Q003",
+      "knowledgeId": "DISTRACT_001",
+      "topicId": "distraction",
+      "subtopic": "attention",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why is interacting with a device risky while driving?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It drains the vehicle's battery while driving"
+        },
+        {
+          "key": "B",
+          "text": "It interferes with the vehicle's safety systems"
+        },
+        {
+          "key": "C",
+          "text": "It is only risky at speeds above 60 km/h"
+        },
+        {
+          "key": "D",
+          "text": "It can take attention away from the driving task"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Driving requires continuous attention to the road environment and developing hazards.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Mobile phones and electronic devices, pp.53–54",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "DISTRACT_Q004",
+      "knowledgeId": "DISTRACT_001",
+      "topicId": "distraction",
+      "subtopic": "red_light",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "A P1 driver is stopped at a red light. Should they assume this makes handheld phone use acceptable?",
+      "options": [
+        {
+          "key": "A",
+          "text": "No; device restrictions still need to be followed while driving"
+        },
+        {
+          "key": "B",
+          "text": "Yes, for navigation but not for messages"
+        },
+        {
+          "key": "C",
+          "text": "Yes, provided the handbrake is applied"
+        },
+        {
+          "key": "D",
+          "text": "Yes, because the vehicle is stationary"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Being temporarily stopped in traffic does not mean a probationary driver should ignore the applicable device rules.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Mobile phones and electronic devices, pp.53–54",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The vehicle is stopped at a red light and a phone notification appears on the mounted device.",
+        "hazards": [
+          "phone notification",
+          "red light",
+          "attention"
+        ],
+        "decisionPoint": "Decide whether being stopped in traffic makes device interaction acceptable.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "DISTRACT_Q005",
+      "knowledgeId": "DISTRACT_001",
+      "topicId": "distraction",
+      "subtopic": "passenger_help",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "If a route setting needs to be changed during a trip, what is the safer general choice?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Make the change quickly so your eyes leave the road only briefly"
+        },
+        {
+          "key": "B",
+          "text": "Have a passenger handle it or stop somewhere safe before changing it"
+        },
+        {
+          "key": "C",
+          "text": "Adjust it while stopped at the next set of lights"
+        },
+        {
+          "key": "D",
+          "text": "Adjust it on a straight section where there is no traffic"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Avoiding device interaction while driving helps keep attention on the road.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Mobile phones and electronic devices, pp.53–54",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Mid-trip, the route changes and the navigation system needs a new destination.",
+        "hazards": [
+          "navigation",
+          "device interaction",
+          "moving traffic"
+        ],
+        "decisionPoint": "Choose a safer way to make the change.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "PPLATE_Q002",
+      "knowledgeId": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "subtopic": "zero_bac",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "A P1 driver has consumed a small amount of alcohol. Which statement matches the handbook?",
+      "options": [
+        {
+          "key": "A",
+          "text": "They may drive once enough time has passed since the drink"
+        },
+        {
+          "key": "B",
+          "text": "They may drive provided they stay under 0.05"
+        },
+        {
+          "key": "C",
+          "text": "They must not drive unless their BAC is zero"
+        },
+        {
+          "key": "D",
+          "text": "They may drive if a full licence holder is in the car"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "The handbook states that P1 and P2 drivers must have zero BAC while driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Alcohol, p.71; P1/P2 conditions, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "PPLATE_Q003",
+      "knowledgeId": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "subtopic": "licence_conditions",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why should RoadBuddy re-check P-plate rules against current official material before each release?",
+      "options": [
+        {
+          "key": "A",
+          "text": "P-plate rules are different every day"
+        },
+        {
+          "key": "B",
+          "text": "Only overseas rules apply"
+        },
+        {
+          "key": "C",
+          "text": "The handbook has no information about licences"
+        },
+        {
+          "key": "D",
+          "text": "Licence conditions and road laws can change over time"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "The handbook itself warns that road laws can change, so current official requirements should be verified.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "P1/P2 conditions, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks about the team's source-review process."
+    },
+    {
+      "id": "PPLATE_Q004",
+      "knowledgeId": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "subtopic": "responsibility",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which is the safest way to treat probationary licence conditions?",
+      "options": [
+        {
+          "key": "A",
+          "text": "As rules that apply only when carrying passengers"
+        },
+        {
+          "key": "B",
+          "text": "As guidance that applies only during the first six months"
+        },
+        {
+          "key": "C",
+          "text": "As conditions that apply only on high-speed roads"
+        },
+        {
+          "key": "D",
+          "text": "As requirements the driver needs to know and follow"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Licence conditions are requirements attached to probationary driving, not optional advice.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "P1/P2 conditions, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "PPLATE_Q005",
+      "knowledgeId": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "subtopic": "sources",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "If RoadBuddy's stored P-plate rule conflicts with a newer official Victorian source, which should be reviewed for the app?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The newer official source"
+        },
+        {
+          "key": "B",
+          "text": "A social-media comment"
+        },
+        {
+          "key": "C",
+          "text": "The older stored wording automatically"
+        },
+        {
+          "key": "D",
+          "text": "An unrelated overseas handbook"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Current official Victorian material should be used to review time-sensitive licence and road-rule content.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Handbook notice on changing road laws; P1/P2 conditions, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks about the team's source-review process."
+    },
+    {
+      "id": "FATIGUE_Q002",
+      "knowledgeId": "FATIGUE_001",
+      "topicId": "fatigue",
+      "subtopic": "effects",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which driving abilities can fatigue reduce?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Attention, judgement and reflexes"
+        },
+        {
+          "key": "B",
+          "text": "Only night vision"
+        },
+        {
+          "key": "C",
+          "text": "Only the ability to hold a lane on long, straight roads"
+        },
+        {
+          "key": "D",
+          "text": "Only reaction time; judgement is unaffected"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Fatigue can impair the mental and physical abilities needed to respond safely.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Fatigue, p.57",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FATIGUE_Q003",
+      "knowledgeId": "FATIGUE_001",
+      "topicId": "fatigue",
+      "subtopic": "late_night",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Why can a late-night trip require extra self-checking before driving?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Fatigue only affects drivers who have worked a full shift"
+        },
+        {
+          "key": "B",
+          "text": "It may fall during normal sleeping hours when fatigue is more likely"
+        },
+        {
+          "key": "C",
+          "text": "Fatigue only builds up after two hours of continuous driving"
+        },
+        {
+          "key": "D",
+          "text": "Traffic volumes are higher late at night"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "The handbook highlights normal sleeping hours as a period when fatigue risk can be important.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Fatigue, p.57",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A planned drive begins late at night after a long day, during hours when the driver would normally be asleep.",
+        "hazards": [
+          "late night",
+          "possible fatigue",
+          "reduced alertness"
+        ],
+        "decisionPoint": "Decide what self-check should occur before starting the trip.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FATIGUE_Q004",
+      "knowledgeId": "FATIGUE_001",
+      "topicId": "fatigue",
+      "subtopic": "prediction_limit",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "A trip starts at 11 pm. What should RoadBuddy avoid claiming from the time alone?",
+      "options": [
+        {
+          "key": "A",
+          "text": "That late-night driving deserves fatigue awareness"
+        },
+        {
+          "key": "B",
+          "text": "That drivers should consider whether they are fit to drive"
+        },
+        {
+          "key": "C",
+          "text": "That the driver is definitely fatigued"
+        },
+        {
+          "key": "D",
+          "text": "That attention matters when driving"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Time of day can provide context, but it does not prove an individual driver is fatigued.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Fatigue, p.57",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks what the app should avoid claiming, not a road-safety point."
+    },
+    {
+      "id": "FATIGUE_Q005",
+      "knowledgeId": "FATIGUE_001",
+      "topicId": "fatigue",
+      "subtopic": "decision_making",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "If you recognise that you are too tired to drive safely, what is the appropriate general response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Have a coffee and continue immediately"
+        },
+        {
+          "key": "B",
+          "text": "Take a short break, then complete the trip regardless"
+        },
+        {
+          "key": "C",
+          "text": "Avoid continuing to drive until you can do so safely"
+        },
+        {
+          "key": "D",
+          "text": "Open a window and keep driving"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "The handbook advises against driving when tired because fatigue impairs safe driving performance.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Fatigue, p.57",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "During a late drive, the driver notices repeated yawning and difficulty maintaining concentration.",
+        "hazards": [
+          "fatigue signs",
+          "attention",
+          "judgement"
+        ],
+        "decisionPoint": "Decide whether continuing the journey is appropriate.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "VEHICLE_Q001",
+      "knowledgeId": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "subtopic": "pre_drive_check",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why is basic vehicle condition part of safe driving?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It affects fuel use more than it affects safety"
+        },
+        {
+          "key": "B",
+          "text": "It determines how long the registration stays valid"
+        },
+        {
+          "key": "C",
+          "text": "Modern safety systems compensate for poor vehicle condition"
+        },
+        {
+          "key": "D",
+          "text": "A roadworthy vehicle supports the driver's ability to control and see safely"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Safe driving depends on both driver behaviour and a vehicle that is in suitable condition.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Vehicle safety and maintenance, pp.58–59",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "VEHICLE_Q002",
+      "knowledgeId": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "subtopic": "tyres",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why are tyres an important safety item?",
+      "options": [
+        {
+          "key": "A",
+          "text": "They are part of the vehicle's contact with the road and affect grip"
+        },
+        {
+          "key": "B",
+          "text": "They are the only part of the vehicle checked at registration"
+        },
+        {
+          "key": "C",
+          "text": "They affect fuel use rather than braking"
+        },
+        {
+          "key": "D",
+          "text": "Tread depth only matters on unsealed roads"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Tyre condition contributes to grip and vehicle control.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Vehicle safety and maintenance, pp.58–59",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "VEHICLE_Q003",
+      "knowledgeId": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "subtopic": "lights",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Before a trip in low light, why should faulty vehicle lights be addressed?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Lights are only required on roads without street lighting"
+        },
+        {
+          "key": "B",
+          "text": "Lights help the driver see and help other road users see the vehicle"
+        },
+        {
+          "key": "C",
+          "text": "Faulty lights make the speedometer read inaccurately"
+        },
+        {
+          "key": "D",
+          "text": "One working headlight is enough to see and be seen"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Working lights support visibility and conspicuity in low-light conditions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Vehicle safety and maintenance, pp.58–59",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A night trip is about to begin, but one of the vehicle's main lights is not working correctly.",
+        "hazards": [
+          "faulty light",
+          "low visibility",
+          "vehicle conspicuity"
+        ],
+        "decisionPoint": "Decide whether the issue should be addressed before entering traffic.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "VEHICLE_Q004",
+      "knowledgeId": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "subtopic": "restraints",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What is the main safety purpose of seatbelts and restraints?",
+      "options": [
+        {
+          "key": "A",
+          "text": "To hold the driver in a comfortable seating position"
+        },
+        {
+          "key": "B",
+          "text": "To protect front-seat occupants only"
+        },
+        {
+          "key": "C",
+          "text": "To reduce injury risk in a crash"
+        },
+        {
+          "key": "D",
+          "text": "To stop the vehicle starting until everyone is seated"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Occupant restraints are a core vehicle safety measure intended to reduce injury risk.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Vehicle safety and maintenance, pp.58–59",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "VEHICLE_Q005",
+      "knowledgeId": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "subtopic": "maintenance",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You notice a safety-related vehicle problem before leaving. What is the best general approach?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Drive gently and have it checked after the trip"
+        },
+        {
+          "key": "B",
+          "text": "Continue if the vehicle still has current registration"
+        },
+        {
+          "key": "C",
+          "text": "Continue if no dashboard warning light has appeared"
+        },
+        {
+          "key": "D",
+          "text": "Address the problem before relying on the vehicle for the trip"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Known safety-related faults should not simply be ignored before driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Vehicle safety and maintenance, pp.58–59",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Before departure, the driver notices an obvious safety-related fault with the vehicle.",
+        "hazards": [
+          "vehicle fault",
+          "pre-trip check"
+        ],
+        "decisionPoint": "Decide whether to ignore the issue because the trip is short or address it first.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "NIGHT_Q006",
+      "knowledgeId": "NIGHT_001",
+      "topicId": "night_driving",
+      "subtopic": "visibility",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why can an unlit road be more demanding than the same road in daylight?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Hazards may be visible later"
+        },
+        {
+          "key": "B",
+          "text": "Unlit roads usually carry a higher speed limit"
+        },
+        {
+          "key": "C",
+          "text": "Tyres lose grip as the air temperature drops"
+        },
+        {
+          "key": "D",
+          "text": "Vehicles generally travel faster on unlit roads"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Reduced visibility can shorten the time available to identify and respond to hazards.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "NIGHT_Q007",
+      "knowledgeId": "NIGHT_002",
+      "topicId": "night_driving",
+      "subtopic": "speed_choice",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You enter a dark bend where you cannot see far ahead. What is the safer response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Move towards the centre line to see further around the bend"
+        },
+        {
+          "key": "B",
+          "text": "Reduce speed so you have more time to respond"
+        },
+        {
+          "key": "C",
+          "text": "Switch to high beam and hold your current speed"
+        },
+        {
+          "key": "D",
+          "text": "Brake firmly once you are already in the bend"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "When sight distance is reduced, lowering speed increases the time and space available to respond.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A vehicle approaches a dark bend where the driver cannot see beyond the curve.",
+        "hazards": [
+          "darkness",
+          "limited sight distance",
+          "bend"
+        ],
+        "decisionPoint": "Decide whether to maintain speed or create more time to react.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "NIGHT_Q008",
+      "knowledgeId": "NIGHT_001",
+      "topicId": "night_driving",
+      "subtopic": "glare",
+      "difficulty": "challenge",
+      "type": "scenario_multiple_choice",
+      "prompt": "Bright lights from another vehicle briefly make it harder to see. What principle should guide your response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Speed up so you are past the bright lights sooner"
+        },
+        {
+          "key": "B",
+          "text": "Close one eye until the vehicle has passed"
+        },
+        {
+          "key": "C",
+          "text": "Maintain control and adapt to the reduced visibility"
+        },
+        {
+          "key": "D",
+          "text": "Flash your own high beam so the other driver dips theirs"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "The safe response is to preserve attention and adapt driving to the visibility available.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "An oncoming vehicle's bright headlights briefly reduce the driver's ability to see the road ahead.",
+        "hazards": [
+          "glare",
+          "temporary reduced visibility",
+          "oncoming traffic"
+        ],
+        "decisionPoint": "Respond without losing control or focusing attention away from the road.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "NIGHT_Q009",
+      "knowledgeId": "NIGHT_002",
+      "topicId": "night_driving",
+      "subtopic": "trip_prep",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "RoadBuddy flags that your planned trip will finish after dark. Which lesson is most relevant?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Unrelated motorway trivia"
+        },
+        {
+          "key": "B",
+          "text": "Vehicle registration fees"
+        },
+        {
+          "key": "C",
+          "text": "Daytime parking only"
+        },
+        {
+          "key": "D",
+          "text": "Night visibility, scanning and safe speed"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "A trip-matched lesson should address the actual condition flagged by the trip check.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Managing risk — Driving safely at night, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks which app lesson to show, not a road-safety point."
+    },
+    {
+      "id": "WET_Q006",
+      "knowledgeId": "WET_001",
+      "topicId": "wet_weather",
+      "subtopic": "first_rain",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "Why should a driver avoid assuming the road has normal grip just because rain is light?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Light rain washes the surface and improves grip"
+        },
+        {
+          "key": "B",
+          "text": "Modern tyres remove the effect of light rain"
+        },
+        {
+          "key": "C",
+          "text": "Grip is only reduced once water begins to pool on the road"
+        },
+        {
+          "key": "D",
+          "text": "Even light rain can change surface grip and visibility"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Rain can change the driving environment even before conditions appear severe.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Slippery roads, p.82",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "WET_Q007",
+      "knowledgeId": "WET_002",
+      "topicId": "wet_weather",
+      "subtopic": "braking",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Traffic ahead begins slowing on a wet road. Which preparation is most useful?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Leave more space and respond smoothly"
+        },
+        {
+          "key": "B",
+          "text": "Brake firmly and early so you stop well short"
+        },
+        {
+          "key": "C",
+          "text": "Change lanes so you can keep moving at the same speed"
+        },
+        {
+          "key": "D",
+          "text": "Stay close behind so the driver behind you sees the queue"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Extra space and smooth responses help preserve a safety margin when grip may be reduced.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Slippery roads, p.82",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A queue of vehicles begins slowing on a rain-soaked road while the dashcam vehicle is approaching from behind.",
+        "hazards": [
+          "wet braking surface",
+          "slowing traffic",
+          "rear-end risk"
+        ],
+        "decisionPoint": "Choose a smooth response that preserves a safety margin.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "WET_Q008",
+      "knowledgeId": "WET_001",
+      "topicId": "wet_weather",
+      "subtopic": "visibility",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which observation should make you reconsider your speed in rain?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The road surface has recently been resurfaced"
+        },
+        {
+          "key": "B",
+          "text": "You cannot see as far ahead as before"
+        },
+        {
+          "key": "C",
+          "text": "The rain started less than a minute ago"
+        },
+        {
+          "key": "D",
+          "text": "Other traffic is still travelling at the posted limit"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Safe speed should reflect how far and clearly the driver can see and respond.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Rules and responsibilities — Safe speeds for different needs, pp.81–82",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "WET_Q009",
+      "knowledgeId": "WET_002",
+      "topicId": "wet_weather",
+      "subtopic": "combined_risk",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "A trip is both after dark and in heavy rain. How should RoadBuddy treat the lesson?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Choose an unrelated topic at random"
+        },
+        {
+          "key": "B",
+          "text": "Show no learning content"
+        },
+        {
+          "key": "C",
+          "text": "Cover both reduced visibility and wet-road safety"
+        },
+        {
+          "key": "D",
+          "text": "Ignore the rain because darkness is enough"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "When several supported conditions are flagged, the lesson should relate to those conditions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Safe speeds/slippery roads, pp.81–82; Night driving, p.63",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark",
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "after_dark",
+        "rain"
+      ],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks how the app should behave, not a road-safety point."
+    },
+    {
+      "id": "SPEED_Q006",
+      "knowledgeId": "SPEED_001",
+      "topicId": "speed_management",
+      "subtopic": "maximum_limit",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "A speed-limit sign shows the maximum permitted speed. What else must the driver consider?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Whether the traffic around you is travelling above the limit"
+        },
+        {
+          "key": "B",
+          "text": "How much time is left to reach the destination"
+        },
+        {
+          "key": "C",
+          "text": "Road, traffic and visibility conditions"
+        },
+        {
+          "key": "D",
+          "text": "Whether the road has street lighting"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Drivers still need to select a speed that is safe for the current conditions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Speed limits / Safe speeds, pp.79–81",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SPEED_Q007",
+      "knowledgeId": "SPEED_002",
+      "topicId": "speed_management",
+      "subtopic": "reaction_margin",
+      "difficulty": "challenge",
+      "type": "scenario_multiple_choice",
+      "prompt": "Why does reducing speed before a developing hazard improve your safety margin?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It allows a smaller following gap to remain safe"
+        },
+        {
+          "key": "B",
+          "text": "It transfers responsibility for the hazard to the driver behind"
+        },
+        {
+          "key": "C",
+          "text": "It guarantees you can stop within the distance you can see"
+        },
+        {
+          "key": "D",
+          "text": "It gives more time to assess and can reduce stopping distance"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Lower speed can provide more time to respond and reduce the distance needed to stop.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "How quickly can you stop?, p.83",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A pedestrian near the kerb appears likely to step toward the road while the vehicle is approaching.",
+        "hazards": [
+          "pedestrian",
+          "developing hazard",
+          "speed"
+        ],
+        "decisionPoint": "Decide whether reducing speed early improves the driver's safety margin.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SPEED_Q008",
+      "knowledgeId": "SPEED_001",
+      "topicId": "speed_management",
+      "subtopic": "familiar_road",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You know a road very well, but tonight visibility is poor. What should determine your speed?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The current conditions, not familiarity alone"
+        },
+        {
+          "key": "B",
+          "text": "The posted limit, which applies in all conditions"
+        },
+        {
+          "key": "C",
+          "text": "The speed you normally use on that road"
+        },
+        {
+          "key": "D",
+          "text": "The speed of the traffic around you"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Familiarity does not remove the need to adapt speed to current conditions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Safe speeds, pp.79–81",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The driver is on a familiar road at night, but visibility is worse than usual because of darkness and glare.",
+        "hazards": [
+          "familiarity",
+          "poor visibility",
+          "night driving"
+        ],
+        "decisionPoint": "Choose whether familiarity or current conditions should determine speed.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SPEED_Q009",
+      "knowledgeId": "SPEED_002",
+      "topicId": "speed_management",
+      "subtopic": "hazard_response",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "You notice pedestrians near the edge of the road ahead. What is a useful speed-management response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Move towards the centre line without changing speed"
+        },
+        {
+          "key": "B",
+          "text": "Prepare to slow and create more time to respond"
+        },
+        {
+          "key": "C",
+          "text": "Continue at the limit unless they step onto the road"
+        },
+        {
+          "key": "D",
+          "text": "Maintain speed and sound the horn as you approach"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Safe speed management includes anticipating possible hazards and preserving response time.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Safe speeds / hazard perception, pp.79–83",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q006",
+      "knowledgeId": "HAZARD_001",
+      "topicId": "hazard_awareness",
+      "subtopic": "developing_hazard",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What makes a developing hazard important to notice early?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It usually means another driver has broken a road rule"
+        },
+        {
+          "key": "B",
+          "text": "It confirms the road is unsafe for all traffic"
+        },
+        {
+          "key": "C",
+          "text": "It may require you to change speed or position soon"
+        },
+        {
+          "key": "D",
+          "text": "It indicates which lane has the shortest delay"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Hazard perception is about recognising situations that may require a response before they become immediate emergencies.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Hazard perception, pp.39–41",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q007",
+      "knowledgeId": "HAZARD_002",
+      "topicId": "hazard_awareness",
+      "subtopic": "parked_cars",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "You are passing a row of parked cars. Which clue deserves attention?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The total number of vehicles in the row"
+        },
+        {
+          "key": "B",
+          "text": "Whether the row ends before the next side street"
+        },
+        {
+          "key": "C",
+          "text": "Whether the vehicles are angle-parked or parallel-parked"
+        },
+        {
+          "key": "D",
+          "text": "A vehicle's wheels or brake lights suggesting it may move"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Scanning for movement cues can help identify a hazard before a vehicle enters your path.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Hazard perception, pp.39–41",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "While passing parked cars, one vehicle's wheels begin turning and its brake lights change.",
+        "hazards": [
+          "parked vehicle",
+          "possible pull-out",
+          "limited reaction time"
+        ],
+        "decisionPoint": "Identify the visual cue that may signal a developing hazard.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q008",
+      "knowledgeId": "HAZARD_002",
+      "topicId": "hazard_awareness",
+      "subtopic": "mirror_use",
+      "difficulty": "challenge",
+      "type": "scenario_multiple_choice",
+      "prompt": "Why should hazard scanning include mirrors as well as the road ahead?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Safe decisions depend on knowing what is around the vehicle"
+        },
+        {
+          "key": "B",
+          "text": "Rear vision is only relevant when reversing or parking"
+        },
+        {
+          "key": "C",
+          "text": "Mirrors give a wider view of the road ahead than the windscreen"
+        },
+        {
+          "key": "D",
+          "text": "Mirrors must be checked at fixed time intervals"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Awareness of surrounding traffic supports safer decisions about speed and position.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Hazard perception / blind spots, pp.39–41",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Traffic appears clear ahead, but a vehicle is approaching quickly from behind in another lane.",
+        "hazards": [
+          "rear traffic",
+          "mirrors",
+          "lane decision"
+        ],
+        "decisionPoint": "Decide why scanning behind and beside the vehicle matters before acting.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "HAZARD_Q009",
+      "knowledgeId": "HAZARD_001",
+      "topicId": "hazard_awareness",
+      "subtopic": "risk_radar_context",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Risk Radar shows recorded crashes near part of your route. What is the appropriate learning message?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The road has been made safer since those crashes were recorded"
+        },
+        {
+          "key": "B",
+          "text": "Use the history as context and stay alert for current hazards"
+        },
+        {
+          "key": "C",
+          "text": "Those records show where the next crash is most likely to occur"
+        },
+        {
+          "key": "D",
+          "text": "The recorded crash count should determine your speed there"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Historical crash records can provide context, but they do not predict a future crash.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Hazard perception, pp.39–41",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "historical_crash_context"
+      ],
+      "riskFactorTypes": [
+        "significant_crash_history"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Risk Radar shows several recorded injury crashes near an upcoming section of the route, while current traffic appears normal.",
+        "hazards": [
+          "historical crash context",
+          "interpretation risk"
+        ],
+        "decisionPoint": "Decide how to use historical data without treating it as a crash prediction.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FOLLOW_Q006",
+      "knowledgeId": "FOLLOW_001",
+      "topicId": "following_distance",
+      "subtopic": "measurement",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "The vehicle ahead passes a fixed point. What can you use that point for?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Deciding when it is safe to begin overtaking"
+        },
+        {
+          "key": "B",
+          "text": "Judging whether the vehicle ahead is exceeding the limit"
+        },
+        {
+          "key": "C",
+          "text": "Counting a time gap before your vehicle reaches it"
+        },
+        {
+          "key": "D",
+          "text": "Estimating how many car lengths separate the two vehicles"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "A fixed roadside point can be used to estimate the time gap to the vehicle ahead.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Give yourself some space, pp.61–62",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FOLLOW_Q007",
+      "knowledgeId": "FOLLOW_002",
+      "topicId": "following_distance",
+      "subtopic": "wet_conditions",
+      "difficulty": "challenge",
+      "type": "scenario_multiple_choice",
+      "prompt": "Why might the same physical gap be less safe when the road becomes wet?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rain makes the vehicle ahead brake more suddenly"
+        },
+        {
+          "key": "B",
+          "text": "Wet roads reduce how far your headlights reach"
+        },
+        {
+          "key": "C",
+          "text": "Water on the road makes the gap look larger than it is"
+        },
+        {
+          "key": "D",
+          "text": "Reduced grip can increase the distance needed to respond and stop"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "A larger safety margin is useful when conditions may increase stopping distance.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Following distance, p.62",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "raining",
+        "wet_surface"
+      ],
+      "riskFactorTypes": [
+        "rain"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The same traffic gap is maintained as a dry road becomes wet after rain starts.",
+        "hazards": [
+          "wet surface",
+          "braking distance",
+          "fixed gap"
+        ],
+        "decisionPoint": "Decide whether the existing physical gap still provides the same safety margin.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FOLLOW_Q008",
+      "knowledgeId": "FOLLOW_002",
+      "topicId": "following_distance",
+      "subtopic": "tailgating",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "A driver behind is following you very closely. What should you avoid doing?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reacting aggressively or creating a sudden conflict"
+        },
+        {
+          "key": "B",
+          "text": "Continuing at a steady, predictable speed"
+        },
+        {
+          "key": "C",
+          "text": "Increasing your own following gap to the vehicle in front"
+        },
+        {
+          "key": "D",
+          "text": "Letting them overtake when it is safe to do so"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Safe driving prioritises space, attention and avoiding escalation.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Give yourself some space, pp.61–62",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A vehicle behind is tailgating closely while traffic ahead is moving normally.",
+        "hazards": [
+          "tailgater",
+          "pressure",
+          "rear-end risk"
+        ],
+        "decisionPoint": "Choose a response that avoids aggression and preserves space ahead.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "INTER_Q006",
+      "knowledgeId": "INTER_001",
+      "topicId": "intersections",
+      "subtopic": "approach",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Why should you scan an intersection before entering even when you have priority?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Scanning transfers responsibility to the other driver"
+        },
+        {
+          "key": "B",
+          "text": "Another road user may make a mistake or a hazard may develop"
+        },
+        {
+          "key": "C",
+          "text": "Priority only applies at intersections that are signed"
+        },
+        {
+          "key": "D",
+          "text": "You must give way to anyone arriving at the same time"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Hazard perception still matters when you have priority or a green signal.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Traffic controls at intersections, p.98",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "INTER_Q007",
+      "knowledgeId": "INTER_002",
+      "topicId": "intersections",
+      "subtopic": "roundabout_signals",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "At a roundabout, why is observing other vehicles' position and signals useful?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It tells you which exit you are required to take"
+        },
+        {
+          "key": "B",
+          "text": "A vehicle that is signalling must give way to you"
+        },
+        {
+          "key": "C",
+          "text": "It helps you anticipate their likely path"
+        },
+        {
+          "key": "D",
+          "text": "It decides who has priority at the roundabout"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Reading other road users' movement helps with safe gap and entry decisions.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Giving way at roundabouts, p.107",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "At a busy roundabout, vehicles are signalling and changing position as they approach exits.",
+        "hazards": [
+          "roundabout",
+          "vehicle signals",
+          "path prediction"
+        ],
+        "decisionPoint": "Use position and signals to anticipate another vehicle's likely movement.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "INTER_Q008",
+      "knowledgeId": "INTER_001",
+      "topicId": "intersections",
+      "subtopic": "blocked_view",
+      "difficulty": "challenge",
+      "type": "scenario_multiple_choice",
+      "prompt": "Your view at an intersection is partly blocked. What principle should guide your approach?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Edge forward until other traffic sees you and stops"
+        },
+        {
+          "key": "B",
+          "text": "Rely on the vehicle in front having checked before you"
+        },
+        {
+          "key": "C",
+          "text": "Proceed normally if the intersection has traffic lights"
+        },
+        {
+          "key": "D",
+          "text": "Proceed only when you can assess the situation safely"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Limited visibility requires greater care and a decision based on what can be safely assessed.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Intersections / hazard perception",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A large parked van blocks part of the driver's view when approaching an uncontrolled intersection.",
+        "hazards": [
+          "blocked view",
+          "intersection",
+          "hidden traffic"
+        ],
+        "decisionPoint": "Decide how to approach when the traffic situation cannot yet be fully seen.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SIGNS_Q006",
+      "knowledgeId": "SIGNS_001",
+      "topicId": "signs_markings",
+      "subtopic": "temporary_signs",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Roadworks signs temporarily change how traffic should move. What should you do?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Follow the applicable temporary traffic controls"
+        },
+        {
+          "key": "B",
+          "text": "Follow whichever of the two limits is higher"
+        },
+        {
+          "key": "C",
+          "text": "Follow the permanent signs, since temporary ones are advisory"
+        },
+        {
+          "key": "D",
+          "text": "Follow the temporary limit only while workers are present"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Drivers must observe the traffic controls that apply to the current road environment.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Road signs, pp.84–90",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Roadworks ahead have temporary signs and a changed lane layout that differ from the driver's usual route.",
+        "hazards": [
+          "roadworks",
+          "temporary signs",
+          "changed lanes"
+        ],
+        "decisionPoint": "Decide which traffic controls should guide the driver through the work area.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SIGNS_Q007",
+      "knowledgeId": "SIGNS_002",
+      "topicId": "signs_markings",
+      "subtopic": "lane_lines",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What is one purpose of lane markings?",
+      "options": [
+        {
+          "key": "A",
+          "text": "To mark the boundary of the speed-limit zone"
+        },
+        {
+          "key": "B",
+          "text": "To guide the position and movement of traffic"
+        },
+        {
+          "key": "C",
+          "text": "To indicate where overtaking is always permitted"
+        },
+        {
+          "key": "D",
+          "text": "To show where the road surface was last resurfaced"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Road markings communicate how traffic lanes and movements are organised.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Road markings, pp.91–92",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SIGNS_Q008",
+      "knowledgeId": "SIGNS_001",
+      "topicId": "signs_markings",
+      "subtopic": "interpretation",
+      "difficulty": "challenge",
+      "type": "scenario_multiple_choice",
+      "prompt": "You see a road sign you do not recognise. What is the safest learning habit?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Assume it means the same as a similar shape you already know"
+        },
+        {
+          "key": "B",
+          "text": "Continue and look up the meaning once the trip has finished"
+        },
+        {
+          "key": "C",
+          "text": "Check its meaning in an official Victorian road-rule source"
+        },
+        {
+          "key": "D",
+          "text": "Do whatever the vehicle ahead of you does"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Official road-rule sources should be used to learn the meaning and requirements of road signs.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Road signs, pp.84–90",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The driver encounters an unfamiliar road sign while planning a future trip and is unsure what it means.",
+        "hazards": [
+          "unfamiliar sign",
+          "interpretation"
+        ],
+        "decisionPoint": "Decide where the driver should check the sign's meaning before relying on it.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SHARE_Q006",
+      "knowledgeId": "SHARE_001",
+      "topicId": "sharing_road",
+      "subtopic": "cyclist_visibility",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Before opening a vehicle door beside a traffic lane, why should you check for cyclists?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Cyclists are required to stop behind a parked vehicle"
+        },
+        {
+          "key": "B",
+          "text": "The mirror does not show the footpath side of the vehicle"
+        },
+        {
+          "key": "C",
+          "text": "Opening a door into a lane requires indicating first"
+        },
+        {
+          "key": "D",
+          "text": "A cyclist may be approaching alongside the vehicle"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Checking for approaching road users helps avoid creating a hazard when opening a door.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Sharing the road, pp.125–144",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "The vehicle is parked beside a bicycle lane and a cyclist is approaching from behind as the driver prepares to open the door.",
+        "hazards": [
+          "cyclist",
+          "dooring risk",
+          "blind area"
+        ],
+        "decisionPoint": "Decide what to check before opening the door.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SHARE_Q007",
+      "knowledgeId": "SHARE_001",
+      "topicId": "sharing_road",
+      "subtopic": "pedestrian_crossing",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "What should a driver be prepared to do near a pedestrian crossing?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Slow or stop as required for pedestrians"
+        },
+        {
+          "key": "B",
+          "text": "Sound the horn to warn pedestrians you are approaching"
+        },
+        {
+          "key": "C",
+          "text": "Give way only to pedestrians on your side of the road"
+        },
+        {
+          "key": "D",
+          "text": "Continue at the limit unless a pedestrian has already stepped on"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Pedestrian areas require active scanning and compliance with applicable give-way requirements.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Sharing the road, pp.125–144",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "SHARE_Q008",
+      "knowledgeId": "SHARE_001",
+      "topicId": "sharing_road",
+      "subtopic": "space",
+      "difficulty": "challenge",
+      "type": "scenario_multiple_choice",
+      "prompt": "Why is 'leave appropriate space' better learning advice than 'pass as soon as possible' around vulnerable road users?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It sets one fixed distance that applies at every speed"
+        },
+        {
+          "key": "B",
+          "text": "It makes the decision depend on whether the pass can actually be completed safely"
+        },
+        {
+          "key": "C",
+          "text": "It means you should never overtake a cyclist"
+        },
+        {
+          "key": "D",
+          "text": "It applies only on roads with a marked bicycle lane"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Safe sharing depends on the actual space, visibility and traffic situation rather than urgency to pass.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Sharing the road, pp.125–144",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A vulnerable road user is ahead and the available passing space narrows because of oncoming traffic.",
+        "hazards": [
+          "vulnerable road user",
+          "oncoming traffic",
+          "limited space"
+        ],
+        "decisionPoint": "Decide whether passing should be delayed until it can be completed safely.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "DISTRACT_Q006",
+      "knowledgeId": "DISTRACT_001",
+      "topicId": "distraction",
+      "subtopic": "cognitive_load",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "Why can a distracting task be risky even if it takes only a few seconds?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The vehicle drifts sideways whenever you look away"
+        },
+        {
+          "key": "B",
+          "text": "Short glances only matter on roads above 80 km/h"
+        },
+        {
+          "key": "C",
+          "text": "Important road information can change during those seconds"
+        },
+        {
+          "key": "D",
+          "text": "A few seconds is longer than the legal limit for looking away"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "The road environment can change quickly, so brief losses of attention can still matter.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Mobile phones and electronic devices, pp.53–54",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "DISTRACT_Q007",
+      "knowledgeId": "DISTRACT_001",
+      "topicId": "distraction",
+      "subtopic": "notifications",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "A phone notification appears while you are driving. What is the safest general response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Check it at the next red light"
+        },
+        {
+          "key": "B",
+          "text": "Glance at it while the traffic ahead is stopped"
+        },
+        {
+          "key": "C",
+          "text": "Deal with it quickly so it stops being a distraction"
+        },
+        {
+          "key": "D",
+          "text": "Leave it until it can be dealt with safely and legally"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Driving attention should remain on the road, and device restrictions must be followed.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Mobile phones and electronic devices, pp.53–54",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "A message notification appears while the vehicle is travelling along a straight road with light traffic.",
+        "hazards": [
+          "notification",
+          "cognitive distraction",
+          "false sense of safety"
+        ],
+        "decisionPoint": "Decide whether apparently easy road conditions justify checking the device.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "DISTRACT_Q008",
+      "knowledgeId": "DISTRACT_001",
+      "topicId": "distraction",
+      "subtopic": "trip_prep",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which action can reduce avoidable distraction before a trip?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Set up the route and necessary controls before moving"
+        },
+        {
+          "key": "B",
+          "text": "Turn the music up so notifications are less noticeable"
+        },
+        {
+          "key": "C",
+          "text": "Mount the phone where it is easiest to reach while driving"
+        },
+        {
+          "key": "D",
+          "text": "Plan to make any adjustments at the first set of lights"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Preparing navigation and controls before moving reduces the need for interaction while driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Mobile phones and electronic devices, pp.53–54",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "PPLATE_Q006",
+      "knowledgeId": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "subtopic": "rule_changes",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "Why should an app avoid permanently hard-coding time-sensitive P-plate rules without a review process?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rules depend on the colour of the car"
+        },
+        {
+          "key": "B",
+          "text": "Official requirements can change"
+        },
+        {
+          "key": "C",
+          "text": "No official source exists"
+        },
+        {
+          "key": "D",
+          "text": "P-plate rules are only suggestions"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Road laws and licence conditions can change, so stored learning content needs source review.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "P1/P2 conditions, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks about the team's content-governance process."
+    },
+    {
+      "id": "PPLATE_Q007",
+      "knowledgeId": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "subtopic": "source_check",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "Before approving a new P-plate quiz question, what should the content reviewer verify?",
+      "options": [
+        {
+          "key": "A",
+          "text": "That it appears on social media"
+        },
+        {
+          "key": "B",
+          "text": "That the rule matches a current official Victorian source"
+        },
+        {
+          "key": "C",
+          "text": "That the answer is the longest option"
+        },
+        {
+          "key": "D",
+          "text": "That another state uses the same rule"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Legal-rule questions should be checked against current authoritative Victorian material.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "P1/P2 conditions, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks what a content reviewer should verify."
+    },
+    {
+      "id": "PPLATE_Q008",
+      "knowledgeId": "PPLATE_001",
+      "topicId": "p_plate_rules",
+      "subtopic": "zero_bac",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "For a P1 or P2 driver, what BAC requirement does the handbook state?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Below 0.05, the same as a full licence holder"
+        },
+        {
+          "key": "B",
+          "text": "Zero BAC"
+        },
+        {
+          "key": "C",
+          "text": "Zero for P1 and below 0.05 for P2"
+        },
+        {
+          "key": "D",
+          "text": "Below 0.02"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "The handbook states that probationary drivers must have zero BAC while driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Alcohol, p.71; P1/P2 conditions, pp.22–23",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FATIGUE_Q006",
+      "knowledgeId": "FATIGUE_001",
+      "topicId": "fatigue",
+      "subtopic": "self_assessment",
+      "difficulty": "applied",
+      "type": "scenario_multiple_choice",
+      "prompt": "Before a long or late trip, which question is most useful?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Will coffee keep me going until I arrive?"
+        },
+        {
+          "key": "B",
+          "text": "How much time can I save by leaving now?"
+        },
+        {
+          "key": "C",
+          "text": "Am I alert and fit to drive safely?"
+        },
+        {
+          "key": "D",
+          "text": "Is the route short enough that fatigue will not matter?"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Safe trip preparation includes considering whether fatigue could impair driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Fatigue, p.57",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [
+        "after_dark"
+      ],
+      "riskFactorTypes": [
+        "after_dark"
+      ],
+      "scenario": {
+        "type": "dashcam_inspired_text",
+        "description": "Before a long evening trip, the driver has had little rest and feels less alert than usual.",
+        "hazards": [
+          "long trip",
+          "reduced alertness",
+          "self-assessment"
+        ],
+        "decisionPoint": "Decide whether the driver is fit to begin the trip.",
+        "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
+      },
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FATIGUE_Q007",
+      "knowledgeId": "FATIGUE_001",
+      "topicId": "fatigue",
+      "subtopic": "impairment",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "Why is fatigue a road-safety issue rather than only a comfort issue?",
+      "options": [
+        {
+          "key": "A",
+          "text": "It makes the driver more likely to be stopped by police"
+        },
+        {
+          "key": "B",
+          "text": "It only matters on trips longer than two hours"
+        },
+        {
+          "key": "C",
+          "text": "It causes the driver to sit in an unsafe position"
+        },
+        {
+          "key": "D",
+          "text": "It can impair attention, judgement and reaction"
+        }
+      ],
+      "correctOption": "D",
+      "explanation": "Fatigue can directly affect abilities needed for safe driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Fatigue, p.57",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "FATIGUE_Q008",
+      "knowledgeId": "FATIGUE_001",
+      "topicId": "fatigue",
+      "subtopic": "buddy_scope",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "A user asks Buddy, 'Am I definitely too tired to drive?' What is the safer product response?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Explain fatigue signs and limits, but do not claim to diagnose the user's state from app data alone"
+        },
+        {
+          "key": "B",
+          "text": "Give a random yes/no answer"
+        },
+        {
+          "key": "C",
+          "text": "Guarantee they are safe if they completed a quiz"
+        },
+        {
+          "key": "D",
+          "text": "Predict fatigue from route length alone"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "RoadBuddy can provide source-based education but should not infer a personal safety state without reliable evidence.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Fatigue, p.57",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": false,
+      "serve": false,
+      "excludeReason": "Asks how Buddy should reply, not a road-safety point."
+    },
+    {
+      "id": "VEHICLE_Q006",
+      "knowledgeId": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "subtopic": "visibility",
+      "difficulty": "applied",
+      "type": "multiple_choice",
+      "prompt": "A windscreen is badly obscured before a trip. Why should that be fixed before driving?",
+      "options": [
+        {
+          "key": "A",
+          "text": "The driver needs a clear view to detect hazards"
+        },
+        {
+          "key": "B",
+          "text": "It is only a problem when driving towards the sun"
+        },
+        {
+          "key": "C",
+          "text": "An obscured windscreen reduces how well the wipers work"
+        },
+        {
+          "key": "D",
+          "text": "It stops the demister from clearing the glass"
+        }
+      ],
+      "correctOption": "A",
+      "explanation": "Good visibility is fundamental to identifying hazards and controlling the vehicle safely.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Vehicle safety and maintenance, pp.58–59",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "VEHICLE_Q007",
+      "knowledgeId": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "subtopic": "warning_signs",
+      "difficulty": "challenge",
+      "type": "multiple_choice",
+      "prompt": "Why should an unusual safety-related vehicle problem be investigated rather than ignored?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Faults only matter on trips at highway speed"
+        },
+        {
+          "key": "B",
+          "text": "A fault may affect the vehicle's safe operation"
+        },
+        {
+          "key": "C",
+          "text": "Any fault immediately cancels the vehicle's registration"
+        },
+        {
+          "key": "D",
+          "text": "A fault that is not visible cannot affect safety"
+        }
+      ],
+      "correctOption": "B",
+      "explanation": "Vehicle condition is part of the overall safety system and known safety faults should be addressed.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Vehicle safety and maintenance, pp.58–59",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    },
+    {
+      "id": "VEHICLE_Q008",
+      "knowledgeId": "VEHICLE_001",
+      "topicId": "vehicle_safety",
+      "subtopic": "pre_trip",
+      "difficulty": "basic",
+      "type": "multiple_choice",
+      "prompt": "Which is the best time to notice an obvious vehicle-safety problem?",
+      "options": [
+        {
+          "key": "A",
+          "text": "At the next scheduled service"
+        },
+        {
+          "key": "B",
+          "text": "When the vehicle next needs fuel"
+        },
+        {
+          "key": "C",
+          "text": "Before entering traffic"
+        },
+        {
+          "key": "D",
+          "text": "At the first stop during the trip"
+        }
+      ],
+      "correctOption": "C",
+      "explanation": "Basic pre-trip awareness gives the driver a chance to address an obvious safety issue before driving.",
+      "source": {
+        "id": "SRC_001",
+        "name": "Road to Solo Driving",
+        "section": "Vehicle safety and maintenance, pp.58–59",
+        "url": "https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit"
+      },
+      "conditionKeys": [],
+      "riskFactorTypes": [],
+      "scenario": null,
+      "reviewStatus": "review",
+      "distractorsRewritten": true,
+      "serve": true,
+      "excludeReason": null
+    }
+  ],
+  "mockBlueprint": {
+    "totalQuestions": 32,
+    "passMarkPercent": 78,
+    "quotas": [
+      {
+        "topicId": "signs_markings",
+        "questionCount": 5,
+        "minimumDifficulty": "basic"
+      },
+      {
+        "topicId": "intersections",
+        "questionCount": 5,
+        "minimumDifficulty": "basic"
+      },
+      {
+        "topicId": "speed_management",
+        "questionCount": 4,
+        "minimumDifficulty": "basic"
+      },
+      {
+        "topicId": "hazard_awareness",
+        "questionCount": 4,
+        "minimumDifficulty": "applied"
+      },
+      {
+        "topicId": "night_driving",
+        "questionCount": 3,
+        "minimumDifficulty": "basic"
+      },
+      {
+        "topicId": "wet_weather",
+        "questionCount": 3,
+        "minimumDifficulty": "basic"
+      },
+      {
+        "topicId": "following_distance",
+        "questionCount": 2,
+        "minimumDifficulty": "basic"
+      },
+      {
+        "topicId": "sharing_road",
+        "questionCount": 2,
+        "minimumDifficulty": "basic"
+      },
+      {
+        "topicId": "distraction",
+        "questionCount": 2,
+        "minimumDifficulty": "basic"
+      },
+      {
+        "topicId": "p_plate_rules",
+        "questionCount": 2,
+        "minimumDifficulty": "basic"
+      }
+    ]
+  }
+}
