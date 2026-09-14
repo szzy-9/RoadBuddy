@@ -12,6 +12,8 @@ from app.schemas.learn import (
     MockTestGradeResponse,
     TripLessonRequest,
     TripLessonResponse,
+    LearnAnswerRequest,
+    LearnAnswerResponse,
 )
 
 from app.services.learning_query import (
@@ -20,6 +22,7 @@ from app.services.learning_query import (
     get_topics,
     get_trip_lesson,
     grade_mock_test,
+    check_learn_answer,
 )
 
 router = APIRouter(prefix="/learn", tags=["learn"])
@@ -83,6 +86,27 @@ def trip_lesson(
         session,
         request,
     )
+
+@router.post(
+    "/questions/{question_id}/answer",
+    response_model=LearnAnswerResponse,
+)
+def answer_question(
+    question_id: str,
+    request: LearnAnswerRequest,
+    session: Annotated[Session, Depends(get_db)],
+) -> LearnAnswerResponse:
+    try:
+        return check_learn_answer(
+            session,
+            question_id,
+            request,
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail=str(exc),
+        ) from exc
 
 
 

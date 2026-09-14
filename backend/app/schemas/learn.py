@@ -52,9 +52,6 @@ class LearnQuestionsResponse(BaseModel):
 
 
 
-
-
-
 class MockTestQuestionResponse(BaseModel):
     id: str
     topic_id: str
@@ -101,9 +98,33 @@ class MockTestGradeResponse(BaseModel):
 class TripLessonRequest(BaseModel):
     risk_factors: list[str]
 
+class LearnQuestionPromptResponse(BaseModel):
+    id: str
+    topic_id: str
+    subtopic: str | None = None
+    difficulty: str
+    question_type: str
+    prompt: str
+    options: list[LearnOptionResponse]
+    source: LearnSourceResponse
+    scenario: LearnScenarioResponse | None = None
+
 
 class TripLessonResponse(BaseModel):
     available: bool
     matched_risk_factors: list[str]
     matched_topics: list[str]
-    questions: list[LearnQuestionResponse]
+    questions: list[LearnQuestionPromptResponse]
+
+class LearnAnswerRequest(BaseModel):
+    selected_option: str
+
+
+class LearnAnswerResponse(BaseModel):
+    question_id: str
+    selected_option: str
+    correct_option: str
+    correct: bool
+    explanation: str
+    source: LearnSourceResponse
+

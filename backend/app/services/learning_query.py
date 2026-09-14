@@ -27,6 +27,9 @@ from app.schemas.learn import (
     MockTestQuestionResponse,
     TripLessonRequest,
     TripLessonResponse,
+    LearnAnswerRequest,
+    LearnAnswerResponse,
+    LearnQuestionPromptResponse,
 )
 
 DIFFICULTY_RANK = {
@@ -631,7 +634,7 @@ def get_trip_lesson(
         for source in sources
     }
 
-    results: list[LearnQuestionResponse] = []
+    results: list[LearnQuestionPromptResponse] = []
 
     for question in questions:
         source = sources_by_id[
@@ -656,7 +659,7 @@ def get_trip_lesson(
             )
 
         results.append(
-            LearnQuestionResponse(
+            LearnQuestionPromptResponse(
                 id=question.question_id,
                 topic_id=question.topic_id,
                 subtopic=question.subtopic,
@@ -666,7 +669,6 @@ def get_trip_lesson(
                 options=options_by_question[
                     question.question_id
                 ],
-                explanation=question.explanation,
                 source=LearnSourceResponse(
                     id=source.source_id,
                     name=source.source_title,
@@ -689,4 +691,46 @@ def get_trip_lesson(
         matched_risk_factors=supported_factors,
         matched_topics=matched_topics,
         questions=results,
+    )
+
+def check_learn_answer(
+    session: Session,
+    question_id: str,
+    request: LearnAnswerRequest,
+) -> LearnAnswerResponse:
+    selected_option = request.selected_option.strip().upper()
+
+    if selected_option not in {"A", "B", "C", "D"}:
+        raise ValueError("selected_option must be one of A, B, C or D")
+
+    question = session.get(
+        LearningQuestion,
+        question_id,
+    )
+
+    if question is None or not question.serve:
+        raise ValueError("Question not found or unavailable")
+
+    source = session.get(
+        LearningSource,
+        question.source_id,
+    )
+
+    if source is None:
+        raise ValueError("Question source is unavailable")
+
+    correct = selected_option == question.correct_option
+
+    return LearnAnswerResponse(
+        question_id=question.question_id,
+        selected_option=selected_option,
+        correct_option=question.correct_option,
+        correct=correct,
+        explanation=question.explanation,
+        source=LearnSourceResponse(
+            id=source.source_id,
+            name=source.source_title,
+            section=question.source_section,
+            url=source.source_url,
+        ),
     )
