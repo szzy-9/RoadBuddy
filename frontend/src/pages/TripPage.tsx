@@ -595,6 +595,8 @@ export default function TripPage() {
           submitLabel='Check my trip'
           initialOrigin={result?.route.origin ?? ''}
           initialDestination={result?.route.destination ?? ''}
+          initialOriginPoint={result?.route.origin_point ?? null}
+          initialDestinationPoint={result?.route.destination_point ?? null}
           showExample={!result}
           onLoadingChange={setIsChecking}
         />

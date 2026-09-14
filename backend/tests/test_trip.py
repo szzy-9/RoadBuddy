@@ -425,3 +425,123 @@ def test_segment_query_preserves_nulls_and_maps_rows_by_index() -> None:
     session.execute.side_effect = SQLAlchemyError("unavailable")
     with pytest.raises(CrashDataUnavailable):
         get_route_segment_crash_counts(session, segments)
+
+
+def test_resolved_coordinates_are_used_instead_of_regeocoding(monkeypatch) -> None:
+    """A point the user already picked must not be looked up a second time.
+
+    Re-geocoding a chosen label is lossy: "Chadstone Shopping Centre, Melbourne
+    3145" has no point of interest index behind it, so it parses as street
+    number 3145 on a road called Melbourne and lands in Wodonga.
+    """
+    from app.services import trip_analysis
+
+    def fail_geocode(address, *_args, **_kwargs):
+        raise AssertionError(f"re-geocoded an already resolved address: {address!r}")
+
+    monkeypatch.setattr(trip_analysis, "geocode_address", fail_geocode)
+
+    routed: list[Coordinates] = []
+
+    async def fake_route(origin, destination, _settings, _client):
+        routed.extend([origin, destination])
+        return RouteResult(
+            distance_km=15.0,
+            duration_minutes=20,
+            geometry={
+                "type": "LineString",
+                "coordinates": [[145.0825, -37.8877], [145.1439, -37.9265]],
+            },
+        )
+
+    monkeypatch.setattr(trip_analysis, "calculate_route", fake_route)
+    monkeypatch.setattr(
+        trip_analysis,
+        "get_endpoint_hotspots",
+        lambda *_args, **_kwargs: [],
+    )
+    monkeypatch.setattr(
+        trip_analysis,
+        "get_route_segment_crash_counts",
+        lambda *_args, **_kwargs: {},
+    )
+    monkeypatch.setattr(
+        trip_analysis,
+        "route_has_high_speed_zone",
+        lambda *_args, **_kwargs: False,
+    )
+
+    async def fake_weather(*_args, **_kwargs):
+        return WeatherConditions(rain=False, precipitation_mm=0.0)
+
+    monkeypatch.setattr(trip_analysis, "get_weather_at", fake_weather)
+    monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
+
+    request = TripCheckRequest.model_validate(
+        {
+            "origin": "Chadstone Shopping Centre, Melbourne 3145, Australia",
+            "destination": "IKEA, 917 Princes Hwy, Melbourne 3171, Australia",
+            "departure_time": "2026-08-25T22:40:00+10:00",
+            "origin_point": {"longitude": 145.0825, "latitude": -37.8877},
+            "destination_point": {"longitude": 145.1439, "latitude": -37.9265},
+        }
+    )
+
+    response = asyncio.run(
+        _analyse_production_trip(request, Settings(mapbox_token="t"), Mock())
+    )
+
+    assert [(c.longitude, c.latitude) for c in routed] == [
+        (145.0825, -37.8877),
+        (145.1439, -37.9265),
+    ]
+    assert response.route.origin_point.longitude == 145.0825
+    assert response.route.destination_point.latitude == -37.9265
+    # The label the user saw is what the result should echo back.
+    assert response.route.origin == "Chadstone Shopping Centre, Melbourne 3145, Australia"
+
+
+def test_typed_address_without_a_point_is_still_geocoded(monkeypatch) -> None:
+    """Free text the user never picked from the list still needs a lookup."""
+    from app.services import trip_analysis
+
+    looked_up: list[str] = []
+
+    async def fake_geocode(address, *_args, **_kwargs):
+        looked_up.append(address)
+        return Coordinates(longitude=144.657, latitude=-37.8233, label=address)
+
+    monkeypatch.setattr(trip_analysis, "geocode_address", fake_geocode)
+
+    async def fake_route(_origin, _destination, _settings, _client):
+        return RouteResult(
+            distance_km=15.0,
+            duration_minutes=20,
+            geometry={
+                "type": "LineString",
+                "coordinates": [[144.66, -37.82], [144.95, -37.82]],
+            },
+        )
+
+    monkeypatch.setattr(trip_analysis, "calculate_route", fake_route)
+    monkeypatch.setattr(
+        trip_analysis, "get_endpoint_hotspots", lambda *_a, **_k: []
+    )
+    monkeypatch.setattr(
+        trip_analysis, "get_route_segment_crash_counts", lambda *_a, **_k: {}
+    )
+    monkeypatch.setattr(
+        trip_analysis, "route_has_high_speed_zone", lambda *_a, **_k: False
+    )
+
+    async def fake_weather(*_args, **_kwargs):
+        return WeatherConditions(rain=False, precipitation_mm=0.0)
+
+    monkeypatch.setattr(trip_analysis, "get_weather_at", fake_weather)
+    monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
+
+    request = TripCheckRequest.model_validate(VALID_REQUEST)
+
+    asyncio.run(_analyse_production_trip(request, Settings(mapbox_token="t"), Mock()))
+
+    assert looked_up == [VALID_REQUEST["origin"], VALID_REQUEST["destination"]]

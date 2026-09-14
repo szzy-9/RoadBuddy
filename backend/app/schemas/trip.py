@@ -18,10 +18,24 @@ class DataAvailability(StrEnum):
     UNAVAILABLE = "unavailable"
 
 
+class GeoPoint(BaseModel):
+    """A geographic coordinate pair resolved from a free-text address."""
+
+    longitude: float = Field(ge=-180, le=180)
+    latitude: float = Field(ge=-90, le=90)
+
+
 class TripCheckRequest(BaseModel):
     origin: Address
     destination: Address
     departure_time: datetime
+    # Sent when the address came from the suggestion list, whose coordinates are
+    # authoritative. Geocoding a chosen label a second time is lossy: a point of
+    # interest label has no address behind it, so "Chadstone Shopping Centre,
+    # Melbourne 3145" reads as street number 3145 on a road named Melbourne and
+    # resolves to Wodonga. Absent for text the user typed without picking.
+    origin_point: GeoPoint | None = None
+    destination_point: GeoPoint | None = None
 
     @field_validator("departure_time")
     @classmethod
@@ -39,13 +53,6 @@ class LocationSuggestion(BaseModel):
 
 class LocationSuggestionsResponse(BaseModel):
     suggestions: list[LocationSuggestion]
-
-
-class GeoPoint(BaseModel):
-    """A geographic coordinate pair resolved from a free-text address."""
-
-    longitude: float = Field(ge=-180, le=180)
-    latitude: float = Field(ge=-90, le=90)
 
 
 class GeoLineString(BaseModel):
