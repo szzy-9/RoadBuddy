@@ -22,3 +22,23 @@ test('significant_crash_history matches the crash_history lesson', () => {
   const factor: RiskFactor = { type: 'significant_crash_history', label: 'Crash history' }
   assert.deepEqual(getTripLessonIds([factor]), ['crash_history'])
 })
+
+test('multiple trip conditions select only their matching lessons', () => {
+  const afterDark: RiskFactor = { type: 'after_dark', label: 'After dark' }
+  const highSpeed: RiskFactor = { type: 'high_speed_zone', label: 'High-speed zone' }
+
+  assert.deepEqual(getTripLessonIds([afterDark, highSpeed]), ['night', 'high_speed'])
+})
+
+test('trip lesson matching is deterministic when factor input order changes', () => {
+  const crashHistory: RiskFactor = { type: 'significant_crash_history', label: 'Crash history' }
+  const rain: RiskFactor = { type: 'rain', label: 'Rain' }
+  const afterDark: RiskFactor = { type: 'after_dark', label: 'After dark' }
+
+  assert.deepEqual(getTripLessonIds([crashHistory, rain, afterDark]), [
+    'night', 'wet', 'crash_history',
+  ])
+  assert.deepEqual(getTripLessonIds([afterDark, crashHistory, rain]), [
+    'night', 'wet', 'crash_history',
+  ])
+})
