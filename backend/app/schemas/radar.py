@@ -3,6 +3,8 @@ from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
+from app.schemas.indicator import IndicatorExplanation
+
 
 class RadarDataStatus(StrEnum):
     AVAILABLE = "available"
@@ -23,6 +25,7 @@ class CrashClusterSummary(BaseModel):
 class CrashClusterDetail(CrashClusterSummary):
     first_year: int | None = None
     last_year: int | None = None
+    explanation: IndicatorExplanation | None = None
 
     # Derived from the crashes inside the cluster's 200 m grid square. Each is
     # optional: a cluster whose crashes never recorded a road name, a surface

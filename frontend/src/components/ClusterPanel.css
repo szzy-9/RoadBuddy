@@ -46,6 +46,9 @@
 .cluster-stat-dot-wet { background: #e9a63c; }
 .cluster-stat-dot-dark { background: #7fb2c8; }
 .panel-note { margin: 13px 0 0; color: #8fa7b8; font-size: .65rem; line-height: 1.4; }
+.cluster-why { margin-top: 13px; font-size: .78rem; line-height: 1.5; }
+.cluster-why summary { cursor: pointer; font-weight: 700; }
+.cluster-why p { margin: 6px 0; }
 .cluster-panel-empty { display: grid; min-height: 190px; place-content: center; text-align: center; }
 .cluster-panel-empty p { margin: 0; color: #9fb2c2; font-size: .8rem; line-height: 1.5; }
 .panel-pin { color: var(--orange); font-size: 1.8rem; }

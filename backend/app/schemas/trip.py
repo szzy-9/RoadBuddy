@@ -4,6 +4,8 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, StringConstraints, field_validator
 
+from app.schemas.indicator import IndicatorExplanation
+
 Address = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
 
 
@@ -82,6 +84,7 @@ class RouteSummary(BaseModel):
 class RiskFactor(BaseModel):
     type: Literal["rain", "after_dark", "high_speed_zone", "significant_crash_history"]
     label: str
+    explanation: IndicatorExplanation | None = None
 
 
 class TripHotspot(BaseModel):
