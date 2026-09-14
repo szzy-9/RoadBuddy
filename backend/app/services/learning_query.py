@@ -30,6 +30,10 @@ from app.schemas.learn import (
     LearnAnswerRequest,
     LearnAnswerResponse,
     LearnQuestionPromptResponse,
+    MockTestResponse,
+    MockTestGradeRequest,
+    MockTestGradeResponse,
+    MockTestQuestionResult,
 )
 
 DIFFICULTY_RANK = {
