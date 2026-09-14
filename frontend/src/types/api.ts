@@ -1,6 +1,11 @@
 export type ConcernLevel = 'low' | 'medium' | 'higher'
 export type DataAvailability = 'available' | 'unavailable'
 
+export interface IndicatorExplanation {
+  source: string
+  trigger: string
+}
+
 export interface GeoPoint {
   longitude: number
   latitude: number
@@ -33,6 +38,7 @@ export interface RouteSummary {
 export interface RiskFactor {
   type: 'rain' | 'after_dark' | 'high_speed_zone' | 'significant_crash_history'
   label: string
+  explanation?: IndicatorExplanation | null
 }
 
 export interface TripHotspot {
@@ -126,6 +132,7 @@ export interface CrashClusterSummary {
 export interface CrashClusterDetail extends CrashClusterSummary {
   first_year: number | null
   last_year: number | null
+  explanation?: IndicatorExplanation | null
   /** Optional: absent on backends predating the cluster context fields. */
   road_name?: string | null
   dominant_crash_type?: string | null

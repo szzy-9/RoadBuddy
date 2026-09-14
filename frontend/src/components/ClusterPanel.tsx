@@ -95,6 +95,13 @@ export default function ClusterPanel({ cluster, isLoading, error, onClose }: Clu
               No crash type, surface or light condition was recorded for this cluster.
             </p>
           )}
+          {cluster.explanation && (
+            <details className="cluster-why">
+              <summary>Why?</summary>
+              <p><strong>Source:</strong> {cluster.explanation.source}</p>
+              <p><strong>Triggered by:</strong> {cluster.explanation.trigger}</p>
+            </details>
+          )}
           <p className="panel-note">Historical crash records provide context; they do not predict a future crash.</p>
         </>
       )}

@@ -346,10 +346,7 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
     return () => controller.abort()
   }, [hotspots])
 
-  // Weather is not wired up on the backend yet, so a rain factor would be
-  // asserting a condition nothing actually measured. Filtered here rather than
-  // relying on the response to omit it.
-  const shownFactors = result.factors.filter((factor) => factor.type !== 'rain')
+  const shownFactors = result.factors
   const prepLessons = getTripLessonIds(result.factors)
     .flatMap((id) => LESSONS.filter((lesson) => lesson.id === id))
 
@@ -431,10 +428,19 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
               <ul className="conditions">
                 {shownFactors.map((factor) => (
                   <li className="condition" key={factor.type}>
-                    <span className="condition-icon" aria-hidden="true">
-                      {FACTOR_ICONS[factor.type]}
+                    <span className="condition-label">
+                      <span className="condition-icon" aria-hidden="true">
+                        {FACTOR_ICONS[factor.type]}
+                      </span>
+                      {factor.label}
                     </span>
-                    {factor.label}
+                    {factor.explanation && (
+                      <details className="condition-why">
+                        <summary>Why?</summary>
+                        <p><strong>Source:</strong> {factor.explanation.source}</p>
+                        <p><strong>Triggered by:</strong> {factor.explanation.trigger}</p>
+                      </details>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -1,4 +1,6 @@
 import json
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -47,6 +49,42 @@ def test_cluster_detail(client: TestClient) -> None:
     assert detail["young_driver_crashes"] == 4
     assert detail["young_driver_pct"] == 33.33
     assert detail["young_driver_pct_displayable"] is True
+    assert detail["explanation"] == {
+        "source": "RoadBuddy development sample",
+        "trigger": "12 recorded injury crashes are grouped in this crash cluster.",
+    }
+
+
+def test_radar_explanation_is_optional_for_older_details(client: TestClient) -> None:
+    from app.schemas.radar import CrashClusterDetail
+
+    detail = client.get("/api/radar/clusters/101").json()
+    detail.pop("explanation", None)
+    assert CrashClusterDetail.model_validate(detail).explanation is None
+
+
+def test_real_cluster_explanation_uses_actual_crash_count() -> None:
+    row = SimpleNamespace(
+        id=9, crash_count=7, eligible_driver_age_crashes=7, young_driver_crashes=1,
+        young_driver_pct=None, young_driver_pct_displayable=False,
+        longitude=144.9, latitude=-37.8, grid_x=320000, grid_y=5810000,
+    )
+    session = Mock()
+    session.execute.side_effect = [
+        Mock(one_or_none=Mock(return_value=row)),
+        Mock(one=Mock(return_value=(2020, 2024))),
+        Mock(one=Mock(return_value=(2, 7, 3, 7))),
+        Mock(one_or_none=Mock(return_value=("PRINCES", "HIGHWAY"))),
+        Mock(scalar_one_or_none=Mock(return_value="REAR END")),
+    ]
+    detail = get_cluster_detail(session, 9, use_mock_data=False)
+    assert detail.model_dump()["explanation"] == {
+        "source": "Victorian Road Crash Data",
+        "trigger": "7 recorded injury crashes are grouped in this crash cluster.",
+    }
+    assert detail.crash_count == 7
+    assert detail.wet_crashes == 2
+    assert detail.dark_crashes == 3
 
 
 def test_radar_data_failure_returns_unavailable_without_clusters(

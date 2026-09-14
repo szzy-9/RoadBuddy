@@ -236,6 +236,15 @@
 
 .condition-icon { color: var(--green-dark); font-size: .95rem; }
 
+.conditions { align-items: flex-start; }
+.condition { flex-wrap: wrap; max-width: 100%; }
+.condition-label { display: inline-flex; align-items: center; gap: 8px; }
+.condition-why { font-size: .75rem; }
+.condition-why summary { cursor: pointer; }
+.condition-why[open] { flex-basis: 100%; }
+.condition:has(.condition-why[open]) { padding-block: 8px; border-radius: 16px; }
+.condition-why p { margin: 6px 0; font-weight: 400; line-height: 1.5; }
+
 /* Trip-matched practice; uses only the existing lesson topics. */
 .trip-prep {
   display: grid;
