@@ -69,3 +69,32 @@ class MockTestResponse(BaseModel):
     total_questions: int
     pass_mark_percent: int
     questions: list[MockTestQuestionResponse]
+
+
+class MockTestAnswerRequest(BaseModel):
+    question_id: str
+    selected_option: str
+
+
+class MockTestGradeRequest(BaseModel):
+    answers: list[MockTestAnswerRequest]
+
+
+class MockTestQuestionResult(BaseModel):
+    question_id: str
+    selected_option: str
+    correct_option: str
+    correct: bool
+    explanation: str
+    source: LearnSourceResponse
+
+
+class MockTestGradeResponse(BaseModel):
+    score: int
+    total: int
+    percentage: float
+    pass_mark_percent: int
+    passed: bool
+    results: list[MockTestQuestionResult]
+
+

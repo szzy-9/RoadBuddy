@@ -25,6 +25,9 @@ from app.schemas.learn import (
     LearnTopicsResponse,
     MockTestQuestionResponse,
     MockTestResponse,
+    MockTestGradeRequest,
+    MockTestGradeResponse,
+    MockTestQuestionResult,
 )
 
 DIFFICULTY_RANK = {
@@ -283,5 +286,152 @@ def get_mock_test(
         total_questions=config.total_questions,
         pass_mark_percent=config.pass_mark_percent,
         questions=results,
+    )
+
+def grade_mock_test(
+    session: Session,
+    request: MockTestGradeRequest,
+) -> MockTestGradeResponse:
+    config = session.get(
+        LearningMockTestConfig,
+        "default",
+    )
+
+    if config is None or not config.active:
+        return MockTestGradeResponse(
+            score=0,
+            total=0,
+            percentage=0.0,
+            pass_mark_percent=0,
+            passed=False,
+            results=[],
+        )
+
+    if len(request.answers) != config.total_questions:
+        raise ValueError(
+            f"Expected {config.total_questions} answers, "
+            f"received {len(request.answers)}"
+        )
+
+    question_ids = [
+        answer.question_id
+        for answer in request.answers
+    ]
+
+    if len(set(question_ids)) != len(question_ids):
+        raise ValueError(
+            "Duplicate question IDs are not allowed"
+    )
+
+
+
+    questions = session.execute(
+        select(LearningQuestion)
+        .where(
+            LearningQuestion.question_id.in_(question_ids),
+            LearningQuestion.serve.is_(True),
+        )
+    ).scalars().all()
+
+    questions_by_id = {
+        question.question_id: question
+        for question in questions
+    }
+
+    if len(questions_by_id) != config.total_questions:
+        raise ValueError(
+            "One or more question IDs are invalid or unavailable"
+    )
+
+
+    source_ids = {
+        question.source_id
+        for question in questions
+    }
+
+    sources = session.execute(
+        select(LearningSource)
+        .where(
+            LearningSource.source_id.in_(source_ids)
+        )
+    ).scalars().all()
+
+    sources_by_id = {
+        source.source_id: source
+        for source in sources
+    }
+
+    results: list[MockTestQuestionResult] = []
+    score = 0
+
+    for answer in request.answers:
+        selected = answer.selected_option.strip().upper()
+        
+        if selected not in {"A", "B", "C", "D"}:
+            raise ValueError(
+                f"{answer.question_id}: invalid selected option"
+            )
+
+        question = questions_by_id.get(
+            answer.question_id
+        )
+
+        if question is None:
+            continue
+
+        selected_option = (
+            answer.selected_option
+            .strip()
+            .upper()
+        )
+
+        correct = (
+            selected_option
+            == question.correct_option
+        )
+
+        if correct:
+            score += 1
+
+        source = sources_by_id[
+            question.source_id
+        ]
+
+        results.append(
+            MockTestQuestionResult(
+                question_id=question.question_id,
+                selected_option=selected_option,
+                correct_option=question.correct_option,
+                correct=correct,
+                explanation=question.explanation,
+                source=LearnSourceResponse(
+                    id=source.source_id,
+                    name=source.source_title,
+                    section=question.source_section,
+                    url=source.source_url,
+                ),
+            )
+        )
+
+    total = len(results)
+
+    percentage = (
+        round(score * 100 / total, 2)
+        if total
+        else 0.0
+    )
+
+    passed = (
+        total > 0
+        and percentage >= config.pass_mark_percent
+    )
+
+    return MockTestGradeResponse(
+        score=score,
+        total=total,
+        percentage=percentage,
+        pass_mark_percent=config.pass_mark_percent,
+        passed=passed,
+        results=results,
     )
 
