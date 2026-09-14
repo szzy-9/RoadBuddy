@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
+
 import { addCompletedTopics, getLessonFeedback, getTripLessonIds, LESSONS } from '../data/lessons'
 import type { Lesson } from '../data/lessons'
 import { useTripResult } from '../state/tripResult'
 import './LearnPage.css'
+import { checkLearnAnswer } from '../api/client'
+
+import type { TripLessonResponse } from '../types/api'
 
 type PracticeMode =
   | { kind: 'mock' }
@@ -16,6 +20,21 @@ type PracticeSession = {
   lessons: Lesson[]
   questionIndex: number
   answers: number[]
+  finished: boolean
+}
+
+type TripAnswerState = {
+  selectedOption: string
+  correct: boolean
+  correctOption: string
+  explanation: string
+  sourceName: string
+  sourceUrl: string
+}
+
+type TripPracticeState = {
+  questionIndex: number
+  answers: Record<string, TripAnswerState>
   finished: boolean
 }
 
@@ -32,15 +51,318 @@ function shuffledLessons(): Lesson[] {
 
 export default function LearnPage() {
   const [searchParams] = useSearchParams()
+  const location = useLocation()
   const [tripResult] = useTripResult()
+  
+  const tripLesson = (
+    location.state as { tripLesson?: TripLessonResponse } | null
+  )?.tripLesson ?? null
+  
   const tripLessonIds = searchParams.get('mode') === 'trip' && tripResult
     ? getTripLessonIds(tripResult.factors)
     : []
 
   // Reset on a different trip match or a return to /learn, without a landing
   // screen flash before trip practice. This remains the same quiz UI.
-  return <LearnPractice key={tripLessonIds.join(',') || 'practice'} tripLessonIds={tripLessonIds} />
+    
+  if (
+    searchParams.get('mode') === 'trip'
+    && tripLesson
+    && tripLesson.available
+    && tripLesson.questions.length > 0
+  ) {
+    return (
+      <TripLearnPractice
+        key={tripLesson.questions.map((question) => question.id).join(',')}
+        tripLesson={tripLesson}
+      />
+    )
+  }
+
+  
+  return (
+    <LearnPractice
+      key={
+        tripLesson?.questions.map((question) => question.id).join(',')
+        || tripLessonIds.join(',')
+        || 'practice'
+      }
+      tripLessonIds={tripLessonIds}
+    />
+  )
 }
+
+function TripLearnPractice({
+  tripLesson,
+}: {
+  tripLesson: TripLessonResponse
+}) {
+  const [practice, setPractice] = useState<TripPracticeState>({
+    questionIndex: 0,
+    answers: {},
+    finished: false,
+  })
+  const [submitting, setSubmitting] = useState(false)
+
+  const questionHeading = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    questionHeading.current?.focus()
+  }, [practice.questionIndex, practice.finished])
+
+  const question = tripLesson.questions[practice.questionIndex]
+  const answer = question
+    ? practice.answers[question.id]
+    : undefined
+
+  async function chooseOption(optionKey: string) {
+    if (!question || answer || submitting) return
+
+    setSubmitting(true)
+
+    try {
+      const result = await checkLearnAnswer(
+        question.id,
+        {
+          selected_option: optionKey,
+        },
+      )
+
+      setPractice((current) => ({
+        ...current,
+        answers: {
+          ...current.answers,
+          [question.id]: {
+            selectedOption: result.selected_option,
+            correct: result.correct,
+            correctOption: result.correct_option,
+            explanation: result.explanation,
+            sourceName: result.source.name,
+            sourceUrl: result.source.url,
+          },
+        },
+      }))
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  function nextQuestion() {
+    if (!question || !answer) return
+
+    if (
+      practice.questionIndex
+      === tripLesson.questions.length - 1
+    ) {
+      setPractice((current) => ({
+        ...current,
+        finished: true,
+      }))
+      return
+    }
+
+    setPractice((current) => ({
+      ...current,
+      questionIndex: current.questionIndex + 1,
+    }))
+  }
+
+  if (practice.finished) {
+    const results = Object.values(practice.answers)
+    const correctCount = results.filter(
+      (result) => result.correct,
+    ).length
+
+    const percentage = Math.round(
+      (correctCount / tripLesson.questions.length) * 100,
+    )
+
+    return (
+      <div className="learn-page learn-result">
+        <div
+          className="learn-score is-correct"
+          aria-label={`${correctCount} of ${tripLesson.questions.length} correct`}
+        >
+          <span>{percentage}%</span>
+        </div>
+
+        <h2 ref={questionHeading} tabIndex={-1}>
+          Trip prep complete
+        </h2>
+
+        <p>
+          {correctCount} of {tripLesson.questions.length} correct
+        </p>
+
+        <div className="learn-result-actions">
+          <button
+            className="button button-primary"
+            type="button"
+            onClick={() => {
+              setPractice({
+                questionIndex: 0,
+                answers: {},
+                finished: false,
+              })
+            }}
+          >
+            Again
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!question) {
+    return null
+  }
+
+  const topicLabel = question.topic_id
+    .replaceAll('_', ' ')
+
+  return (
+    <div className="learn-page learn-quiz">
+      <header className="learn-quiz-header">
+        <progress
+          className="learn-progress"
+          value={practice.questionIndex + 1}
+          max={tripLesson.questions.length}
+          aria-label="Trip preparation progress"
+        />
+
+        <span className="learn-counter">
+          {practice.questionIndex + 1}
+          {' / '}
+          {tripLesson.questions.length}
+        </span>
+      </header>
+
+      <section
+        className="learn-question"
+        aria-labelledby="trip-learn-question-title"
+      >
+        <span className="learn-pill">
+          {topicLabel}
+        </span>
+
+        <h2
+          id="trip-learn-question-title"
+          ref={questionHeading}
+          tabIndex={-1}
+        >
+          {question.prompt}
+        </h2>
+
+        {question.scenario?.description && (
+          <p>{question.scenario.description}</p>
+        )}
+
+        <div className="learn-options">
+          {question.options.map((option) => {
+            const correct = Boolean(
+              answer
+              && option.key === answer.correctOption,
+            )
+
+            const incorrect = Boolean(
+              answer
+              && option.key === answer.selectedOption
+              && !answer.correct,
+            )
+
+            return (
+              <button
+                key={option.key}
+                className={
+                  `learn-option${
+                    correct
+                      ? ' correct'
+                      : incorrect
+                        ? ' incorrect'
+                        : ''
+                  }`
+                }
+                type="button"
+                onClick={() => chooseOption(option.key)}
+                disabled={Boolean(answer) || submitting}
+              >
+                <span>{option.text}</span>
+
+                {(correct || incorrect) && (
+                  <>
+                    <span
+                      className="learn-answer-mark"
+                      aria-hidden="true"
+                    >
+                      {correct ? '✓' : '×'}
+                    </span>
+
+                    <span className="sr-only">
+                      {correct
+                        ? 'Correct answer'
+                        : 'Incorrect answer'}
+                    </span>
+                  </>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      {answer && (
+        <section
+          className={
+            `learn-feedback ${
+              answer.correct
+                ? 'is-correct'
+                : 'is-incorrect'
+            }`
+          }
+          aria-live="polite"
+        >
+          <span
+            className="learn-verdict-mark"
+            role="img"
+            aria-label={
+              answer.correct
+                ? 'Correct'
+                : 'Incorrect'
+            }
+          >
+            {answer.correct ? '✓' : '×'}
+          </span>
+
+          <p>{answer.explanation}</p>
+
+          <a
+            className="learn-source"
+            href={answer.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span aria-hidden="true">↗</span>
+            {' '}
+            {answer.sourceName}
+          </a>
+        </section>
+      )}
+
+      <button
+        className="button button-primary learn-next"
+        type="button"
+        onClick={nextQuestion}
+        disabled={!answer}
+      >
+        {practice.questionIndex
+        === tripLesson.questions.length - 1
+          ? 'Done'
+          : 'Next →'}
+      </button>
+    </div>
+  )
+}
+
 
 function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
   const [session, setSession] = useState<PracticeSession | null>(() => (
@@ -99,7 +421,8 @@ function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
             type="button"
             onClick={() => startPractice({ kind: 'mock' })}
           >
-            <svg className="learn-mode-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+     
+       <svg className="learn-mode-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M29 5H12a3 3 0 0 0-3 3v32a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V15L29 5Zm0 0v10h10M17 28l5 5 10-11" />
             </svg>
             <strong>Mock test</strong>

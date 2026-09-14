@@ -1,8 +1,8 @@
 {
   "meta": {
     "bundleVersion": "1.0.0",
-    "generatedAt": "2026-09-13",
-    "sourceWorkbook": "RoadBuddy_-_Question_Bank_100_Questions_V2__updated_.xlsx",
+    "generatedAt": "2026-09-14",
+    "sourceWorkbook": "question_bank.xlsx",
     "counts": {
       "topics": 12,
       "knowledgeItems": 19,
@@ -99,7 +99,7 @@
       "id": "speed_management",
       "name": "Speed Management",
       "description": "Speed limits, safe speed below the limit, stopping distance and adapting to conditions.",
-      "tripMatchable": false,
+      "tripMatchable": true,
       "conditionKeys": [
         "future_speed_zone_context"
       ],
@@ -1457,7 +1457,7 @@
         "decisionPoint": "Decide where to direct attention and how far ahead to scan.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1503,7 +1503,7 @@
         "after_dark"
       ],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1549,7 +1549,7 @@
         "after_dark"
       ],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1606,7 +1606,7 @@
         "decisionPoint": "Decide how much following space is useful before the braking event develops.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1653,7 +1653,7 @@
         "rain"
       ],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1710,7 +1710,7 @@
         "decisionPoint": "Decide whether continuing to drive is still safe.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1762,7 +1762,7 @@
         "decisionPoint": "Decide whether the posted maximum is also the appropriate current driving speed.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1814,7 +1814,7 @@
         "decisionPoint": "Identify how speed changes the distance and time available to stop.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1856,7 +1856,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1912,7 +1912,7 @@
         "decisionPoint": "Anticipate what may happen next and choose an early response.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1954,7 +1954,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -1996,7 +1996,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2038,7 +2038,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2094,7 +2094,7 @@
         "decisionPoint": "Choose how the safety margin should change.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2136,7 +2136,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2188,7 +2188,7 @@
         "decisionPoint": "Decide whether to enter when there is no room to clear the intersection.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2230,7 +2230,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2282,7 +2282,7 @@
         "decisionPoint": "Decide who must be given priority before entering.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2324,7 +2324,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2366,7 +2366,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2408,7 +2408,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks what RoadBuddy should teach, not a road rule."
@@ -2450,7 +2450,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2502,7 +2502,7 @@
         "decisionPoint": "Decide whether to pass immediately or wait until adequate space is available.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2554,7 +2554,7 @@
         "decisionPoint": "Decide where to scan and what hazard may emerge.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2596,7 +2596,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2638,7 +2638,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2680,7 +2680,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2722,7 +2722,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2774,7 +2774,7 @@
         "decisionPoint": "Decide whether being stopped in traffic makes device interaction acceptable.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2826,7 +2826,7 @@
         "decisionPoint": "Choose a safer way to make the change.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2868,7 +2868,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2910,7 +2910,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks about the team's source-review process."
@@ -2952,7 +2952,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -2994,7 +2994,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks about the team's source-review process."
@@ -3036,7 +3036,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3088,7 +3088,7 @@
         "decisionPoint": "Decide what self-check should occur before starting the trip.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3130,7 +3130,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks what the app should avoid claiming, not a road-safety point."
@@ -3182,7 +3182,7 @@
         "decisionPoint": "Decide whether continuing the journey is appropriate.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3224,7 +3224,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3266,7 +3266,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3318,7 +3318,7 @@
         "decisionPoint": "Decide whether the issue should be addressed before entering traffic.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3360,7 +3360,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3411,7 +3411,7 @@
         "decisionPoint": "Decide whether to ignore the issue because the trip is short or address it first.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3457,7 +3457,7 @@
         "after_dark"
       ],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3513,7 +3513,7 @@
         "decisionPoint": "Decide whether to maintain speed or create more time to react.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3569,7 +3569,7 @@
         "decisionPoint": "Respond without losing control or focusing attention away from the road.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3615,7 +3615,7 @@
         "after_dark"
       ],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks which app lesson to show, not a road-safety point."
@@ -3662,7 +3662,7 @@
         "rain"
       ],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3719,7 +3719,7 @@
         "decisionPoint": "Choose a smooth response that preserves a safety margin.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3765,7 +3765,7 @@
         "rain"
       ],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3814,7 +3814,7 @@
         "rain"
       ],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks how the app should behave, not a road-safety point."
@@ -3856,7 +3856,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3908,7 +3908,7 @@
         "decisionPoint": "Decide whether reducing speed early improves the driver's safety margin.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -3964,7 +3964,7 @@
         "decisionPoint": "Choose whether familiarity or current conditions should determine speed.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4006,7 +4006,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4048,7 +4048,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4100,7 +4100,7 @@
         "decisionPoint": "Identify the visual cue that may signal a developing hazard.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4152,7 +4152,7 @@
         "decisionPoint": "Decide why scanning behind and beside the vehicle matters before acting.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4207,7 +4207,7 @@
         "decisionPoint": "Decide how to use historical data without treating it as a crash prediction.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4249,7 +4249,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4306,7 +4306,7 @@
         "decisionPoint": "Decide whether the existing physical gap still provides the same safety margin.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4358,7 +4358,7 @@
         "decisionPoint": "Choose a response that avoids aggression and preserves space ahead.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4400,7 +4400,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4452,7 +4452,7 @@
         "decisionPoint": "Use position and signals to anticipate another vehicle's likely movement.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4504,7 +4504,7 @@
         "decisionPoint": "Decide how to approach when the traffic situation cannot yet be fully seen.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4556,7 +4556,7 @@
         "decisionPoint": "Decide which traffic controls should guide the driver through the work area.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4598,7 +4598,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4649,7 +4649,7 @@
         "decisionPoint": "Decide where the driver should check the sign's meaning before relying on it.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4701,7 +4701,7 @@
         "decisionPoint": "Decide what to check before opening the door.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4743,7 +4743,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4795,7 +4795,7 @@
         "decisionPoint": "Decide whether passing should be delayed until it can be completed safely.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4837,7 +4837,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4889,7 +4889,7 @@
         "decisionPoint": "Decide whether apparently easy road conditions justify checking the device.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4931,7 +4931,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -4973,7 +4973,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks about the team's content-governance process."
@@ -5015,7 +5015,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks what a content reviewer should verify."
@@ -5057,7 +5057,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -5113,7 +5113,7 @@
         "decisionPoint": "Decide whether the driver is fit to begin the trip.",
         "mediaNotice": "Dashcam-style composite scenario only. No third-party footage embedded; use original, licensed or permission-cleared media if visuals are added."
       },
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -5155,7 +5155,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -5197,7 +5197,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": false,
       "serve": false,
       "excludeReason": "Asks how Buddy should reply, not a road-safety point."
@@ -5239,7 +5239,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -5281,7 +5281,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null
@@ -5323,7 +5323,7 @@
       "conditionKeys": [],
       "riskFactorTypes": [],
       "scenario": null,
-      "reviewStatus": "review",
+      "reviewStatus": "approved",
       "distractorsRewritten": true,
       "serve": true,
       "excludeReason": null

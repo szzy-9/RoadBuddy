@@ -153,3 +153,59 @@ export interface RadarStatusResponse {
   source: string | null
   licence: string | null
 }
+
+export interface LearnOption {
+  key: string
+  text: string
+}
+
+export interface LearnSource {
+  id: string
+  name: string
+  section: string
+  url: string
+}
+
+export interface LearnScenario {
+  type: string
+  description: string
+  hazards: string[]
+  decision_point: string
+  media_reference: string
+}
+
+export interface LearnQuestion {
+  id: string
+  topic_id: string
+  subtopic: string
+  difficulty: string
+  question_type: string
+  prompt: string
+  options: LearnOption[]
+  source: LearnSource
+  scenario: LearnScenario | null
+}
+
+export interface TripLessonRequest {
+  risk_factors: RiskFactor['type'][]
+}
+
+export interface TripLessonResponse {
+  available: boolean
+  matched_risk_factors: RiskFactor['type'][]
+  matched_topics: string[]
+  questions: LearnQuestion[]
+}
+
+export interface LearnAnswerRequest {
+  selected_option: string
+}
+
+export interface LearnAnswerResponse {
+  question_id: string
+  selected_option: string
+  correct_option: string
+  correct: boolean
+  explanation: string
+  source: LearnSource
+}
