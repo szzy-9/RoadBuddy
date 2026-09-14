@@ -49,3 +49,23 @@ class LearnTopicsResponse(BaseModel):
 
 class LearnQuestionsResponse(BaseModel):
     questions: list[LearnQuestionResponse]
+
+
+
+
+
+
+class MockTestQuestionResponse(BaseModel):
+    id: str
+    topic_id: str
+    difficulty: str
+    question_type: str
+    prompt: str
+    options: list[LearnOptionResponse]
+    scenario: LearnScenarioResponse | None = None
+
+
+class MockTestResponse(BaseModel):
+    total_questions: int
+    pass_mark_percent: int
+    questions: list[MockTestQuestionResponse]

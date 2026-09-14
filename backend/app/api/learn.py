@@ -7,8 +7,11 @@ from app.database.connection import get_db
 from app.schemas.learn import (
     LearnQuestionsResponse,
     LearnTopicsResponse,
+    MockTestResponse,
 )
+
 from app.services.learning_query import (
+    get_mock_test,
     get_questions_by_topic,
     get_topics,
 )
@@ -29,3 +32,16 @@ def questions(
     session: Annotated[Session, Depends(get_db)],
 ) -> LearnQuestionsResponse:
     return get_questions_by_topic(session, topic)
+
+@router.get(
+    "/mock-test",
+    response_model=MockTestResponse,
+)
+def mock_test(
+    session: Annotated[Session, Depends(get_db)],
+    seed: Annotated[int | None, Query()] = None,
+) -> MockTestResponse:
+    return get_mock_test(
+        session,
+        seed=seed,
+    )
