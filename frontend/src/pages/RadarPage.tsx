@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import { getRadarCluster, getRadarClusters, searchLocations } from '../api/client'
 import AddressAutocomplete from '../components/AddressAutocomplete'
 import ClusterPanel from '../components/ClusterPanel'
+import { bandColor, CRASH_COUNT_BANDS } from '../lib/crashBands'
 import type {
   CrashClusterDetail,
   CrashClusterSummary,
@@ -27,35 +28,6 @@ const NEARBY_PAN_MS = 300
 const PAN_SETTLE_GRACE_MS = 150
 /** Tolerance for deciding a pan actually reached its target. */
 const ARRIVAL_EPSILON = 1e-4
-
-/**
- * Five-band intensity scale for crash counts.
- *
- * Thresholds are fixed rather than derived from the visible clusters, so a
- * colour means the same thing at every zoom and in every suburb. Edit `min`
- * to retune the bands; each band covers `min` up to the next band's `min`.
- */
-const CRASH_COUNT_BANDS = [
-  { min: 0, color: '#2E9E5B', label: '1-4' },
-  { min: 5, color: '#E5B917', label: '5-9' },
-  { min: 10, color: '#E8843C', label: '10-19' },
-  { min: 20, color: '#D6453D', label: '20-49' },
-  { min: 50, color: '#A63BC4', label: '50+' },
-] as const
-
-/**
- * Pick the colour band for a crash count.
- *
- * @param crashCount - Historical injury crashes in the cluster.
- * @returns The matching band's colour.
- */
-function bandColor(crashCount: number): string {
-  let color: string = CRASH_COUNT_BANDS[0].color
-  for (const band of CRASH_COUNT_BANDS) {
-    if (crashCount >= band.min) color = band.color
-  }
-  return color
-}
 
 /**
  * A place to open the map on, handed over from the trip result screen.

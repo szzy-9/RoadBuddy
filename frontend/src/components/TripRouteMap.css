@@ -1,0 +1,44 @@
+.trip-route {
+  min-width: 0;
+  margin: 0 0 24px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--cream);
+}
+
+.trip-route-canvas { width: 100%; height: clamp(280px, 42vw, 400px); }
+.trip-route-marker {
+  padding: 6px 9px;
+  border: 2px solid white;
+  border-radius: 8px 8px 8px 0;
+  color: white;
+  background: #25383E;
+  box-shadow: 0 2px 6px #0004;
+  font: 800 11px/1.2 system-ui, sans-serif;
+  letter-spacing: .04em;
+}
+.trip-route-marker-end { background: #70451c; }
+.trip-route-legend { padding: 14px 16px; }
+.trip-route-legend h3 { margin: 0 0 10px; font-size: .7rem; letter-spacing: .06em; }
+.trip-route-legend ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.trip-route-legend li { display: flex; align-items: center; gap: 6px; font-size: .72rem; }
+.trip-route-swatch { flex: none; width: 10px; height: 10px; border-radius: 50%; }
+.trip-route-legend p { margin: 12px 0 0; color: var(--muted); font-size: .75rem; line-height: 1.5; }
+.trip-route-unavailable {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: var(--muted);
+  background: var(--cream);
+  font-size: .8rem;
+  line-height: 1.5;
+}
+.trip-route .trip-route-unavailable { margin: 0; }

@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from time import perf_counter
 
 import httpx
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from app.config import Settings
@@ -17,6 +18,7 @@ from app.schemas.trip import (
     DataAvailability,
     DepartureComparison,
     DepartureComparisonOption,
+    GeoLineString,
     GeoPoint,
     RiskFactor,
     RouteSummary,
@@ -27,6 +29,7 @@ from app.schemas.trip import (
 from app.services.crash_query import (
     CrashDataUnavailable,
     get_endpoint_hotspots,
+    get_route_segment_crash_counts,
     route_has_high_speed_zone,
 )
 from app.services.daylight import is_after_dark
@@ -44,6 +47,7 @@ from app.services.risk_engine import (
     calculate_concern,
     summarise_factors,
 )
+from app.services.route_segments import split_route
 from app.services.routing import RoutingUnavailable, calculate_route
 from app.services.weather import WeatherConditions, get_weather_at
 
@@ -179,6 +183,17 @@ def _analyse_mock_trip(request: TripCheckRequest) -> TripCheckResponse:
         origin_coordinates,
         destination_coordinates,
     )
+    mock_points = [origin_coordinates, destination_coordinates]
+    if origin_coordinates == destination_coordinates:
+        # Mock geocoding resolves whole suburbs to one point. Give two addresses
+        # in that suburb a deterministic sample loop rather than a collapsed line.
+        longitude, latitude = origin_coordinates
+        mock_points = [origin_coordinates, (longitude + .003, latitude + .002),
+                       (longitude + .003, latitude), destination_coordinates]
+    geometry = GeoLineString(type="LineString", coordinates=mock_points)
+    segments = split_route(geometry)
+    for segment in segments:
+        segment.nearby_crash_count = (0, 5, 10, 20, 50)[segment.index % 5]
 
     selected_flags = ConditionFlags(
         rain=mock_rain_at(request.departure_time),
@@ -208,6 +223,8 @@ def _analyse_mock_trip(request: TripCheckRequest) -> TripCheckResponse:
             destination_point=_tuple_to_geo_point(destination_coordinates),
             distance_km=distance_km,
             duration_minutes=duration_minutes,
+            geometry=geometry,
+            segments=segments,
         ),
         concern_level=departure_evaluation.concern_level,
         factors=departure_evaluation.factors,
@@ -243,10 +260,12 @@ async def _analyse_production_trip(
                     settings,
                     client,
                 )
-        except (GeocodingUnavailable, RoutingUnavailable) as exc:
+                geometry = GeoLineString.model_validate(route.geometry)
+        except (GeocodingUnavailable, RoutingUnavailable, ValidationError) as exc:
             raise RouteUnavailable from exc
 
         route_geojson = json.dumps(route.geometry, separators=(",", ":"))
+        segments = split_route(geometry)
         try:
             with _timed_stage("crash-history query"):
                 hotspots = get_endpoint_hotspots(
@@ -256,10 +275,23 @@ async def _analyse_production_trip(
                     destination_coordinates.longitude,
                     destination_coordinates.latitude,
                     use_mock_data=False,
+                    route_geojson=route_geojson,
                 )
             crash_status = DataAvailability.AVAILABLE
         except CrashDataUnavailable:
+            session.rollback()
             hotspots = []
+            crash_status = DataAvailability.UNAVAILABLE
+
+        try:
+            with _timed_stage("route-section crash query"):
+                counts = get_route_segment_crash_counts(session, segments)
+            for segment in segments:
+                segment.nearby_crash_count = counts.get(segment.index)
+            if any(segment.nearby_crash_count is None for segment in segments):
+                crash_status = DataAvailability.UNAVAILABLE
+        except CrashDataUnavailable:
+            session.rollback()
             crash_status = DataAvailability.UNAVAILABLE
 
         try:
@@ -267,6 +299,7 @@ async def _analyse_production_trip(
                 high_speed_zone = route_has_high_speed_zone(session, route_geojson)
             speed_status = DataAvailability.AVAILABLE
         except CrashDataUnavailable:
+            session.rollback()
             high_speed_zone = False
             speed_status = DataAvailability.UNAVAILABLE
 
@@ -357,6 +390,8 @@ async def _analyse_production_trip(
             destination_point=_to_geo_point(destination_coordinates),
             distance_km=route.distance_km,
             duration_minutes=route.duration_minutes,
+            geometry=geometry,
+            segments=segments,
         ),
         concern_level=departure_evaluation.concern_level,
         factors=departure_evaluation.factors,

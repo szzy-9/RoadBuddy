@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import LoadingState from '../components/LoadingState'
 import TripSearchForm from '../components/TripSearchForm'
+import TripRouteMap from '../components/TripRouteMap'
 import { reverseGeocodeAll } from '../api/reverseGeocode'
 import { useTripResult } from '../state/tripResult'
 import { getTripLessonIds, LESSONS } from '../data/lessons'
@@ -391,6 +392,7 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
           </header>
 
           <div className="result-body">
+            <TripRouteMap route={result.route} />
             <details className="means">
               <summary>
                 <span className="means-icon" aria-hidden="true">ⓘ</span>

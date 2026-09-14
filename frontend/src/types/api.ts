@@ -6,6 +6,18 @@ export interface GeoPoint {
   latitude: number
 }
 
+export interface GeoLineString {
+  type: 'LineString'
+  coordinates: [number, number][]
+}
+
+export interface RouteRiskSegment {
+  index: number
+  geometry: GeoLineString
+  /** null means crash data is unavailable, not zero recorded crashes. */
+  nearby_crash_count: number | null
+}
+
 export interface RouteSummary {
   origin: string
   destination: string
@@ -14,6 +26,8 @@ export interface RouteSummary {
   destination_point?: GeoPoint
   distance_km: number
   duration_minutes: number
+  geometry: GeoLineString
+  segments: RouteRiskSegment[]
 }
 
 export interface RiskFactor {

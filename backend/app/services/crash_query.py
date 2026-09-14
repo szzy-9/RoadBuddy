@@ -1,12 +1,13 @@
+import json
 from typing import NamedTuple
 
-from sqlalchemy import Select, func, select, or_
+from sqlalchemy import Select, and_, func, or_, select, text, true
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database.models import Crash, CrashCluster200m, DatasetSnapshot, SourceMetadata
 from app.schemas.radar import CrashClusterDetail, CrashClusterSummary, RadarStatusResponse
-from app.schemas.trip import TripHotspot
+from app.schemas.trip import RouteRiskSegment, TripHotspot
 from app.services.mock_data import MOCK_CLUSTERS, MOCK_DATASET_UPDATED
 
 
@@ -44,7 +45,48 @@ def _titlecase(value: str) -> str:
     return cleaned[:1].upper() + cleaned[1:].lower()
 
 
+def _cluster_membership(grid_x, grid_y) -> tuple:
+    """Use the original 200 m rounding rule for both statistics and display."""
+    projected = func.ST_Transform(Crash.geom, CLUSTER_GRID_SRID)
+    return (
+        Crash.geom.is_not(None),
+        func.round(func.ST_X(projected) / CLUSTER_GRID_METRES) * CLUSTER_GRID_METRES == grid_x,
+        func.round(func.ST_Y(projected) / CLUSTER_GRID_METRES) * CLUSTER_GRID_METRES == grid_y,
+    )
+
+
 def _cluster_projection() -> Select[tuple]:
+    """Keep cluster identity/statistics, displaying its nearest valid member crash.
+
+    A correlated lateral join selects one representative per cluster inside the
+    same SQL statement. Spatial filters still use the stored cluster geometry.
+    """
+    centre = func.ST_SetSRID(
+        func.ST_MakePoint(CrashCluster200m.grid_x, CrashCluster200m.grid_y),
+        CLUSTER_GRID_SRID,
+    )
+    member = (
+        select(Crash.geom.label("geom"))
+        .where(
+            *_cluster_membership(CrashCluster200m.grid_x, CrashCluster200m.grid_y),
+            func.ST_IsValid(Crash.geom),
+            ~func.ST_IsEmpty(Crash.geom),
+            # A generous cell envelope uses the existing geom index to narrow
+            # candidates; the rounding predicates above decide membership.
+            func.ST_Intersects(
+                Crash.geom,
+                func.ST_Transform(func.ST_Expand(centre, CLUSTER_GRID_METRES), 4326),
+            ),
+        )
+        .order_by(
+            func.ST_Distance(func.ST_Transform(Crash.geom, CLUSTER_GRID_SRID), centre),
+            Crash.accident_no,
+        )
+        .limit(1)
+        .correlate(CrashCluster200m)
+        .lateral("representative_crash")
+    )
+    display_geom = func.coalesce(member.c.geom, CrashCluster200m.geom)
     return select(
         CrashCluster200m.cluster_id.label("id"),
         CrashCluster200m.total_crashes.label("crash_count"),
@@ -52,9 +94,9 @@ def _cluster_projection() -> Select[tuple]:
         CrashCluster200m.young_driver_crashes,
         CrashCluster200m.young_driver_pct,
         CrashCluster200m.young_driver_pct_displayable,
-        func.ST_X(CrashCluster200m.geom).label("longitude"),
-        func.ST_Y(CrashCluster200m.geom).label("latitude"),
-    )
+        func.ST_X(display_geom).label("longitude"),
+        func.ST_Y(display_geom).label("latitude"),
+    ).select_from(CrashCluster200m).outerjoin(member, true())
 
 
 def get_clusters_in_bbox(
@@ -192,25 +234,7 @@ def get_cluster_detail(
     # read from the crashes that snap to the cluster's own grid point. The
     # crash's stored vicgrid_x/y are a different projection to grid_x/grid_y, so
     # the geometry is transformed rather than compared against those columns.
-    crash_grid_x = (
-        func.round(
-            func.ST_X(func.ST_Transform(Crash.geom, CLUSTER_GRID_SRID))
-            / CLUSTER_GRID_METRES
-        )
-        * CLUSTER_GRID_METRES
-    )
-    crash_grid_y = (
-        func.round(
-            func.ST_Y(func.ST_Transform(Crash.geom, CLUSTER_GRID_SRID))
-            / CLUSTER_GRID_METRES
-        )
-        * CLUSTER_GRID_METRES
-    )
-    in_cluster = (
-        Crash.geom.is_not(None),
-        crash_grid_x == row.grid_x,
-        crash_grid_y == row.grid_y,
-    )
+    in_cluster = _cluster_membership(row.grid_x, row.grid_y)
 
     try:
         conditions = session.execute(
@@ -344,6 +368,16 @@ MIN_CRASHES_FOR_DOMINANT_TYPE = 5
 # Radius searched around the origin and destination, in metres. Wide enough to
 # cover the streets around an address, not the roads between two suburbs.
 ENDPOINT_SEARCH_RADIUS_METRES = 1000
+ROUTE_CORRIDOR_METRES = 150
+
+
+def _near_geometry(geom, route, radius):
+    """Metre-based distance plus a bounding envelope for the existing geom index."""
+    corridor = func.ST_Buffer(func.Geography(route), radius)
+    return and_(
+        geom.op("&&")(func.ST_Envelope(func.Geometry(corridor))),
+        func.ST_DWithin(func.Geography(geom), func.Geography(route), radius),
+    )
 
 
 def get_endpoint_hotspots(
@@ -353,11 +387,13 @@ def get_endpoint_hotspots(
     destination_longitude: float,
     destination_latitude: float,
     use_mock_data: bool,
+    *,
+    route_geojson: str | None = None,
 ) -> list[TripHotspot]:
-    """Find the largest crash clusters near a trip's origin and destination.
+    """Find the largest clusters near the route, or endpoints for legacy callers.
 
-    Only the two endpoints are searched, not the roads between them: the check
-    is about the areas the driver starts and finishes in.
+    Production trips supply the ORS polyline, searching a 150 m corridor along
+    it. Cluster grid geometry determines proximity; markers use member crashes.
 
     Args:
         session: Database session.
@@ -366,9 +402,10 @@ def get_endpoint_hotspots(
         destination_longitude: Destination longitude in decimal degrees.
         destination_latitude: Destination latitude in decimal degrees.
         use_mock_data: When true, return the deterministic sample instead.
+        route_geojson: Existing driving LineString; omit for endpoint-only search.
 
     Returns:
-        Up to eight hotspots within the search radius of either endpoint,
+        Up to eight hotspots within the route corridor (or endpoint radii),
         ordered by crash count, highest first.
 
     Raises:
@@ -399,9 +436,17 @@ def get_endpoint_hotspots(
                 for endpoint in endpoints
             ]
         )
+        proximity = (
+            _near_geometry(
+                CrashCluster200m.geom,
+                func.ST_SetSRID(func.ST_GeomFromGeoJSON(route_geojson), 4326),
+                ROUTE_CORRIDOR_METRES,
+            )
+            if route_geojson is not None else near_endpoint
+        )
         rows = session.execute(
             _cluster_projection()
-            .where(near_endpoint)
+            .where(proximity)
             .order_by(CrashCluster200m.total_crashes.desc())
             .limit(8)
         ).all()
@@ -425,6 +470,50 @@ def get_endpoint_hotspots(
         )
         for row in rows
     ]
+
+
+def get_route_segment_crash_counts(
+    session: Session,
+    segments: list[RouteRiskSegment],
+) -> dict[int, int | None]:
+    """Count recorded crashes within 150 m of every section in one PostGIS query.
+
+    Each crash is counted once per section; adjoining corridors may overlap.
+    An empty spatial dataset is unavailable, while zero near a section in a
+    populated dataset is a real zero. No speed or weather inference is made.
+    """
+    if not segments:
+        return {}
+    payload = json.dumps([
+        {"index": segment.index, "geometry": segment.geometry.model_dump()}
+        for segment in segments
+    ])
+    try:
+        rows = session.execute(text("""
+            WITH sections AS (
+                SELECT item.index,
+                    ST_SetSRID(ST_GeomFromGeoJSON(item.geometry::text), 4326) AS geom
+                FROM jsonb_to_recordset(CAST(:segments AS jsonb))
+                    AS item(index integer, geometry jsonb)
+            ), availability AS (
+                SELECT EXISTS (
+                    SELECT 1 FROM crash
+                    WHERE geom IS NOT NULL AND NOT ST_IsEmpty(geom) AND ST_IsValid(geom)
+                ) AS available
+            )
+            SELECT sections.index,
+                CASE WHEN (SELECT available FROM availability)
+                    THEN count(crash.accident_no) ELSE NULL END AS nearby_crash_count
+            FROM sections
+            LEFT JOIN crash ON
+                crash.geom && ST_Envelope(ST_Buffer(sections.geom::geography, :radius)::geometry)
+                AND ST_DWithin(crash.geom::geography, sections.geom::geography, :radius)
+            GROUP BY sections.index
+            ORDER BY sections.index
+        """), {"segments": payload, "radius": ROUTE_CORRIDOR_METRES}).all()
+    except SQLAlchemyError as exc:
+        raise CrashDataUnavailable from exc
+    return {row.index: row.nearby_crash_count for row in rows}
 
 
 def route_has_high_speed_zone(

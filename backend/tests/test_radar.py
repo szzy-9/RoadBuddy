@@ -1,11 +1,16 @@
+import json
+
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import event, text
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.services.crash_query import (
     BoundingBox,
     CrashDataUnavailable,
+    get_cluster_detail,
     get_clusters_in_bbox,
+    get_endpoint_hotspots,
 )
 
 
@@ -75,3 +80,89 @@ def test_spatial_query_boundary_converts_database_failure() -> None:
             use_mock_data=False,
             zoom=12,
         )
+
+
+@pytest.mark.parametrize("member_available", [True, False])
+def test_cluster_display_uses_nearest_member_without_changing_statistics(
+    postgis_session, member_available,
+) -> None:
+    session = postgis_session
+    session.execute(text("""
+        INSERT INTO crash_cluster_200m VALUES
+        (123, 320000, 5810000, 12, 10, 4, 40, true,
+         ST_Transform(ST_SetSRID(ST_MakePoint(320000, 5810000), 32755), 4326))
+    """))
+    session.execute(text("""
+        INSERT INTO crash VALUES
+        ('missing', '2020-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+    """))
+    if member_available:
+        session.execute(text("""
+            INSERT INTO crash (accident_no, accident_date, geom)
+            SELECT id, '2021-01-01',
+                ST_Transform(ST_SetSRID(ST_MakePoint(x, y), 32755), 4326)
+            FROM (VALUES
+                ('farther', 320090, 5810090),
+                ('nearest', 320010, 5810020),
+                ('tied-later', 320010, 5810020),
+                ('different-cell', 320110, 5810000)
+            ) AS points(id, x, y)
+        """))
+    expected = session.execute(text("""
+        SELECT ST_X(geom), ST_Y(geom) FROM crash WHERE accident_no = 'nearest'
+    """)).one_or_none()
+    centre = session.execute(text("""
+        SELECT ST_X(geom), ST_Y(geom) FROM crash_cluster_200m
+    """)).one()
+    statements = []
+
+    def record(_conn, _cursor, statement, _params, _context, _many):
+        statements.append(statement)
+
+    connection = session.connection()
+    event.listen(connection, "before_cursor_execute", record)
+    try:
+        clusters = get_clusters_in_bbox(
+            session, BoundingBox(140, -40, 150, -33), False, 12,
+        )
+    finally:
+        event.remove(connection, "before_cursor_execute", record)
+    assert len(statements) == 1
+    assert len(clusters) == 1
+    detail = get_cluster_detail(session, 123, False)
+    hotspots = get_endpoint_hotspots(session, *centre, *centre, False)
+    for result in [clusters[0], detail, hotspots[0]]:
+        assert getattr(result, "id", getattr(result, "cluster_id", None)) == 123
+        assert result.crash_count == 12
+        assert result.eligible_driver_age_crashes == 10
+        assert result.young_driver_crashes == 4
+        assert result.young_driver_pct == 40
+        assert result.young_driver_pct_displayable is True
+        assert (result.longitude, result.latitude) == pytest.approx(expected or centre)
+    if member_available:
+        assert tuple(expected) != tuple(centre)
+        # The grid centre remains the viewport filter even if the display point
+        # is outside a very tight viewport around that centre.
+        tight_bbox = BoundingBox(centre[0] - .000001, centre[1] - .000001,
+                                 centre[0] + .000001, centre[1] + .000001)
+        assert [cluster.id for cluster in get_clusters_in_bbox(
+            session, tight_bbox, False, 12,
+        )] == [123]
+
+    session.execute(text("""
+        INSERT INTO crash_cluster_200m VALUES
+        (456, 322000, 5810000, 99, 90, 20, 22.22, true,
+         ST_Transform(ST_SetSRID(ST_MakePoint(322000, 5810000), 32755), 4326))
+    """))
+    # The supplied route passes through cluster 123, far from either geocoded
+    # endpoint. The larger off-route cluster must be excluded.
+    route_hotspots = get_endpoint_hotspots(
+        session, 140, -35, 149, -39, False,
+        route_geojson=json.dumps({"type": "LineString", "coordinates": [
+            [centre[0] - .005, centre[1]], [centre[0] + .005, centre[1]],
+        ]}),
+    )
+    assert [hotspot.cluster_id for hotspot in route_hotspots] == [123]
+    assert (route_hotspots[0].longitude, route_hotspots[0].latitude) == (
+        pytest.approx(expected or centre)
+    )

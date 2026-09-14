@@ -1,8 +1,12 @@
 import asyncio
+import json
 from datetime import datetime, timedelta
+from types import SimpleNamespace
 from unittest.mock import Mock
 
+import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import event, text
 
 from app.api import trip as trip_api
 from app.config import Settings
@@ -10,6 +14,7 @@ from app.schemas.trip import DataAvailability, TripCheckRequest
 from app.services.geocoding import Coordinates
 from app.services.routing import RouteResult
 from app.services.trip_analysis import RouteUnavailable, _analyse_production_trip
+from app.services.weather import WeatherConditions, WeatherUnavailable
 
 VALID_REQUEST = {
     "origin": "Tarneit VIC 3029",
@@ -67,8 +72,32 @@ def test_trip_check_returns_route_coordinates(client: TestClient) -> None:
         assert -180 <= point["longitude"] <= 180
         assert -90 <= point["latitude"] <= 90
 
+    assert route["geometry"]["type"] == "LineString"
+    assert route["segments"]
+    assert route["segments"][0]["geometry"]["coordinates"][0] == (
+        route["geometry"]["coordinates"][0]
+    )
+    assert route["segments"][-1]["geometry"]["coordinates"][-1] == (
+        route["geometry"]["coordinates"][-1]
+    )
+    previous_end = None
+    for index, segment in enumerate(route["segments"]):
+        assert segment["index"] == index
+        assert segment["geometry"]["type"] == "LineString"
+        coordinates = segment["geometry"]["coordinates"]
+        assert len(coordinates) >= 2
+        for point in coordinates:
+            assert len(point) == 2
+            assert -180 <= point[0] <= 180
+            assert -90 <= point[1] <= 90
+        if previous_end is not None:
+            assert coordinates[0] == previous_end
+        previous_end = coordinates[-1]
+    again = client.post("/api/trip/check", json=VALID_REQUEST).json()["route"]
+    assert again == route
 
-def test_hotspots_query_uses_endpoints_not_route_geometry(monkeypatch) -> None:
+
+def test_hotspots_query_uses_real_route_geometry(monkeypatch) -> None:
     from app.services import trip_analysis
 
     resolved = {
@@ -91,8 +120,8 @@ def test_hotspots_query_uses_endpoints_not_route_geometry(monkeypatch) -> None:
     async def fake_weather(*_args, **_kwargs):
         return WeatherConditions(rain=False, precipitation_mm=0.0)
 
-    def capture_hotspots(_session, *coordinates, **_kwargs):
-        received["coordinates"] = coordinates
+    def capture_hotspots(_session, *coordinates, **kwargs):
+        received["geometry"] = kwargs["route_geojson"]
         return []
 
     monkeypatch.setattr(trip_analysis, "geocode_address", fake_geocode)
@@ -101,13 +130,27 @@ def test_hotspots_query_uses_endpoints_not_route_geometry(monkeypatch) -> None:
     monkeypatch.setattr(trip_analysis, "get_endpoint_hotspots", capture_hotspots)
     monkeypatch.setattr(trip_analysis, "route_has_high_speed_zone", lambda *_args: False)
     monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
+    def fake_counts(_session, segments):
+        counts = (0, 4, 5, 9, 10, 19, 20, 49, 50, None)
+        return {
+            segment.index: counts[segment.index % len(counts)]
+            for segment in reversed(segments)
+        }
+
+    monkeypatch.setattr(trip_analysis, "get_route_segment_crash_counts", fake_counts)
 
     request = TripCheckRequest.model_validate(VALID_REQUEST)
     settings = Settings(use_mock_data=False, ors_api_key="test-only")
-    asyncio.run(_analyse_production_trip(request, settings, Mock()))
+    result = asyncio.run(_analyse_production_trip(request, settings, Mock()))
 
-    # Only the two endpoints are passed; the route geometry is not consulted.
-    assert received["coordinates"] == (144.6570, -37.8233, 144.9465, -37.8150)
+    assert json.loads(received["geometry"]) == {
+        "type": "LineString", "coordinates": [[144.66, -37.82], [144.95, -37.82]],
+    }
+    assert result.route.geometry.model_dump(mode="json") == json.loads(received["geometry"])
+    assert [segment.nearby_crash_count for segment in result.route.segments[:10]] == (
+        [0, 4, 5, 9, 10, 19, 20, 49, 50, None]
+    )
+    assert result.data_status.crash_data == DataAvailability.UNAVAILABLE
 
 
 def test_trip_comparison_summarises_rain_easing(client: TestClient) -> None:
@@ -173,7 +216,7 @@ def test_weather_failure_keeps_route_and_marks_weather_unavailable(monkeypatch) 
         )
 
     async def fail_weather(*_args, **_kwargs):
-        raise trip_analysis.WeatherUnavailable
+        raise WeatherUnavailable
 
     monkeypatch.setattr(trip_analysis, "geocode_address", fake_geocode)
     monkeypatch.setattr(trip_analysis, "calculate_route", fake_route)
@@ -181,6 +224,7 @@ def test_weather_failure_keeps_route_and_marks_weather_unavailable(monkeypatch) 
     monkeypatch.setattr(trip_analysis, "get_endpoint_hotspots", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(trip_analysis, "route_has_high_speed_zone", lambda *_args: False)
     monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
+    monkeypatch.setattr(trip_analysis, "get_route_segment_crash_counts", lambda *_: {})
 
     request = TripCheckRequest.model_validate(VALID_REQUEST)
     settings = Settings(
@@ -235,6 +279,7 @@ def test_optional_database_failures_keep_trip_result_available(monkeypatch) -> N
     monkeypatch.setattr(trip_analysis, "get_endpoint_hotspots", fail_optional_data)
     monkeypatch.setattr(trip_analysis, "route_has_high_speed_zone", fail_optional_data)
     monkeypatch.setattr(trip_analysis, "is_after_dark", lambda *_args: False)
+    monkeypatch.setattr(trip_analysis, "get_route_segment_crash_counts", fail_optional_data)
 
     request = TripCheckRequest.model_validate(VALID_REQUEST)
     settings = Settings(use_mock_data=False, ors_api_key="test-only")
@@ -246,3 +291,137 @@ def test_optional_database_failures_keep_trip_result_available(monkeypatch) -> N
     assert result.data_status.crash_data == DataAvailability.UNAVAILABLE
     assert result.data_status.speed_zones == DataAvailability.UNAVAILABLE
     assert result.factors == []
+    assert result.route.geometry.type == "LineString"
+    assert result.route.segments
+    assert all(segment.nearby_crash_count is None for segment in result.route.segments)
+
+
+def test_route_sections_keep_bends_and_shared_boundaries() -> None:
+    from app.schemas.trip import GeoLineString
+    from app.services.route_segments import distance_metres, split_route
+
+    points = [(144.9, -37.8), (144.91, -37.8), (144.91, -37.81), (144.92, -37.81)]
+    segments = split_route(GeoLineString(type="LineString", coordinates=points))
+    assert len(segments) > 3
+    assert segments[0].geometry.coordinates[0] == points[0]
+    assert segments[-1].geometry.coordinates[-1] == points[-1]
+    flattened = []
+    for index, segment in enumerate(segments):
+        assert segment.index == index
+        coords = segment.geometry.coordinates
+        if index:
+            assert coords[0] == segments[index - 1].geometry.coordinates[-1]
+        flattened.extend(coords if not index else coords[1:])
+        length = sum(distance_metres(a, b) for a, b in zip(coords, coords[1:], strict=False))
+        if index < len(segments) - 1:
+            assert 400 <= length <= 500
+        else:
+            assert 0 < length <= 500
+    # Every original bend survives, in its original order.
+    assert [p for p in flattened if p in points] == points
+
+
+def test_route_segment_counts_match_sections_in_one_spatial_query(postgis_session) -> None:
+    from app.schemas.trip import GeoLineString, RouteRiskSegment
+    from app.services.crash_query import get_route_segment_crash_counts
+
+    session = postgis_session
+    segments = [RouteRiskSegment(
+        index=index, nearby_crash_count=None,
+        geometry=GeoLineString(type="LineString", coordinates=[
+            (144.0 + index * .02, -37.8), (144.005 + index * .02, -37.8),
+        ]),
+    ) for index in range(10)]
+    expected = [0, 4, 5, 9, 10, 19, 20, 49, 50, 51]
+    for index, count in enumerate(expected):
+        session.execute(text("""
+            INSERT INTO crash (accident_no, geom)
+            SELECT :prefix || n, ST_SetSRID(ST_MakePoint(:lon, -37.799), 4326)
+            FROM generate_series(1, :count) n
+        """), {"prefix": f"{index}-", "lon": 144.002 + index * .02, "count": count})
+    # This crash is over 150 m away, and a missing geometry must not be counted.
+    session.execute(text("""
+        INSERT INTO crash (accident_no, geom) VALUES
+        ('outside', ST_SetSRID(ST_MakePoint(144.002, -37.798), 4326)), ('missing', NULL)
+    """))
+    queries = []
+    connection = session.connection()
+
+    def record(_conn, _cursor, statement, _params, _context, _many):
+        queries.append(statement)
+
+    event.listen(connection, "before_cursor_execute", record)
+    try:
+        counts = get_route_segment_crash_counts(session, list(reversed(segments)))
+    finally:
+        event.remove(connection, "before_cursor_execute", record)
+    assert len(queries) == 1
+    assert counts == dict(enumerate(expected))
+
+
+def test_mock_same_suburb_route_has_visible_geometry(client: TestClient) -> None:
+    result = client.post("/api/trip/check", json={
+        **VALID_REQUEST,
+        "origin": "1 Collins St Melbourne", "destination": "200 Collins St Melbourne",
+    })
+    assert result.status_code == 200
+    route = result.json()["route"]
+    assert len({tuple(point) for point in route["geometry"]["coordinates"]}) >= 2
+    assert any(len(set(map(tuple, segment["geometry"]["coordinates"]))) >= 2
+               for segment in route["segments"])
+
+
+@pytest.mark.parametrize("coordinates", [[], [[144, -37]], [[181, -37], [144, -37]],
+                                           [[144, -37, 1], [144, -37, 2]]])
+def test_invalid_provider_geometry_is_a_route_failure(monkeypatch, coordinates) -> None:
+    from app.services import trip_analysis
+
+    async def fake_geocode(address, *_):
+        return Coordinates(longitude=144.9, latitude=-37.8, label=address)
+
+    async def fake_route(*_):
+        return RouteResult(1, 1, {"type": "LineString", "coordinates": coordinates})
+
+    monkeypatch.setattr(trip_analysis, "geocode_address", fake_geocode)
+    monkeypatch.setattr(trip_analysis, "calculate_route", fake_route)
+    with pytest.raises(RouteUnavailable):
+        asyncio.run(_analyse_production_trip(
+            TripCheckRequest.model_validate(VALID_REQUEST), Settings(use_mock_data=False), Mock(),
+        ))
+
+
+def test_empty_spatial_dataset_is_unavailable(postgis_session) -> None:
+    from app.schemas.trip import GeoLineString
+    from app.services.crash_query import get_route_segment_crash_counts
+    from app.services.route_segments import split_route
+
+    segments = split_route(GeoLineString(
+        type="LineString", coordinates=[(144.9, -37.8), (144.91, -37.8)],
+    ))
+    assert get_route_segment_crash_counts(postgis_session, segments) == {0: None, 1: None}
+
+
+def test_segment_query_preserves_nulls_and_maps_rows_by_index() -> None:
+    from sqlalchemy.exc import SQLAlchemyError
+
+    from app.schemas.trip import GeoLineString
+    from app.services.crash_query import CrashDataUnavailable, get_route_segment_crash_counts
+    from app.services.route_segments import split_route
+
+    segments = split_route(GeoLineString(
+        type="LineString", coordinates=[(144.9, -37.8), (144.91, -37.8)],
+    ))
+    session = Mock()
+    session.execute.return_value.all.return_value = [
+        SimpleNamespace(index=1, nearby_crash_count=None),
+        SimpleNamespace(index=0, nearby_crash_count=0),
+    ]
+    assert get_route_segment_crash_counts(session, segments) == {0: 0, 1: None}
+    assert session.execute.call_count == 1
+    statement, params = session.execute.call_args.args
+    assert params["radius"] == 150
+    assert [item["index"] for item in json.loads(params["segments"])] == [0, 1]
+    assert "ST_DWithin" in str(statement)
+    session.execute.side_effect = SQLAlchemyError("unavailable")
+    with pytest.raises(CrashDataUnavailable):
+        get_route_segment_crash_counts(session, segments)

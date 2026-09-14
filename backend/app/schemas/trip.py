@@ -48,8 +48,26 @@ class GeoPoint(BaseModel):
     latitude: float = Field(ge=-90, le=90)
 
 
+class GeoLineString(BaseModel):
+    """A road polyline in GeoJSON longitude/latitude order (WGS84)."""
+
+    type: Literal["LineString"]
+    coordinates: list[tuple[
+        Annotated[float, Field(ge=-180, le=180)],
+        Annotated[float, Field(ge=-90, le=90)],
+    ]] = Field(min_length=2)
+
+
+class RouteRiskSegment(BaseModel):
+    """Historical exposure only; null means crash data is unavailable."""
+
+    index: int = Field(ge=0)
+    geometry: GeoLineString
+    nearby_crash_count: int | None = Field(ge=0)
+
+
 class RouteSummary(BaseModel):
-    """Origin, destination and headline metrics for a checked route."""
+    """Endpoints, metrics and continuous historical-exposure sections."""
 
     origin: str
     destination: str
@@ -57,6 +75,8 @@ class RouteSummary(BaseModel):
     destination_point: GeoPoint
     distance_km: float = Field(ge=0)
     duration_minutes: int = Field(ge=0)
+    geometry: GeoLineString
+    segments: list[RouteRiskSegment]
 
 
 class RiskFactor(BaseModel):
