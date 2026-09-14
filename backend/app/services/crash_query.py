@@ -9,6 +9,7 @@ from app.database.models import Crash, CrashCluster200m, DatasetSnapshot, Source
 from app.schemas.indicator import IndicatorExplanation
 from app.schemas.radar import CrashClusterDetail, CrashClusterSummary, RadarStatusResponse
 from app.schemas.trip import RouteRiskSegment, TripHotspot
+from app.services.indicator_explanations import RADAR_CLUSTER_LIMITATION
 from app.services.mock_data import MOCK_CLUSTERS, MOCK_DATASET_UPDATED
 
 
@@ -207,6 +208,7 @@ def get_cluster_detail(
             explanation=IndicatorExplanation(
                 source="RoadBuddy development sample",
                 trigger=f"{crash_count} recorded injury crashes are grouped in this crash cluster.",
+                limitation=RADAR_CLUSTER_LIMITATION,
             ),
         )
 
@@ -309,6 +311,7 @@ def get_cluster_detail(
         explanation=IndicatorExplanation(
             source="Victorian Road Crash Data",
             trigger=f"{row.crash_count} recorded injury crashes are grouped in this crash cluster.",
+            limitation=RADAR_CLUSTER_LIMITATION,
         ),
     )
 

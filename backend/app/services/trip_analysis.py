@@ -35,6 +35,7 @@ from app.services.crash_query import (
 )
 from app.services.daylight import is_after_dark
 from app.services.geocoding import Coordinates, GeocodingUnavailable, geocode_address
+from app.services.indicator_explanations import TRIP_INDICATOR_LIMITATIONS
 from app.services.mock_data import (
     mock_after_dark,
     mock_geocode,
@@ -188,17 +189,20 @@ def _trip_factor_explanations(
             source="Open-Meteo",
             trigger=(f"{weather.precipitation_mm:g} mm precipitation is forecast "
                      "around the route midpoint."),
+            limitation=TRIP_INDICATOR_LIMITATIONS["rain"],
         )
     if flags.after_dark:
         explanations["after_dark"] = IndicatorExplanation(
             source="Astral daylight calculation",
             trigger=(f"The journey midpoint at {midpoint:%H:%M} is after dark "
                      "at the route midpoint."),
+            limitation=TRIP_INDICATOR_LIMITATIONS["after_dark"],
         )
     if flags.high_speed_zone:
         explanations["high_speed_zone"] = IndicatorExplanation(
             source="Vicmap Speed Zones",
             trigger="The route intersects a recorded high-speed zone.",
+            limitation=TRIP_INDICATOR_LIMITATIONS["high_speed_zone"],
         )
     if flags.significant_crash_history and qualifying_hotspot_count:
         subject = ("1 nearby crash cluster has" if qualifying_hotspot_count == 1
@@ -206,6 +210,7 @@ def _trip_factor_explanations(
         explanations["significant_crash_history"] = IndicatorExplanation(
             source="Victorian Road Crash Data",
             trigger=f"{subject} at least 5 recorded injury crashes.",
+            limitation=TRIP_INDICATOR_LIMITATIONS["significant_crash_history"],
         )
     return explanations
 
@@ -219,7 +224,10 @@ def _mock_factor_explanations(departure: datetime) -> dict[str, IndicatorExplana
         "significant_crash_history": "The sample route is flagged for significant crash history.",
     }
     return {
-        factor_type: IndicatorExplanation(source="RoadBuddy development sample", trigger=trigger)
+        factor_type: IndicatorExplanation(
+            source="RoadBuddy development sample", trigger=trigger,
+            limitation=TRIP_INDICATOR_LIMITATIONS[factor_type],
+        )
         for factor_type, trigger in triggers.items()
     }
 

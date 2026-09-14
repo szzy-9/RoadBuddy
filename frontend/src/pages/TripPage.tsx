@@ -439,6 +439,9 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
                         <summary>Why?</summary>
                         <p><strong>Source:</strong> {factor.explanation.source}</p>
                         <p><strong>Triggered by:</strong> {factor.explanation.trigger}</p>
+                        {factor.explanation.limitation && (
+                          <p><strong>Limitation:</strong> {factor.explanation.limitation}</p>
+                        )}
                       </details>
                     )}
                   </li>

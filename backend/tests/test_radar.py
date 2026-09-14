@@ -15,6 +15,12 @@ from app.services.crash_query import (
     get_endpoint_hotspots,
 )
 
+EXPECTED_RADAR_LIMITATION = (
+    "Historical crash records describe recorded past crashes only. They do not account "
+    "for current traffic or individual driver behaviour and do not predict where the "
+    "next crash will occur."
+)
+
 
 def test_radar_bbox_returns_only_visible_clusters(client: TestClient) -> None:
     response = client.get("/api/radar/clusters?bbox=144.70,-37.90,144.80,-37.82&zoom=12")
@@ -52,6 +58,7 @@ def test_cluster_detail(client: TestClient) -> None:
     assert detail["explanation"] == {
         "source": "RoadBuddy development sample",
         "trigger": "12 recorded injury crashes are grouped in this crash cluster.",
+        "limitation": EXPECTED_RADAR_LIMITATION,
     }
 
 
@@ -81,6 +88,7 @@ def test_real_cluster_explanation_uses_actual_crash_count() -> None:
     assert detail.model_dump()["explanation"] == {
         "source": "Victorian Road Crash Data",
         "trigger": "7 recorded injury crashes are grouped in this crash cluster.",
+        "limitation": EXPECTED_RADAR_LIMITATION,
     }
     assert detail.crash_count == 7
     assert detail.wet_crashes == 2
