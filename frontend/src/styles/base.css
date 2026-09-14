@@ -3,7 +3,7 @@
      tracking at display sizes without the headings feeling generic, and stays
      legible at the small label sizes the result screen leans on. The stack
      falls back to the previous faces if the webfont does not load. */
-  font-family: 'Plus Jakarta Sans', Inter, 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   color: #0b3440;
   background: #eef3f0;
   font-synthesis: none;

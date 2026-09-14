@@ -352,29 +352,33 @@ function TripResultPanel({ result }: { result: TripCheckResponse }) {
   // Weather is not wired up on the backend yet, so a rain factor would be
   // asserting a condition nothing actually measured. Filtered here rather than
   // relying on the response to omit it.
-  //  const shownFactors = result.factors.filter((factor) => factor.type !== 'rain')
-  const shownFactors = result.factors
+//   const shownFactors = result.factors.filter((factor) => factor.type !== 'rain')
+ 
+    const shownFactors = result.factors
+  
 
-  useEffect(() => {
-  const riskFactors = result.factors.map((factor) => factor.type)
-    if (riskFactors.length === 0) {
-      setTripLesson(null)
-      return
-    }
-    setTripLessonLoading(true)
-    getTripLesson({
-      risk_factors: riskFactors,
-    })
-      .then((lesson) => {
-        setTripLesson(lesson)
-      })
-      .catch(() => {
-        setTripLesson(null)
-      })
-      .finally(() => {
-        setTripLessonLoading(false)
-      })
-  }, [result.factors])
+   useEffect(() => {
+   const riskFactors = result.factors.map((factor) => factor.type)
+     if (riskFactors.length === 0) {
+       setTripLesson(null)
+       return
+     }
+
+     setTripLessonLoading(true)
+
+     getTripLesson({
+       risk_factors: riskFactors,
+     })
+       .then((lesson) => {
+         setTripLesson(lesson)
+       })
+       .catch(() => {
+         setTripLesson(null)
+       })
+       .finally(() => {
+         setTripLessonLoading(false)
+       })
+   }, [result.factors])
   
     
   // A long route can return a dozen clusters, which buries the ones that

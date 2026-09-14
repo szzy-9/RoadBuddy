@@ -5,9 +5,19 @@ import { addCompletedTopics, getLessonFeedback, getTripLessonIds, LESSONS } from
 import type { Lesson } from '../data/lessons'
 import { useTripResult } from '../state/tripResult'
 import './LearnPage.css'
-import { checkLearnAnswer } from '../api/client'
 
-import type { TripLessonResponse } from '../types/api'
+import {
+  checkLearnAnswer,
+  getMockTest,
+  gradeMockTest,
+} from '../api/client'
+
+
+import type { 
+  MockTestGradeResponse,
+  MockTestResponse, 
+  TripLessonResponse,
+} from '../types/api'
 
 type PracticeMode =
   | { kind: 'mock' }
@@ -35,6 +45,13 @@ type TripAnswerState = {
 type TripPracticeState = {
   questionIndex: number
   answers: Record<string, TripAnswerState>
+  finished: boolean
+}
+
+type MockPracticeState = {
+  test: MockTestResponse
+  questionIndex: number
+  answers: Record<string, string>
   finished: boolean
 }
 
@@ -363,6 +380,199 @@ function TripLearnPractice({
   )
 }
 
+function MockTestPractice({
+  test,
+  onDone,
+}: {
+  test: MockTestResponse
+  onDone: () => void
+}) {
+  const [questionIndex, setQuestionIndex] = useState(0)
+  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [grade, setGrade] = useState<MockTestGradeResponse | null>(null)
+  const [grading, setGrading] = useState(false)
+
+  const questionHeading = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    questionHeading.current?.focus()
+  }, [questionIndex, grade])
+
+  const question = test.questions[questionIndex]
+
+  function chooseOption(optionKey: string) {
+    if (!question) return
+
+    setAnswers((current) => ({
+      ...current,
+      [question.id]: optionKey,
+    }))
+  }
+
+  async function nextQuestion() {
+    if (!question || !answers[question.id]) return
+
+    const isLastQuestion =
+      questionIndex === test.questions.length - 1
+
+    if (!isLastQuestion) {
+      setQuestionIndex((current) => current + 1)
+      return
+    }
+
+    setGrading(true)
+
+    try {
+      const result = await gradeMockTest({
+        answers: test.questions.map((item) => ({
+          question_id: item.id,
+          selected_option: answers[item.id],
+        })),
+      })
+
+      setGrade(result)
+    } finally {
+      setGrading(false)
+    }
+  }
+
+  if (grade) {
+    return (
+      <div className="learn-page learn-result">
+        <div
+          className={`learn-score ${
+            grade.passed ? 'is-correct' : 'is-incorrect'
+          }`}
+          aria-label={`${grade.score} of ${grade.total} correct`}
+        >
+          <span>{Math.round(grade.percentage)}%</span>
+        </div>
+
+        <h2 ref={questionHeading} tabIndex={-1}>
+          {grade.passed ? 'Pass' : 'Try again'}
+        </h2>
+
+        <p>
+          {grade.score} of {grade.total} correct
+        </p>
+
+        <p>
+          Pass mark: {grade.pass_mark_percent}%
+        </p>
+
+        <div className="learn-result-actions">
+          <button
+            className="button button-secondary"
+            type="button"
+            onClick={() => {
+              setQuestionIndex(0)
+              setAnswers({})
+              setGrade(null)
+            }}
+          >
+            Again
+          </button>
+
+          <button
+            className="button button-primary"
+            type="button"
+            onClick={onDone}
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!question) {
+    return null
+  }
+
+  const selectedOption = answers[question.id] ?? null
+  const isLastQuestion =
+    questionIndex === test.questions.length - 1
+
+  return (
+    <div className="learn-page learn-quiz">
+      <header className="learn-quiz-header">
+        <button
+          className="learn-back"
+          type="button"
+          aria-label="Back to Learn"
+          onClick={onDone}
+        >
+          ←
+        </button>
+
+        <progress
+          className="learn-progress"
+          value={questionIndex + 1}
+          max={test.questions.length}
+          aria-label="Mock test progress"
+        />
+
+        <span className="learn-counter">
+          {questionIndex + 1} / {test.questions.length}
+        </span>
+      </header>
+
+      <section
+        className="learn-question"
+        aria-labelledby="mock-question-title"
+      >
+        <span className="learn-pill">
+          {question.topic_id.replaceAll('_', ' ')}
+        </span>
+
+        <h2
+          id="mock-question-title"
+          ref={questionHeading}
+          tabIndex={-1}
+        >
+          {question.prompt}
+        </h2>
+
+        {question.scenario?.description && (
+          <p>{question.scenario.description}</p>
+        )}
+
+        <div className="learn-options">
+          {question.options.map((option) => {
+            const selected = option.key === selectedOption
+
+            return (
+              <button
+                key={option.key}
+                className={
+                  `learn-option${selected ? ' selected' : ''}`
+                }
+                type="button"
+                onClick={() => chooseOption(option.key)}
+              >
+                <span>{option.text}</span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      <button
+        className="button button-primary learn-next"
+        type="button"
+        onClick={nextQuestion}
+        disabled={!selectedOption || grading}
+      >
+        {grading
+          ? 'Grading…'
+          : isLastQuestion
+            ? 'Submit test'
+            : 'Next →'}
+      </button>
+    </div>
+  )
+}
+
 
 function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
   const [session, setSession] = useState<PracticeSession | null>(() => (
@@ -378,6 +588,8 @@ function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
   const launcherButton = useRef<HTMLButtonElement>(null)
   const questionIndex = session?.questionIndex
   const finished = session?.finished
+  const [mockPractice, setMockPractice] = useState<MockPracticeState | null>(null)
+  const [mockLoading, setMockLoading] = useState(false)
 
   useEffect(() => {
     if (questionIndex !== undefined) questionHeading.current?.focus()
@@ -410,7 +622,18 @@ function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
       setSession({ ...session, questionIndex: session.questionIndex + 1 })
     }
   }
-
+  
+  if (mockPractice) {
+    return (
+      <MockTestPractice
+        test={mockPractice.test}
+        onDone={() => setMockPractice(null)}
+      />
+    )
+  }
+  
+  
+  
   if (!session) {
     return (
       <div className="learn-page learn-launcher">
@@ -419,8 +642,25 @@ function LearnPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }) {
             ref={launcherButton}
             className="learn-mode-card learn-mock-card"
             type="button"
-            onClick={() => startPractice({ kind: 'mock' })}
+            onClick={async () => {
+              setMockLoading(true)
+
+              try {
+                const test = await getMockTest()
+
+                setMockPractice({
+                  test,
+                  questionIndex: 0,
+                  answers: {},
+                  finished: false,
+                })
+              } finally {
+                setMockLoading(false)
+              }
+            }}
+            disabled={mockLoading}
           >
+        
      
        <svg className="learn-mode-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M29 5H12a3 3 0 0 0-3 3v32a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V15L29 5Zm0 0v10h10M17 28l5 5 10-11" />
