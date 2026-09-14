@@ -209,3 +209,62 @@ export interface LearnAnswerResponse {
   explanation: string
   source: LearnSource
 }
+
+export interface LearnTopic {
+  id: string
+  name: string
+  description: string | null
+  trip_matchable: boolean
+}
+
+export interface LearnTopicsResponse {
+  topics: LearnTopic[]
+}
+
+export interface LearnQuestionsResponse {
+  questions: LearnQuestion[]
+}
+
+export interface MockTestQuestion {
+  id: string
+  topic_id: string
+  difficulty: string
+  question_type: string
+  prompt: string
+  options: LearnOption[]
+  scenario: LearnScenario | null
+}
+
+export interface MockTestResponse {
+  total_questions: number
+  pass_mark_percent: number
+  questions: MockTestQuestion[]
+}
+
+export interface MockTestAnswer {
+  question_id: string
+  selected_option: string
+}
+
+export interface MockTestGradeRequest {
+  answers: MockTestAnswer[]
+}
+
+export interface MockTestQuestionResult {
+  question_id: string
+  selected_option: string
+  correct_option: string
+  correct: boolean
+  explanation: string
+  source: LearnSource
+}
+
+export interface MockTestGradeResponse {
+  score: number
+  total: number
+  percentage: number
+  pass_mark_percent: number
+  passed: boolean
+  results: MockTestQuestionResult[]
+}
+
