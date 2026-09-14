@@ -124,14 +124,13 @@ export default function TripRouteMap({ route }: { route: RouteSummary }) {
       <div className="trip-route-legend">
         <h3>HISTORICAL CRASH EXPOSURE</h3>
         <ul>
-          {LEGEND_BANDS.map(({ band, name, color, label }) => (
+          {LEGEND_BANDS.map(({ band, color, label }) => (
             <li key={band}>
               <span className="trip-route-swatch" style={{ backgroundColor: color }} aria-hidden="true" />
-              <span>{name} <strong>{label}</strong></span>
+              <strong>{label}</strong>
             </li>
           ))}
         </ul>
-        <p>Colours show recorded crash exposure near each part of the route, not a prediction of whether a crash will occur.</p>
       </div>
     </section>
   )
