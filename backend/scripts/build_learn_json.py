@@ -119,6 +119,128 @@ def build_scenario(row: pd.Series) -> dict | None:
         "mediaNotice": clean(row["media_reference"]),
     }
 
+def validate_bundle(
+    sources: list[dict],
+    topics: list[dict],
+    knowledge_items: list[dict],
+    questions: list[dict],
+) -> None:
+    source_ids = {item["id"] for item in sources}
+    topic_ids = {item["id"] for item in topics}
+    knowledge_ids = {item["id"] for item in knowledge_items}
+
+    if len(source_ids) != len(sources):
+        raise ValueError("Duplicate source IDs found")
+
+    if len(topic_ids) != len(topics):
+        raise ValueError("Duplicate topic IDs found")
+
+    if len(knowledge_ids) != len(knowledge_items):
+        raise ValueError("Duplicate knowledge-item IDs found")
+
+    question_ids: set[str] = set()
+
+    for question in questions:
+        question_id = question["id"]
+
+        if not question_id:
+            raise ValueError("Question has no ID")
+
+        if question_id in question_ids:
+            raise ValueError(
+                f"Duplicate question ID: {question_id}"
+            )
+
+        question_ids.add(question_id)
+
+        if question["topicId"] not in topic_ids:
+            raise ValueError(
+                f"{question_id}: unknown topic "
+                f"{question['topicId']}"
+            )
+
+        if question["knowledgeId"] not in knowledge_ids:
+            raise ValueError(
+                f"{question_id}: unknown knowledge item "
+                f"{question['knowledgeId']}"
+            )
+
+        source_id = question["source"]["id"]
+
+        if source_id not in source_ids:
+            raise ValueError(
+                f"{question_id}: unknown source {source_id}"
+            )
+
+        options = question["options"]
+
+        if len(options) != 4:
+            raise ValueError(
+                f"{question_id}: expected exactly 4 options"
+            )
+
+        option_keys = {
+            option["key"]
+            for option in options
+        }
+
+        if question["correctOption"] not in option_keys:
+            raise ValueError(
+                f"{question_id}: correct option is missing"
+            )
+
+        option_texts = [
+            option["text"]
+            for option in options
+        ]
+
+        if any(not text for text in option_texts):
+            raise ValueError(
+                f"{question_id}: blank option"
+            )
+
+        if len(set(option_texts)) != 4:
+            raise ValueError(
+                f"{question_id}: duplicate option text"
+            )
+
+        if question["serve"]:
+            if question["reviewStatus"] != "approved":
+                raise ValueError(
+                    f"{question_id}: served question is not approved"
+                )
+
+            if not question["explanation"]:
+                raise ValueError(
+                    f"{question_id}: served question has no explanation"
+                )
+
+            if not question["source"]["section"]:
+                raise ValueError(
+                    f"{question_id}: served question has no source section"
+                )
+
+    valid_risk_factors = {
+        "rain",
+        "after_dark",
+        "high_speed_zone",
+        "significant_crash_history",
+    }
+
+    for topic in topics:
+        for risk_factor in topic["riskFactorTypes"]:
+            if risk_factor not in valid_risk_factors:
+                raise ValueError(
+                    f"{topic['id']}: unsupported RiskFactor "
+                    f"{risk_factor}"
+                )
+
+        if topic["riskFactorTypes"] and not topic["tripMatchable"]:
+            raise ValueError(
+                f"{topic['id']}: has trip risk factors "
+                f"but tripMatchable is false"
+            )
+
 
 def main(workbook_path: str, output_path: str) -> None:
     sources_sheet = pd.read_excel(workbook_path, sheet_name="Sources")
@@ -190,8 +312,15 @@ def main(workbook_path: str, output_path: str) -> None:
         question_id = clean(row["question_id"])
         excluded_reason = EXCLUDED.get(question_id)
 
+        review_status = clean(row["status"])
+
+        serve = (
+            excluded_reason is None
+            and review_status == "approved"
+        )
+
         options, correct_key = build_options(row, rng, served_index % 4)
-        if not excluded_reason:
+        if serve:
             served_index += 1
 
         condition_keys = split_keys(row["trip_match_keys"])
@@ -218,9 +347,9 @@ def main(workbook_path: str, output_path: str) -> None:
                 "conditionKeys": condition_keys,
                 "riskFactorTypes": risk_factor_types(condition_keys),
                 "scenario": build_scenario(row),
-                "reviewStatus": clean(row["status"]),
+                "reviewStatus": review_status,
                 "distractorsRewritten": question_id in REWRITES,
-                "serve": excluded_reason is None,
+                "serve": serve,
                 "excludeReason": excluded_reason,
             }
         )
@@ -239,6 +368,12 @@ def main(workbook_path: str, output_path: str) -> None:
     key_counts = {key: 0 for key in OPTION_KEYS}
     for question in served:
         key_counts[question["correctOption"]] += 1
+
+    validate_bundle(
+	sources,
+	topics,
+	knowledge_items,
+	questions,)
 
     bundle = {
         "meta": {
