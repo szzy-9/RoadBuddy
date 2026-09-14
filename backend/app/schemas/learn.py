@@ -98,3 +98,12 @@ class MockTestGradeResponse(BaseModel):
     results: list[MockTestQuestionResult]
 
 
+class TripLessonRequest(BaseModel):
+    risk_factors: list[str]
+
+
+class TripLessonResponse(BaseModel):
+    available: bool
+    matched_risk_factors: list[str]
+    matched_topics: list[str]
+    questions: list[LearnQuestionResponse]

@@ -10,12 +10,15 @@ from app.schemas.learn import (
     MockTestResponse,
     MockTestGradeRequest,
     MockTestGradeResponse,
+    TripLessonRequest,
+    TripLessonResponse,
 )
 
 from app.services.learning_query import (
     get_mock_test,
     get_questions_by_topic,
     get_topics,
+    get_trip_lesson,
     grade_mock_test,
 )
 
@@ -68,6 +71,18 @@ def grade_test(
             detail=str(exc),
         ) from exc
 
+@router.post(
+    "/trip-lesson",
+    response_model=TripLessonResponse,
+)
+def trip_lesson(
+    request: TripLessonRequest,
+    session: Annotated[Session, Depends(get_db)],
+) -> TripLessonResponse:
+    return get_trip_lesson(
+        session,
+        request,
+    )
 
 
 
