@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import health, learn, radar, trip
+from app.api import ask, health, learn, radar, trip
 from app.config import get_settings
 
 logger = logging.getLogger(__name__)
@@ -29,6 +29,7 @@ app.include_router(health.router, prefix="/api")
 app.include_router(trip.router, prefix="/api")
 app.include_router(learn.router, prefix="/api")
 app.include_router(radar.router, prefix="/api")
+app.include_router(ask.router, prefix="/api")
 
 
 @app.exception_handler(Exception)

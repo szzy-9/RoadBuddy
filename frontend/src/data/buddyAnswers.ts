@@ -5,7 +5,7 @@ import type { RiskFactor, TripCheckResponse } from '../types/api'
 export type BuddyIntent = Lesson['id'] | 'trip' | 'prediction' | 'unknown'
 
 export type BuddyAnswer = {
-  intent: BuddyIntent
+  intent: BuddyIntent | 'road-rules' | 'p1'
   icon: string
   heading: string
   body: string

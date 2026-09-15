@@ -33,11 +33,21 @@
 }
 .ask-chip > span { color: var(--green-dark); font-size: 1.1rem; }
 .ask-chip:hover { border-color: var(--green); }
-.ask-answer-region { display: flex; min-height: 0; flex: 1; align-items: center; }
+.ask-topic-svg { width: 1.1rem; height: 1.1rem; flex: none; color: var(--green-dark); }
+.ask-topics-toggle { background: transparent; color: var(--muted); }
+.ask-topics-toggle:disabled { cursor: default; opacity: .65; border-color: var(--border); }
+.ask-secondary-topics { display: flex; flex-basis: 100%; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.ask-secondary-topics[hidden] { display: none; }
+.ask-answer-region { display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 14px; overflow-y: auto; }
+.ask-answer-region > .ask-answer:first-child { margin-block: auto; }
+.ask-prepared-questions { display: grid; gap: 8px; width: 100%; flex: none; }
+.ask-prepared-questions .ask-chip { justify-content: flex-start; text-align: left; }
+.ask-sources-heading { margin: 4px 0 0; color: var(--muted); font-size: .76rem; font-weight: 750; }
 
 .ask-answer {
   display: grid;
   width: 100%;
+  flex: none;
   gap: 10px;
   padding: 18px;
   color: var(--navy);
@@ -120,6 +130,11 @@
 @media (max-width: 820px) {
   .main-content:has(> .ask-page) { padding: 12px 0 calc(84px + env(safe-area-inset-bottom)); }
   .ask-page { height: calc(100dvh - 157px - env(safe-area-inset-bottom)); gap: 12px; }
+
+  /* The topic card only points at the questions listed directly above it.
+     On a phone those fill the screen, so the card is redundant and costs a
+     scroll; the questions speak for themselves. */
+  .ask-topic-card { display: none; }
 }
 
 @media (max-height: 740px) {
@@ -130,3 +145,73 @@
   .ask-answer-icon svg { width: 32px; height: 32px; }
   .ask-answer p { font-size: .82rem; line-height: 1.4; }
 }
+
+/* Buddy is waiting on the model, which takes a few seconds. The region
+   keeps the same footprint as an answer so the page does not jump when
+   the answer arrives. */
+.ask-pending,
+.ask-error {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 18px;
+  font-size: .86rem;
+}
+
+.ask-pending { color: var(--muted); }
+.ask-error { color: var(--navy); }
+
+.ask-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--green-dark);
+  border-radius: 50%;
+  animation: ask-spin .7s linear infinite;
+}
+
+@keyframes ask-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ask-spinner { animation-duration: 2.4s; }
+}
+
+/* A declined question is still an answer card, but it carries guidance
+   rather than a road rule, so it is toned down to read as secondary. */
+.ask-answer-declined { border-color: var(--border); background: var(--cream); }
+.ask-answer-declined .ask-answer-icon { color: var(--muted); }
+.ask-answer-declined h2 { font-size: .95rem; color: var(--muted); font-weight: 700; }
+
+/* A greeting shows what Buddy can be asked. The examples are buttons so
+   a new user can start without having to type a question first. */
+.ask-examples-lead { color: var(--muted); font-size: .8rem; }
+
+.ask-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ask-examples button {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--navy);
+  font: inherit;
+  font-size: .82rem;
+  text-align: left;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.ask-examples button:hover { border-color: var(--green); }

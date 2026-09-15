@@ -1,4 +1,6 @@
 import type {
+  AskRequest,
+  AskResponse,
   CrashClusterDetail,
   LearnAnswerRequest,
   LearnAnswerResponse,
@@ -161,3 +163,17 @@ export function checkLearnAnswer(
 }
 
 
+
+export function askBuddy(request: AskRequest): Promise<AskResponse> {
+  return apiFetch('/ask/', {
+    method: 'POST',
+    body: JSON.stringify(request),
+    // The answer waits on a model call, which is slower than our own
+    // endpoints; the default timeout would cut it off mid-question. The
+    // backend caps itself at 18 seconds, so this only has to cover that
+    // plus the round trip - a longer wait would mean the server has
+    // already given up and the user is watching a spinner for nothing.
+    timeoutMs: 22_000,
+    timeoutMessage: 'Buddy took too long to answer. Please try again.',
+  })
+}

@@ -252,3 +252,25 @@ export interface LearnAnswerResponse {
   explanation: string
   source: LearnSource
 }
+
+export interface AskRequest {
+  question: string
+}
+
+export interface AskSource {
+  name: string
+  excerpt: string
+}
+
+export interface AskResponse {
+  answered: boolean
+  answer: string
+  sources: AskSource[]
+  /**
+   * Why a question was declined: not_in_sources, off_topic, unavailable.
+   * Also "greeting" for a conversational turn, which is not a decline.
+   */
+  reason: string | null
+  /** Questions to offer the user, sent with a greeting. */
+  examples: string[]
+}
