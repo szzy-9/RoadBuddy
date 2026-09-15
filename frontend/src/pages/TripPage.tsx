@@ -13,7 +13,6 @@ import type {
   TripCheckResponse,
   TripHotspot,
 } from '../types/api'
-import './TripPage.css'
 
 
 /**

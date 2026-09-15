@@ -11,7 +11,6 @@ import type {
   CrashClusterSummary,
   LocationSuggestion,
 } from '../types/api'
-import './RadarPage.css'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || ''
 

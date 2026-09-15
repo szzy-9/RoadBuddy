@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import TripSearchForm from '../components/TripSearchForm'
-import './HomePage.css'
 
 /**
  * What a trip check involves, in the order the user experiences it.

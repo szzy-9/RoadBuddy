@@ -1,7 +1,6 @@
 import type { CrashClusterDetail } from '../types/api'
 import ErrorMessage from './ErrorMessage'
 import LoadingState from './LoadingState'
-import './ClusterPanel.css'
 
 interface ClusterPanelProps {
   cluster: CrashClusterDetail | null

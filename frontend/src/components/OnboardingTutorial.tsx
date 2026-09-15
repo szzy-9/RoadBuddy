@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useBuddyGuide } from '../state/BuddyGuideContext'
-import './OnboardingTutorial.css'
 
 const STEPS = [
   { target: 'trip-form', icon: 'M3 13h14M5 13V9l2-4h6l2 4v4M6.5 16.5h1M12.5 16.5h1', title: 'Check a trip', line: 'Route + time → conditions' },

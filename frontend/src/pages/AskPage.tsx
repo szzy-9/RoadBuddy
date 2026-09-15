@@ -10,7 +10,6 @@ import { PREPARED_QUESTIONS } from '../data/preparedQuestions'
 import type { PreparedQuestion } from '../data/preparedQuestions'
 import { useTripResult } from '../state/tripResult'
 import type { AskSource } from '../types/api'
-import './AskPage.css'
 
 const TOPIC_ORDER = ['night', 'wet', 'merge', 'fatigue'] as const
 const SUGGESTED_TOPICS = TOPIC_ORDER.flatMap((id) => LESSONS.filter((lesson) => lesson.id === id))
@@ -51,6 +50,16 @@ const TOPIC_CARDS: Record<TopicId, { heading: string; icon: string }> = {
 const SOURCE_LABELS: Record<string, string> = {
   'Road to Solo Driving handbook': 'Road to Solo Driving',
   'Road Safety Road Rules 2017': 'Road Rules 2017',
+}
+
+// Where a cited source can be read in full. The corpus is plain text
+// extracted from these two documents, so a citation is only checkable if
+// it points back at the official publication it came from.
+const SOURCE_URLS: Record<string, string> = {
+  'Road to Solo Driving handbook':
+    'https://transport.vic.gov.au/road-and-active-transport/registration-and-licensing/licences/learner-permit/prepare-for-your-learner-permit',
+  'Road Safety Road Rules 2017':
+    'https://www.legislation.vic.gov.au/in-force/statutory-rules/road-safety-road-rules-2017',
 }
 
 const ANSWER_ICON_PATHS: Record<string, string> = {
@@ -330,11 +339,28 @@ export default function AskPage() {
               <>
                 <h3 className="ask-sources-heading">Sources</h3>
                 <div className="ask-answer-links">
-                  {state.sources.map((source) => (
-                    <span className="ask-source" key={source.name}>
-                      <span aria-hidden="true">▤</span> {SOURCE_LABELS[source.name] ?? source.name}
-                    </span>
-                  ))}
+                  {state.sources.map((source) => {
+                    const label = SOURCE_LABELS[source.name] ?? source.name
+                    const href = SOURCE_URLS[source.name]
+                    // An unmapped source still shows its name; only the
+                    // link is lost, never the citation itself.
+                    return href ? (
+                      <a
+                        className="ask-source"
+                        key={source.name}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span aria-hidden="true">↗</span> {label}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    ) : (
+                      <span className="ask-source" key={source.name}>
+                        <span aria-hidden="true">▤</span> {label}
+                      </span>
+                    )
+                  })}
                 </div>
               </>
             )}

@@ -4,7 +4,6 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { addCompletedTopics, getLessonFeedback, getTripLessonIds, LESSONS } from '../data/lessons'
 import type { Lesson } from '../data/lessons'
 import { useTripResult } from '../state/tripResult'
-import './LearnPage.css'
 import { checkLearnAnswer, getLearnQuestions, getLearnTopics, getMockTest, gradeMockTest } from '../api/client'
 import { getMockTestAnswers } from '../lib/learnPractice'
 
@@ -83,7 +82,7 @@ export default function LearnPage() {
 
 function LearnSourceReference({ source }: { source: Pick<LearnSource, 'name' | 'url'> }) {
   return source.url !== null ? (
-    <a className="learn-source" href={source.url} target="_blank" rel="noreferrer">
+    <a className="learn-source" href={source.url} target="_blank" rel="noopener noreferrer">
       <span aria-hidden="true">↗</span> {source.name}
     </a>
   ) : <span className="learn-source">{source.name}</span>
@@ -91,7 +90,6 @@ function LearnSourceReference({ source }: { source: Pick<LearnSource, 'name' | '
 
 type BankMode =
   | { kind: 'topic'; topic: LearnTopic }
-  | { kind: 'quick' }
   | { kind: 'mock' }
 
 type BankSession = {
@@ -167,9 +165,9 @@ function LearnBankPractice() {
         totalQuestions = questions.length
       } else {
         const response = await getMockTest()
-        questions = mode.kind === 'quick' ? response.questions.slice(0, 3) : response.questions
-        totalQuestions = mode.kind === 'mock' ? response.total_questions : questions.length
-        if (mode.kind === 'mock') passMarkPercent = response.pass_mark_percent
+        questions = response.questions
+        totalQuestions = response.total_questions
+        passMarkPercent = response.pass_mark_percent
       }
       if (version !== requestVersion.current) return
       if (questions.length === 0) {
@@ -281,13 +279,6 @@ function LearnBankPractice() {
             <strong>Mock test</strong>
             <span className="learn-mode-meta">Practice test</span>
           </button>
-          <button className="learn-mode-card learn-quick-card" type="button" onClick={() => startPractice({ kind: 'quick' })}>
-            <svg className="learn-mode-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="m27 4-17 23h12l-1 17 17-25H26l1-15Z" />
-            </svg>
-            <strong>Quick</strong>
-            <span className="learn-mode-meta">3 Q</span>
-          </button>
         </div>
         <section className="learn-topics" aria-labelledby="learn-topics-title">
           <h2 id="learn-topics-title">Topics</h2>
@@ -302,11 +293,11 @@ function LearnBankPractice() {
                 <div className="learn-topic-grid">
                   {topics.map((topic) => (
                     <button key={topic.id} className="learn-topic-card" type="button" onClick={() => startPractice({ kind: 'topic', topic })}>
-                      <span aria-hidden="true">▤</span>
+                      {/* <span aria-hidden="true">▤</span> */}
                       <div className="learn-topic-copy">
                         <strong>{topic.name}</strong>
                         {topic.description && <small>{topic.description}</small>}
-                        {topic.trip_matchable && <small>Available for trip prep</small>}
+                        {/* {topic.trip_matchable && <small>Available for trip prep</small>} */}
                       </div>
                     </button>
                   ))}
@@ -801,7 +792,7 @@ function LegacyTripPractice({ tripLessonIds }: { tripLessonIds: Lesson['id'][] }
         <section className={`learn-feedback ${isCorrect ? 'is-correct' : 'is-incorrect'}`} aria-live="polite">
           <span className="learn-verdict-mark" role="img" aria-label={isCorrect ? 'Correct' : 'Incorrect'}>{isCorrect ? '✓' : '×'}</span>
           <p>{feedback.explanation}</p>
-          <a className="learn-source" href={lesson.source.href} target="_blank" rel="noreferrer"><span aria-hidden="true">↗</span> {lesson.source.name}</a>
+          <a className="learn-source" href={lesson.source.href} target="_blank" rel="noopener noreferrer"><span aria-hidden="true">↗</span> {lesson.source.name}</a>
         </section>
       )}
 

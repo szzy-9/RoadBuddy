@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import './NotFoundPage.css'
 
 /**
  * Shown for any address the app does not have a screen for.

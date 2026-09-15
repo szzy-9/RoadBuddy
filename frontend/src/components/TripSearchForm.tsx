@@ -6,7 +6,6 @@ import AddressAutocomplete from '../components/AddressAutocomplete'
 import { localDateTimeDefault, withLocalOffset } from '../lib/datetime'
 import type { GeoPoint, LocationSuggestion } from '../types/api'
 import { saveTripResult } from '../state/tripResult'
-import './TripSearchForm.css'
 
 /**
  * The trip used by "load an example trip".

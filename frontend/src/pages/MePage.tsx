@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { clearCompletedTopics, LESSONS, readCompletedTopics } from '../data/lessons'
 import { useBuddyGuide } from '../state/BuddyGuideContext'
 import koalaReadingIcon from '../assets/koala-reading.png'
-import './MePage.css'
 
 const ALL_TOPICS = LESSONS.map((lesson) => lesson.topic)
 

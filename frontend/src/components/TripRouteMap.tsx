@@ -3,7 +3,6 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { CRASH_COUNT_BANDS, UNAVAILABLE_CRASH_BAND, crashBand } from '../lib/crashBands'
 import type { RouteSummary } from '../types/api'
-import './TripRouteMap.css'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || ''
 const LEGEND_BANDS = [...CRASH_COUNT_BANDS, UNAVAILABLE_CRASH_BAND]
