@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { getMockTestAnswers } from '../src/lib/learnPractice'
+import { getMockTestAnswers } from '../src/lib/learnPractice.ts'
 
 const questions = [{ id: 'q2' }, { id: 'q1' }]
 
