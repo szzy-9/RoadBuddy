@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { getLessonFeedback } from '../src/data/lessons'
-import type { Lesson } from '../src/data/lessons'
+import { getLessonFeedback } from '../src/data/lessons.ts'
+import type { Lesson } from '../src/data/lessons.ts'
 
 const lesson: Lesson = {
   id: 'night',

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { getTripLessonIds } from '../src/data/lessons'
-import type { RiskFactor } from '../src/types/api'
+import { getTripLessonIds } from '../src/data/lessons.ts'
+import type { RiskFactor } from '../src/types/api.ts'
 
 test('after_dark matches the night lesson', () => {
   const factor: RiskFactor = { type: 'after_dark', label: 'After dark' }

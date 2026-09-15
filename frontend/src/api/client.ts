@@ -14,11 +14,6 @@ import type {
   TripCheckResponse,
   TripLessonRequest,
   TripLessonResponse,
-  LearnQuestionsResponse,
-  LearnTopicsResponse,
-  MockTestGradeRequest,
-  MockTestGradeResponse,
-  MockTestResponse,
 } from '../types/api'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
@@ -163,37 +158,6 @@ export function checkLearnAnswer(
       body: JSON.stringify(request),
     },
   )
-}
-
-export function getLearnTopics(): Promise<LearnTopicsResponse> {
-  return apiFetch('/learn/topics')
-}
-
-export function getLearnQuestions(
-  topic: string,
-): Promise<LearnQuestionsResponse> {
-  return apiFetch(
-    `/learn/questions?topic=${encodeURIComponent(topic)}`,
-  )
-}
-
-export function getMockTest(
-  seed?: number,
-): Promise<MockTestResponse> {
-  const query = seed === undefined
-    ? ''
-    : `?seed=${encodeURIComponent(seed)}`
-
-  return apiFetch(`/learn/mock-test${query}`)
-}
-
-export function gradeMockTest(
-  request: MockTestGradeRequest,
-): Promise<MockTestGradeResponse> {
-  return apiFetch('/learn/mock-test/grade', {
-    method: 'POST',
-    body: JSON.stringify(request),
-  })
 }
 
 
